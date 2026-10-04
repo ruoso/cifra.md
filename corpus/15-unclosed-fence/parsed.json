@@ -1,6 +1,6 @@
 {
   "title": null,
-  "properties": {},
+  "properties": [],
   "sections": [
     {
       "name": "A",
@@ -81,11 +81,5 @@
   "blocks": [],
   "sung": true,
   "sungAt": 4,
-  "diagnostics": [
-    {
-      "code": "unclosed-fence",
-      "message": "a fence was opened and never closed",
-      "line": 2
-    }
-  ]
+  "diagnostics": []
 }

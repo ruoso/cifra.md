@@ -33,22 +33,26 @@ to an instrument.
 ## 7.2 Voicing block headings
 
 In the voicings part, every Markdown heading (§1.7.1) opens a voicing
-block. A writer emits it at level 2. Its text is:
+block. Canonical form writes it at level 2 (§8.4.6). Its text is:
 
 ```
 ## Voicings: <tuning>
 ## <name>: <tuning>
 ```
 
-A label, a colon, and a tuning (§6.2). Whitespace around the colon is not
-significant.
+A label, a colon, and a tuning (§6.2): the label is the heading's text up
+to its first colon, and the tuning everything after it. Spaces around the
+colon are not significant.
 
-- The label `Voicings` (case-insensitive) names the **default variation**
-  of that tuning (§7.3). It is the canonical label, and the one a writer
-  emits for a block it creates.
-- Any other label names a **variation** called by that label, as written:
+- The label `Voicings`, in any case of its ASCII letters, names the
+  **default variation** of that tuning (§7.3). Canonical form writes it
+  `Voicings`.
+- Any other label names a **variation** called by that label:
   `## Simple: E2 A2 D3 G3 B3 E4` is a variation called *Simple*. The label
-  may contain spaces. Leading and trailing whitespace is trimmed.
+  may contain spaces; it is trimmed and each run of spaces in it is one
+  space, as in any heading's text (§1.7.1). Two labels name the same
+  variation only if they are then the same, character for character:
+  `Simple` and `simple` are two variations.
 - The tuning MUST parse under §6.2. A heading whose text after the colon is
   not a tuning is an error; a reader MUST report it and MUST skip the lines
   that follow it up to the next heading, so that they are not attributed to
@@ -88,13 +92,17 @@ different label.
   variation, whatever another variation says.
 - A document SHOULD NOT contain two blocks with the same tuning (§6.3) and
   the same name. If it does, a reader MUST read them as one block, in which
-  a later line for a key replaces an earlier one.
+  a later line for a key replaces an earlier one, and MUST report it. The
+  merged block stands where the first was, with the first heading's
+  spelling of the tuning; its notes are those of both, in order.
 - When no variation is chosen, an application uses the tuning's default
   variation, the `Voicings` block, if there is one, and otherwise the
   tuning's first block in the order written.
 - An empty block (a heading with no list items) is a variation that exists
   and has nothing chosen in it yet. A reader MUST keep it, and a writer
-  writes it back as its heading.
+  writes it back as its heading. A block is never removed by
+  canonicalising, not even when §8.3 leaves it empty: whether a tuning was
+  considered is not something the chart can say.
 
 ## 7.4 Voicing items
 
@@ -105,31 +113,36 @@ The voicings of a block are a Markdown list, one item per key:
 - <key>: <fret string> (<fingering>)
 ```
 
-- The list marker is `-`, a space, as for properties (§1.4.2). `*` and `+`
-  are accepted; a writer MUST emit `-`.
+- A voicing item is a list item as for properties (§1.4.2): up to three
+  spaces, `-`, `*` or `+`, and one or more spaces. Canonical form writes
+  `- ` (§8.4.6).
 - `key` is a voicing key (§2.4): a chord symbol, optionally followed by a
-  footnote marker. It MUST NOT contain whitespace, `:`, `[` or `]` except
-  as the marker. `Cm[1]` is the key `Cm`.
+  footnote marker. It MUST NOT contain a space, `:`, `[` or `]` except
+  as the marker. `Cm[1]` and `Cm[0]` are the key `Cm`.
 - `:` with optional whitespace around it, then a fret string (§7.5),
   then optionally a fingering in round brackets (§7.5.1).
 
 The symbol in a key is text, matched character for character against the
 chart's tokens (§2.4). It is not required to parse as a chord, and a reader
-MUST NOT validate it against §5; a block may name a chord the chart does not
-use, and a key for an unknown token (§2.9) is as good as any other.
+MUST NOT validate it against §5; a key for an unknown token (§2.9) is as
+good as any other. A reader accepts a key the chart does not use, and
+resolving simply never reaches it; canonical form does not keep it (§8.3
+I1).
 
 A list item that is not of this form, or whose fret string does not parse
 or has the wrong number of strings (§7.5), is a **problem**. A reader MUST
 skip it, MUST report it with the text of the item, and MUST continue with
 the rest of the block. A writer MUST NOT write problems back; see §8.
 
-A line in a block that is not a list item and not blank is **notes**, as in
-the chart (§1.9): kept verbatim, not interpreted. Blank lines are not
-significant.
+A line in a block that is not a list item, not a heading, not the rule and
+not blank is **notes**, as in the chart (§1.9): kept as read, in order,
+and not interpreted. Blank lines are not significant. A rule after the
+first is reported and not kept (§1.6), and so is anything in the voicings
+part before its first block heading.
 
 Keys within a block are unique. If a key repeats, the last item wins. The
 order of items is not significant; a reader presents them in the order
-§8.3 defines, and presents blocks in that order too, so that the model of
+§8.4.6 defines, and presents blocks in that order too, so that the model of
 a document and of its canonical form are the same.
 
 ## 7.5 Fret strings
@@ -176,9 +189,9 @@ after the fret string, one position per string in tuning order:
 - Each position is a finger `1` to `4` (index to little finger), `T` for
   the thumb, or `-` for a string the hand does not fret: an open string, a
   muted string, or a fretted string whose finger is left unstated. `0` is
-  read as `-`.
-- Positions MAY be separated by spaces or run together; a writer MUST
-  separate them with single spaces.
+  read as `-`, and `t` as `T`.
+- Positions MAY be separated by spaces or run together; canonical form
+  separates them with single spaces and writes `T` and `-` (§8.4.6).
 - The number of positions MUST equal the number of strings.
 - A finger on a string whose fret is `x` or `0` is a contradiction.
 - The same finger on several strings is a barre, and those strings MUST be
@@ -188,7 +201,8 @@ A fingering that breaks one of these rules is a problem of its own,
 `bad-fingering`: a reader MUST report it, drop the fingering, and keep the
 shape. A fingering is the one optional part of a voicing item, and a reader
 that does not use fingerings MUST still keep it, so that a writer can
-write it back.
+write it back. A fingering whose every position is `-` frets nothing and
+says nothing; a reader keeps it, and canonical form does not write it.
 
 A fingering overrides whatever the application would have worked out, in
 the same way a written shape overrides the application's default shape.
@@ -215,7 +229,8 @@ another: a footnoted variant on an instrument that has not chosen it is
 simply unchosen there, which is the truth.
 
 Defaults are never written into the document. A block holds what somebody
-chose; writing defaults in would hide the choices among the guesses.
+chose; writing defaults in would hide the choices among the guesses
+(§8.3 I4).
 
 ### 7.6.1 Names derived from shapes
 
@@ -242,7 +257,7 @@ The **legend** of a document on an instrument is every voicing key the chart
 uses that has a shape in that instrument's block, with its shape. The
 **unvoiced** keys are those the chart uses that have none. No-chord marks
 (§2.6) have no key and belong to neither. Both are ordered
-by symbol, then index (§8.3). A reader SHOULD expose both; they are what a
+by symbol, then index (§8.4.6). A reader SHOULD expose both; they are what a
 printed sheet and an editor need.
 
 ## Open questions

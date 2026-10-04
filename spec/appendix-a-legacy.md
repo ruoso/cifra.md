@@ -2,8 +2,15 @@
 
 Informative. These are spellings that documents written against earlier
 versions of the format may contain. A reader MAY accept them; a writer MUST
-NOT emit them, and a writer that reads one SHOULD convert it on the next
-save as described.
+NOT emit them.
+
+Canonicalising never applies these conversions (§8.7): a legacy form is
+read as whatever this version makes of it, usually notes, and written back
+as that. Converting is **migration**, a separate operation an application
+performs when asked, because several conversions need context the text
+does not hold, such as the instrument a document was opened on (A.2). The
+result of a migration is then written in canonical form like any other
+edit.
 
 ## A.1 `# Tuning`
 
@@ -52,9 +59,9 @@ the title.
 
 Conversion: demote every heading to level 2. An application that stores
 its songs' titles outside the text, as explore-chords does, SHOULD write
-the title in as a level-1 heading at the same time. A reader that knows a
-document comes from such a store MAY apply this conversion on load; a
-reader given an arbitrary file MUST NOT guess, because a one-section song
+the title in as a level-1 heading at the same time. An application that
+knows a document comes from such a store MAY migrate it on load; one
+given an arbitrary file MUST NOT guess, because a one-section song
 whose first line is `# Verse` is indistinguishable from a song titled
 *Verse*.
 

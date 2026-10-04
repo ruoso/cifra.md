@@ -1,6 +1,6 @@
 {
   "title": "Pasted Without a Fence",
-  "properties": {},
+  "properties": [],
   "sections": [
     {
       "name": "",
@@ -22,20 +22,8 @@
     {
       "code": "unfenced-music",
       "message": "this reads as a line of chords, but it is outside a fence, so it is notes; put the music between ``` lines (or ~~~)",
-      "line": 6,
+      "line": 7,
       "text": "G           D"
-    },
-    {
-      "code": "bad-block-heading",
-      "message": "`## Chorus` comes after the rule, where a heading is a voicings block and needs a tuning (`## Voicings: E2 A2 D3 G3 B3 E4`). If it is a section of the song, move the rule below it; the lines under it are not read",
-      "line": 11,
-      "text": "## Chorus"
-    },
-    {
-      "code": "bad-block-heading",
-      "message": "not a tuning: 'cavaquinho'. A tuning is the open strings as pitches with octave numbers, lowest string first, like E2 A2 D3 G3 B3 E4 for a guitar or G4 C4 E4 A4 for a ukulele",
-      "line": 14,
-      "text": "## Voicings: cavaquinho"
     }
   ]
 }

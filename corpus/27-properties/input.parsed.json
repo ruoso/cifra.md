@@ -1,0 +1,86 @@
+{
+  "title": "Properties",
+  "properties": [
+    {
+      "key": "artist",
+      "value": "Someone Else"
+    },
+    {
+      "key": "key",
+      "value": "G"
+    },
+    {
+      "key": "tempo",
+      "value": ""
+    },
+    {
+      "key": "capo",
+      "value": "2"
+    }
+  ],
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": [
+    {
+      "code": "duplicate-property",
+      "message": "`artist` is set again; the earlier value is not kept",
+      "line": 6,
+      "text": "- artist: Someone Else"
+    },
+    {
+      "code": "bad-property",
+      "message": "a property is `key: value`, with a space after the colon; this line is not kept",
+      "line": 7,
+      "text": "- https://example.com"
+    },
+    {
+      "code": "bad-property",
+      "message": "a property is `key: value`, with a space after the colon; this line is not kept",
+      "line": 10,
+      "text": "-"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "title": "Headings Closed",
+  "properties": [],
+  "sections": [
+    {
+      "name": "Verse One",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "C# #",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        },
+        {
+          "type": "notes",
+          "text": "####### seven is not a heading\n#hashtag is not a heading"
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Chorus",
+      "heading": "markdown",
+      "anchor": 9,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": [],
+      "times": 2
+    },
+    {
+      "name": "",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [],
+      "groups": []
+    },
+    {
+      "name": "",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": []
+}

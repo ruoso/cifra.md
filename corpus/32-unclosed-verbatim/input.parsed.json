@@ -1,0 +1,29 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "Solo",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "verbatim",
+          "info": "tab",
+          "text": "e|--0--|\n\nB|--1--|"
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": [
+    {
+      "code": "unclosed-fence",
+      "message": "a fence was opened and never closed; it runs to the end of the document",
+      "line": 2
+    }
+  ]
+}

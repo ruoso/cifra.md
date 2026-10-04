@@ -43,7 +43,7 @@ _TOKENS = [
     ("LP", re.compile(r"\(")),
     ("RP", re.compile(r"\)")),
     ("SLASH", re.compile(r"/")),
-    ("SEP", re.compile(r"[,\s]+")),
+    ("SEP", re.compile(r"[, ]+")),
 ]
 
 _ROOT = re.compile(rf"^({NOTE_RE})")
@@ -82,7 +82,7 @@ def _split_bass(text: str):
     idx = text.rfind("/")
     if idx == -1:
         return text, None
-    candidate = text[idx + 1 :].strip()
+    candidate = text[idx + 1 :].strip(" ")
     if _BASS.match(candidate):
         return text[:idx], candidate
     return text, None
@@ -115,9 +115,9 @@ def parse_chord(text: str, dialect: str = DEFAULT_DIALECT) -> dict:
     def fail(msg):
         return {"chord": None, "ambiguities": ambiguities, "errors": errors + [msg]}
 
-    if not isinstance(text, str) or not text.strip():
+    if not isinstance(text, str) or not text.strip(" "):
         return fail("empty")
-    t = text.strip()
+    t = text.strip(" ")
     rm = _ROOT.match(t)
     if not rm:
         return fail(f"{t!r} does not start with a note name")

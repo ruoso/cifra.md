@@ -1,0 +1,104 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "Tab",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "verbatim",
+          "info": "tab",
+          "text": "```\ne|--0--|\n```"
+        },
+        {
+          "type": "verbatim",
+          "info": "a`b",
+          "text": "text"
+        },
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        },
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "```"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": []
+}

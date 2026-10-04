@@ -1,0 +1,450 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "Verse",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "nochord",
+                      "column": 0,
+                      "words": "When I"
+                    },
+                    {
+                      "type": "count",
+                      "times": 2,
+                      "column": 6,
+                      "words": " first s"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 14,
+                      "words": "aw you "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 21,
+                      "words": "walking down"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0,
+                      "words": "la"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 2,
+                      "words": " la"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 5,
+                      "words": " l"
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "bracket",
+                      "column": 7,
+                      "words": "a la l"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 13,
+                      "words": "a la"
+                    }
+                  ],
+                  "anchor": 9
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "oh my "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 6,
+                      "words": "words "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 12,
+                      "words": "are her"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 19,
+                      "words": "e"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "an"
+                    },
+                    {
+                      "type": "unknown",
+                      "text": ">x",
+                      "column": 2,
+                      "words": "d some "
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 9,
+                      "words": "more words"
+                    }
+                  ],
+                  "column": 6
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "one two "
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 8,
+                      "words": "three"
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline",
+                      "column": 13,
+                      "words": " four "
+                    },
+                    {
+                      "type": "count",
+                      "times": 2,
+                      "column": 19,
+                      "words": "five"
+                    }
+                  ],
+                  "column": 7
+                }
+              ],
+              "closeBar": "|",
+              "forced": false
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "open": {
+            "part": 0,
+            "line": 1,
+            "measure": 0,
+            "item": 0
+          },
+          "close": {
+            "part": 0,
+            "line": 1,
+            "measure": 0,
+            "item": 3
+          },
+          "count": 2,
+          "endings": []
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "label": "",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "Cm",
+          "symbol": "Cm",
+          "index": 1,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "sung": true,
+  "sungAt": 4,
+  "diagnostics": [
+    {
+      "code": "count-out-of-place",
+      "message": "a count that follows neither a repeat group nor ends a line",
+      "line": 3
+    },
+    {
+      "code": "stray-mark",
+      "message": "a closing mark with no open repeat group",
+      "line": 11
+    },
+    {
+      "code": "count-out-of-place",
+      "message": "a count that follows neither a repeat group nor ends a line",
+      "line": 11
+    }
+  ]
+}

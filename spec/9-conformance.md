@@ -18,11 +18,12 @@ ambiguous spellings it met. It MAY stop short of building the chord model.
 
 Must, specifically:
 
-- read music only inside fences, and keep notes verbatim;
+- prepare the text exactly as §1.3 says, in that order;
+- read music only inside fences, and keep notes;
 - keep music before the first heading, empty sections, unknown tokens,
   marks and repeat signs;
 - read all three heading forms;
-- read `[1]` as the bare key and accept index gaps;
+- read `[1]` and `[0]` as the bare key and accept index gaps;
 - number bars, carrying stated numbers forward, unless the document is sung
   (which a chart-only reader that does not implement §4 determines by the
   rule in §4.2 nonetheless);
@@ -53,10 +54,12 @@ Must meet: §6, §7.
 
 ### Writer
 
-A voicings reader (and a cifra reader, if it edits sung lines) that creates
-or edits documents.
+A voicings reader and a cifra reader that creates or edits documents.
 
-Must meet: §8.
+Must meet: §8. In particular, it MUST save every document in the
+canonical form of §8.4, and canonicalising with it MUST give the same
+bytes as with any other conforming writer. A writer that checks whether a
+document is canonical does so by canonicalising it and comparing.
 
 ### Full
 
@@ -103,12 +106,18 @@ Whatever the profile:
 - A reader MUST read a document that uses only the constructs of its
   profile identically to a full reader. A chart reader and a full reader
   agree on every chart without words or voicings.
-- Properties that an implementation does not define MUST be kept.
+- Properties that an implementation does not define MUST be kept: a
+  reader keeps them, and a writer writes their values back, under their
+  keys in lower case (§1.4.3).
+- Whatever a reader does not keep (a problem item, a list item that is
+  not a property, a later rule) it MUST report, so that an application
+  can say what canonicalising will drop before it saves (§8.2).
 
 ## 9.3 Test corpus
 
-The reference corpus in `corpus/` holds, per entry, an uncanonical input,
-the model a reader must produce and the text a writer must produce. An
-implementation claiming any profile SHOULD pass every entry in both
+The reference corpus in `corpus/` holds, per entry, an uncanonical input
+and the model a reader must produce from it, and the canonical text a
+writer must produce and the model a reader must produce from that. An
+implementation claiming any profile SHOULD pass every entry, in both
 directions, as `corpus/README.md` describes. The corpus has no setlist
 entries yet (§10, *Open questions*).

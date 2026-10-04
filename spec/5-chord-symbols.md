@@ -104,7 +104,10 @@ dialect (§5.6) matters only for the four cases marked *ambiguous*.
 
 Whitespace, commas and round brackets inside the body are separators and
 grouping with no meaning of their own: `C7(9)`, `C7 9` and `C7,9` are the
-same, and `Cm7(b5)` is `Cm7b5`. A writer MAY use brackets for readability.
+same, and `Cm7(b5)` is `Cm7b5`. Whitespace here means a space inside a
+symbol a program was given; in a chart a space ends a word (§2.3), so a
+chart's symbols never contain one. An author may use brackets for
+readability.
 
 ### 5.3.1 Quality words
 
@@ -269,9 +272,14 @@ Rules:
   MUST report that it did, so that an application can show which reading
   was taken and offer the other.
 - A reader MUST NOT apply the dialect to anything else.
-- A writer SHOULD avoid the four spellings and write the unambiguous
-  form: `C7M` or `Cmaj7`, `Cadd9` or `C7(9)`, `B°7` or `Bdim`, `C7sus4` or
-  `C7add4`. A writer that emits one of them MUST declare `notation`.
+- A writer that produces a symbol from the model (§5.7) SHOULD avoid the
+  four spellings and write the unambiguous form: `C7M` or `Cmaj7`,
+  `Cadd9` or `C7(9)`, `B°7` or `Bdim`, `C7sus4` or `C7add4`. A writer that
+  produces one of them that way MUST declare `notation`.
+- Copying a symbol the author wrote is not producing one. Canonicalising
+  copies every symbol as written and never adds a property (§8), so a
+  document that uses an ambiguous spelling without declaring `notation` is
+  canonical as it stands, and is read under the default dialect.
 - Where a spelling is unclear, the format's answer is the same: the
   document says which notation it is in, and the reader follows it.
 
@@ -282,7 +290,10 @@ in first position is sus4 everywhere (§5.3.1).
 ## 5.7 Preferred spellings
 
 A writer that produces a symbol *from the model* (as opposed to copying one
-the author wrote) SHOULD use the document's dialect:
+the author wrote), as an editing operation might when it transposes or
+adds a chord the user picked, SHOULD use the document's dialect.
+Canonicalising never does this; it copies every symbol as written. The
+spellings of each dialect are:
 
 | Chord | `brazilian` | `american` | `realbook` |
 |---|---|---|---|

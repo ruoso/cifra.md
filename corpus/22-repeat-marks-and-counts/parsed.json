@@ -1,0 +1,470 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "count",
+                      "times": 3
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                }
+              ],
+              "closeBar": "|"
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                }
+              ],
+              "closeBar": "|"
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "E",
+                      "index": 1,
+                      "key": "E",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                }
+              ],
+              "closeBar": "|"
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "count",
+                      "times": 2
+                    }
+                  ],
+                  "number": 7,
+                  "stated": false
+                }
+              ],
+              "closeBar": "||"
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": "||",
+                  "items": [
+                    {
+                      "type": "count",
+                      "times": 2
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "bracket"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 8,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": "||",
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    }
+                  ],
+                  "number": 9,
+                  "stated": false
+                },
+                {
+                  "bar": "||",
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "barline"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "barline"
+                    }
+                  ],
+                  "number": 10,
+                  "stated": false
+                }
+              ],
+              "closeBar": "||"
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "open": {
+            "part": 0,
+            "line": 0,
+            "measure": 0,
+            "item": 0
+          },
+          "close": {
+            "part": 0,
+            "line": 0,
+            "measure": 1,
+            "item": 1
+          },
+          "count": 3,
+          "endings": [],
+          "countItem": {
+            "part": 0,
+            "line": 0,
+            "measure": 1,
+            "item": 2
+          }
+        },
+        {
+          "open": {
+            "part": 0,
+            "line": 1,
+            "measure": 0,
+            "item": 1
+          },
+          "close": {
+            "part": 0,
+            "line": 2,
+            "measure": 1,
+            "item": 1
+          },
+          "count": 2,
+          "endings": []
+        },
+        {
+          "open": {
+            "part": 0,
+            "line": 3,
+            "measure": 0,
+            "item": 0
+          },
+          "close": {
+            "part": 0,
+            "line": 3,
+            "measure": 1,
+            "item": 1
+          },
+          "count": 2,
+          "endings": [],
+          "countItem": {
+            "part": 0,
+            "line": 3,
+            "measure": 1,
+            "item": 2
+          }
+        },
+        {
+          "open": {
+            "part": 0,
+            "line": 4,
+            "measure": 0,
+            "item": 3
+          },
+          "close": {
+            "part": 0,
+            "line": 5,
+            "measure": 0,
+            "item": 2
+          },
+          "count": 2,
+          "endings": []
+        },
+        {
+          "open": {
+            "part": 0,
+            "line": 5,
+            "measure": 1,
+            "item": 0
+          },
+          "close": {
+            "part": 0,
+            "line": 5,
+            "measure": 1,
+            "item": 2
+          },
+          "count": 2,
+          "endings": []
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": [
+    {
+      "code": "count-out-of-place",
+      "message": "a count that follows neither a repeat group nor ends a line",
+      "line": 7
+    },
+    {
+      "code": "stray-mark",
+      "message": "a closing mark with no open repeat group",
+      "line": 7
+    },
+    {
+      "code": "stray-mark",
+      "message": "a closing mark with no open repeat group",
+      "line": 7
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 8
+    }
+  ]
+}

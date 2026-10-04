@@ -1,0 +1,505 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "Verse",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 2,
+                      "key": "Cm[2]",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 3,
+                      "key": "Cm[3]",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "quando "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 3,
+                      "key": "Cm[3]",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 7,
+                      "words": "eu te vi"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 15,
+                      "words": " passar"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [
+    {
+      "label": "",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "Am",
+          "symbol": "Am",
+          "index": 1,
+          "frets": [
+            "x",
+            0,
+            2,
+            2,
+            1,
+            0
+          ]
+        },
+        {
+          "key": "Cm",
+          "symbol": "Cm",
+          "index": 1,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "key": "Cm[2]",
+          "symbol": "Cm",
+          "index": 2,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "key": "Cm[3]",
+          "symbol": "Cm",
+          "index": 3,
+          "frets": [
+            8,
+            10,
+            10,
+            8,
+            8,
+            8
+          ]
+        },
+        {
+          "key": "D",
+          "symbol": "D",
+          "index": 1,
+          "frets": [
+            "x",
+            "x",
+            0,
+            2,
+            3,
+            2
+          ]
+        },
+        {
+          "key": "G",
+          "symbol": "G",
+          "index": 1,
+          "frets": [
+            3,
+            2,
+            0,
+            0,
+            0,
+            3
+          ],
+          "fingers": [
+            3,
+            2,
+            null,
+            null,
+            null,
+            4
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "label": "Easy",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "Am",
+          "symbol": "Am",
+          "index": 1,
+          "frets": [
+            "x",
+            0,
+            2,
+            2,
+            1,
+            0
+          ]
+        },
+        {
+          "key": "Cm",
+          "symbol": "Cm",
+          "index": 1,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "key": "Cm[3]",
+          "symbol": "Cm",
+          "index": 3,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "key": "D",
+          "symbol": "D",
+          "index": 1,
+          "frets": [
+            "x",
+            "x",
+            0,
+            2,
+            3,
+            2
+          ]
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "sung": true,
+  "sungAt": 6,
+  "diagnostics": []
+}

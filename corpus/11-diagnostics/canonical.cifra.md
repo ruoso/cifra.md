@@ -17,4 +17,3 @@ C x2 | G
 ---
 
 ## Voicings: E2 A2 D3 G3 B3 E4
-- D: xx0231

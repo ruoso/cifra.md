@@ -26,11 +26,15 @@ accidental `#`, `b`, `##`, `bb` (and the `♯`, `♭` forms). The accidental is
 applied to the pitch, so `Cb4` sounds the same as `B3` and `B#3` the same as
 `C4`.
 
-The letter is uppercase, as in a chord symbol (§5.1.1).
+The letter is written uppercase, as in a chord symbol (§5.1.1). Unlike in
+a chord symbol, nothing here can be mistaken for a word, so a reader MUST
+accept the letter in either case: `e2` is `E2`, `bb2` is `Bb2`. The
+accidental is as §5.1.1 spells it, and canonical form writes the letter
+uppercase and the rest as written (§8.4.6).
 
 ## 6.2 Writing a tuning
 
-A tuning is one or more pitches separated by commas, whitespace, or both.
+A tuning is one or more pitches separated by commas, spaces, or both.
 All of these are the same tuning:
 
 ```
@@ -39,8 +43,11 @@ E2 A2 D3 G3 B3 E4
 E2,A2,D3,G3,B3,E4
 ```
 
-A writer SHOULD separate pitches with a single space, and MUST use the same
-separator throughout one tuning.
+A tuning's **text** is its pitches each as written, its letter uppercase,
+joined by single spaces: all three above are `E2 A2 D3 G3 B3 E4`, and
+`eb2, a2` is `Eb2 A2`. The spelling of each pitch is kept, `Eb2` and
+`E♭2` alike; only the separators and the letter's case are not. This is
+the text canonical form writes (§8.4.6).
 
 The order is the order strings are written in a fret string (§7.5): the
 first pitch is the string that gets the first fret. By convention that is
@@ -56,8 +63,8 @@ and each string sounds the same pitch. Pitches compare by sound: `Eb2` and
 letter case never matter.
 
 A reader MUST use this identity when matching a voicing block to an
-instrument (§7.6). A writer MUST keep the spelling the document used when
-writing a block back.
+instrument (§7.6). Where two blocks with the same tuning and name are
+merged (§7.3), the tuning is written as the first of them spelled it.
 
 A capo is a tuning. Raising every string by the same amount is exactly what
 a capo does, and a document arranged for "guitar, capo 2" has a block for

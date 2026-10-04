@@ -9,30 +9,90 @@ import re
 
 from .chord import DEFAULT_DIALECT, DIALECTS, parse_chord
 from .frets import check_fingers, parse_fingers, parse_frets
+from .text import prepare
 from .tuning import parse_tuning
 
-RULE = re.compile(r"^\s*-{3,}\s*$")
-FENCE = re.compile(r"^(`{3,}|~{3,})(.*)$")
-MD_HEADING = re.compile(r"^(#{1,6})(?:[ \t]+(.*?))?[ \t]*$")
-TITLE = re.compile(r"^#[ \t]+(.*?)[ \t]*$")
-LIST_ITEM = re.compile(r"^[-*+][ \t]+(.*?)[ \t]*$")
-PROPERTY = re.compile(r"^([A-Za-z0-9_-]+)[ \t]*:[ \t]*(.*)$")
-BRACKET_HEADING = re.compile(r"^(\s*\[\s*([^\]]*?)\s*\]\s*)(.*)$")
-LABEL_HEADING = re.compile(r"^(\s*([^\s:|]+):(?:[ \t]+|$))(.*)$")
-HEADING_ANCHOR = re.compile(r"\s*@(\d+)\s*$")
-BAR_ANCHOR = re.compile(r"^@(\d+)$")
-COUNT = re.compile(r"^\(?(?:[x×](\d+)|(\d+)[x×]|(bis))\)?$")
+# Whitespace is U+0020 only (§1.3); tabs are already spaces and trailing
+# spaces are already gone when these patterns see a line.
+RULE = re.compile(r"^ {0,3}-{3,}$")
+FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+MD_HEADING = re.compile(r"^ {0,3}(#{1,6})(?: (.*))?$")
+LIST_ITEM = re.compile(r"^ {0,3}[-*+](?: +(.*))?$")
+PROPERTY = re.compile(r"^([A-Za-z0-9_-]+) *:(?: +(.*))?$")
+BRACKET_HEADING = re.compile(r"^( *\[ *([^\]]*?) *\] *)(.*)$")
+LABEL_HEADING = re.compile(r"^( *([^ :|]+):(?: +|$))(.*)$")
+HEADING_ANCHOR = re.compile(r" *@([0-9]+) *$")
+BAR_ANCHOR = re.compile(r"^@([0-9]+)$")
+COUNT = re.compile(r"^\(?(?:[x×]([0-9]+)|([0-9]+)[x×]|(bis))\)?$")
 BEAT = {"/", ".", "-"}
-ANNOTATION = re.compile(r"^\s*//\s?(.*)$")
-HEADING_COUNT = re.compile(r"\s*(\(?(?:[x×]\d+|\d+[x×]|bis)\)?)\s*$")
-ENDING = re.compile(r"^(\d+)\.$")
-CHORD_TOKEN = re.compile(r"^(.*?)(?:\[(\d+)\])?$")
-LYRIC_MARKER = re.compile(r"^(\s*)>( ?)")
+ANNOTATION = re.compile(r"^ *// ?(.*)$")
+HEADING_COUNT = re.compile(r" *(\(?(?:[x×][0-9]+|[0-9]+[x×]|bis)\)?) *$")
+ENDING = re.compile(r"^([0-9]+)\.$")
+CHORD_TOKEN = re.compile(r"^(.*?)(?:\[([0-9]+)\])?$")
+LYRIC_MARKER = re.compile(r"^( *)>( ?)")
 BARS = re.compile(r"(:)?(\|+)(:)?")
-WORD = re.compile(r"\S+")
+WORD = re.compile(r"[^ ]+")
+SPACES = re.compile(r" +")
+CLOSING_SEQUENCE = re.compile(r"(?:^| )#+$")
 
 REPEAT = "%"
-FINGERING = re.compile(r"^(.*?)\s*\(([^()]*)\)\s*$")
+FINGERING = re.compile(r"^(.*?) *\(([^()]*)\) *$")
+
+
+def ascii_lower(text: str) -> str:
+    return "".join(chr(ord(c) + 32) if "A" <= c <= "Z" else c for c in text)
+
+
+def heading_text(content: str | None) -> str:
+    """The text of a Markdown heading (§1.7.1): trimmed, closing `#`s removed,
+    runs of spaces collapsed to one."""
+    t = (content or "").strip(" ")
+    t = CLOSING_SEQUENCE.sub("", t).strip(" ")
+    return SPACES.sub(" ", t)
+
+
+def md_heading(line: str):
+    """(level, text) for a Markdown heading line, else None."""
+    m = MD_HEADING.match(line)
+    if not m:
+        return None
+    return len(m.group(1)), heading_text(m.group(2))
+
+
+def fence_open(line: str):
+    """(char, length, info) for a line that opens a fence, else None (§1.9)."""
+    m = FENCE.match(line)
+    if not m:
+        return None
+    run, info = m.group(1), m.group(2)
+    if run[0] == "`" and "`" in info:
+        return None  # CommonMark: a backtick fence's info string has no backtick
+    return run[0], len(run), ascii_lower(info.strip(" "))
+
+
+def closes_fence(line: str, fence) -> bool:
+    m = re.match(r"^ {0,3}(`+|~+)$", line)
+    return bool(m) and m.group(1)[0] == fence[0] and len(m.group(1)) >= fence[1]
+
+
+def substantive(it: dict) -> bool:
+    """Does the item make a measure (§2.2)? Marks, counts and ending markers
+    do not, including an ending marker demoted to an unknown token (§3.4)."""
+    if it["type"] == "unknown":
+        return not ENDING.match(it["text"])
+    return it["type"] in ("chord", "nochord", "beat", "repeat")
+
+
+def is_bar(measure: dict) -> bool:
+    return any(substantive(it) for it in measure["items"])
+
+
+def divide_words(items: list[dict], words: str) -> None:
+    """Each item takes the words from its column to the next item's (§4.4).
+    `items` are in column order."""
+    for k, it in enumerate(items):
+        end = items[k + 1]["column"] if k + 1 < len(items) else len(words)
+        it["words"] = words[it["column"] : end] if it["column"] < len(words) else ""
 
 
 def key_for(symbol: str, index: int) -> str:
@@ -91,7 +151,7 @@ def _classify_core(core: str, dialect: str):
         return {"type": "ending", "number": int(m.group(1))}
     m = CHORD_TOKEN.match(core)
     symbol = m.group(1) or core
-    index = int(m.group(2)) if m.group(2) else 1
+    index = max(int(m.group(2)), 1) if m.group(2) else 1
     result = parse_chord(symbol, dialect)
     if result["chord"] is None:
         return {"type": "unknown", "text": core}
@@ -144,8 +204,12 @@ def scan_line(body: str, dialect: str) -> dict:
                 items.append({"type": "count", "times": _count_times(COUNT.match(word)), "column": col})
                 continue
             before, core, after = _split_marks(word)
+            core = core.rstrip(",;")
             for k in range(len(before)):
                 items.append({"type": "mark", "open": True, "notation": "bracket", "column": col + k})
+            if core and BAR_ANCHOR.match(core):
+                anchor = int(core[1:])
+                core = ""
             if core:
                 item = _classify_core(core, dialect)
                 item["column"] = col + len(before)
@@ -209,17 +273,22 @@ def _strip_marker(raw: str) -> str:
 
 
 def line_shape(raw: str, dialect: str) -> dict:
-    raw = raw.rstrip()
     am = ANNOTATION.match(raw)
     if am:
         return {"kind": "annotation", "body": am.group(1), "words": 0, "scan": None, "forced": False}
     forced = bool(LYRIC_MARKER.match(raw))
     body = _strip_marker(raw) if forced else raw
+    if forced and not body.strip(" "):
+        forced, body = False, raw  # `>` alone has no words to force
     scan = scan_line(body, dialect)
     items = [it for m in scan["measures"] for it in m["items"]]
     words = [it for it in items if it["type"] in ("chord", "nochord", "unknown")]
     chords = [it for it in words if it["type"] in ("chord", "nochord")]
-    if not items and scan["trailing"] is None and not body.strip():
+    if forced:
+        kind = "forced"
+    elif not items:
+        # No items: empty, or only bar lines, anchors and punctuation. Read as
+        # a blank line, though an anchor on it still carries forward (§2.8).
         kind = "blank"
     elif forced:
         kind = "forced"
@@ -236,12 +305,11 @@ def line_shape(raw: str, dialect: str) -> dict:
 
 
 class _Parser:
-    def __init__(self, text: str, dialect: str | None):
-        text = text.lstrip("﻿")
-        self.lines = [ln[:-1] if ln.endswith("\r") else ln for ln in text.split("\n")]
+    def __init__(self, text, dialect: str | None):
+        self.lines = prepare(text)
         self.diagnostics = []
         self.title = None
-        self.properties = {}
+        self.properties = []  # [{"key", "value"}], in order of first appearance
         self.sections = []
         self.blocks = []
         self.dialect_override = dialect
@@ -252,38 +320,55 @@ class _Parser:
             d["text"] = text
         self.diagnostics.append(d)
 
+    def prop(self, key):
+        for p in self.properties:
+            if p["key"] == key:
+                return p["value"]
+        return None
+
     # metadata ------------------------------------------------------------
     def read_metadata(self) -> int:
         i = 0
         n = len(self.lines)
-        while i < n and not self.lines[i].strip():
+        while i < n and not self.lines[i]:
             i += 1
         if i < n:
-            m = TITLE.match(self.lines[i])
-            if m:
-                self.title = m.group(1)
+            h = md_heading(self.lines[i])
+            if h and h[0] == 1:
+                # An empty title is no title (§1.4.1); the line is still the title line.
+                self.title = h[1] or None
                 i += 1
         j = i
         while j < n:
             ln = self.lines[j]
-            if not ln.strip():
+            if not ln:
                 j += 1
                 continue
             m = LIST_ITEM.match(ln)
             if not m:
                 break
-            pm = PROPERTY.match(m.group(1))
+            pm = PROPERTY.match(m.group(1) or "")
             if pm:
-                self.properties[pm.group(1).lower()] = pm.group(2).strip()
+                key, value = ascii_lower(pm.group(1)), pm.group(2) or ""
+                for p in self.properties:
+                    if p["key"] == key:
+                        self.diag("duplicate-property", j + 1, f"`{key}` is set again; the earlier value is not kept", ln)
+                        p["value"] = value
+                        break
+                else:
+                    self.properties.append({"key": key, "value": value})
             else:
-                self.diag("bad-property", j + 1, "a property is `key: value`", ln)
+                self.diag("bad-property", j + 1, "a property is `key: value`, with a space after the colon; this line is not kept", ln)
             i = j + 1
             j += 1
         return i
 
     # sections ------------------------------------------------------------
     def new_section(self, name, heading):
-        name, anchor, times = _take_anchor(name)
+        name = SPACES.sub(" ", name.strip(" "))
+        anchor = times = None
+        if heading != "label":  # a label is one word and carries neither (§1.7.4)
+            name, anchor, times = _take_anchor(name)
         section = {"name": name, "heading": heading, "anchor": anchor, "body": [], "groups": []}
         if times is not None:
             section["times"] = times
@@ -292,7 +377,7 @@ class _Parser:
 
     def run(self):
         start = self.read_metadata()
-        dialect = (self.dialect_override or self.properties.get("notation", DEFAULT_DIALECT)).strip().lower()
+        dialect = ascii_lower((self.dialect_override or self.prop("notation") or DEFAULT_DIALECT).strip(" "))
         if dialect not in DIALECTS:
             self.diag("bad-notation", 1, f"unknown notation {dialect!r}; using {DEFAULT_DIALECT}")
             dialect = DEFAULT_DIALECT
@@ -314,62 +399,80 @@ class _Parser:
                 continue
 
             if fence is not None:
-                fm = FENCE.match(raw)
-                if fm and fm.group(1)[0] == fence[0] and len(fm.group(1)) >= fence[1] and not fm.group(2).strip():
+                if closes_fence(raw, fence):
                     fence = None
                     part = None
                     continue
                 if part["type"] == "verbatim":
                     part["raw"].append(raw)
                     continue
-                # inside a fence: cifra-style headings open sections
-                bm = BRACKET_HEADING.match(raw)
-                if bm and bm.group(2) and not bm.group(2).isdigit():
-                    rest = bm.group(3).strip()
+                # inside a fence: cifra-style headings open sections. What
+                # follows a bracket heading on its line is read as a line of
+                # its own, so it may be another heading (§1.7.2).
+                text = raw
+                headed = False
+
+                def leave_opening_part():
+                    # A fence that opens with a cifra heading holds nothing for
+                    # the section before it; its blank lines are not a part.
+                    if part.get("_opening") and all(not t for _, t in part["raw"]):
+                        body = part["_section"]["body"]
+                        del body[next(i for i, p in enumerate(body) if p is part)]
+
+                while True:
+                    bm = BRACKET_HEADING.match(text)
+                    if not (bm and bm.group(2) and not bm.group(2).isdigit()):
+                        break
+                    rest = bm.group(3)
                     cm = COUNT.match(rest) if rest else None
+                    leave_opening_part()
                     section = self.new_section(bm.group(2) + (f" {rest}" if cm else ""), "bracket")
                     part = {"type": "music", "raw": []}
                     section["body"].append(part)
-                    if rest and not cm:
-                        part["raw"].append((lineno, bm.group(3)))
+                    headed = True
+                    text = "" if cm else rest
+                    if not text:
+                        break
+                if headed and not text:
                     continue
-                lm = LABEL_HEADING.match(raw)
+                lm = LABEL_HEADING.match(text)
                 if lm and lm.group(2) and _is_chord_run(lm.group(3), dialect):
+                    leave_opening_part()
                     section = self.new_section(lm.group(2), "label")
                     part = {"type": "music", "raw": []}
                     section["body"].append(part)
-                    rest = lm.group(3).strip()
+                    rest = lm.group(3)
                     if rest:
-                        part["raw"].append((lineno, lm.group(3)))
-                        if "|" not in rest and len(rest.split()) == 1 and _classify_core(rest.rstrip(",;"), dialect)["type"] == "chord":
+                        part["raw"].append((lineno, rest))
+                        if "|" not in rest and len(rest.split(" ")) == 1 and _classify_core(rest.rstrip(",;"), dialect)["type"] == "chord":
                             self.diag(
                                 "heading-looks-like-key",
                                 lineno,
-                                f"`{raw.strip()}` reads as a section called {lm.group(2)!r} holding one chord; "
+                                f"`{text.strip(' ')}` reads as a section called {lm.group(2)!r} holding one chord; "
                                 f"if it is the song's key, write `- key: {rest}` in the properties",
                                 raw,
                             )
                     continue
-                part["raw"].append((lineno, raw))
+                part["raw"].append((lineno, text))
                 continue
 
-            fm = FENCE.match(raw)
-            if fm:
-                fence = (fm.group(1)[0], len(fm.group(1)), lineno)
-                info = fm.group(2).strip()
-                if info and info.lower() != "cifra":
+            fo = fence_open(raw)
+            if fo:
+                fence = (fo[0], fo[1], lineno)
+                info = fo[2]
+                if info and info != "cifra":
                     part = {"type": "verbatim", "info": info, "raw": []}
                 else:
-                    part = {"type": "music", "raw": []}
+                    part = {"type": "music", "raw": [], "_opening": True, "_section": section}
                 section["body"].append(part)
                 continue
             if RULE.match(raw):
                 in_voicings = True
                 part = None
                 continue
-            hm = MD_HEADING.match(raw)
-            if hm:
-                section = self.new_section(hm.group(2) or "", "markdown")
+            h = md_heading(raw)
+            if h:
+                section = self.new_section(h[1], "markdown")
                 part = None
                 continue
             # notes
@@ -379,26 +482,32 @@ class _Parser:
             part["raw"].append((lineno, raw))
 
         if fence is not None:
-            self.diag("unclosed-fence", fence[2], "a fence was opened and never closed")
+            self.diag("unclosed-fence", fence[2], "a fence was opened and never closed; it runs to the end of the document")
+            if part is not None and part["type"] == "verbatim":
+                while part["raw"] and not part["raw"][-1]:
+                    part["raw"].pop()
 
         self.finish_sections()
         return self.result()
 
     # voicings part ------------------------------------------------------------
     def voicings_line(self, raw, lineno, block, skipping):
-        if not raw.strip() or RULE.match(raw):
+        if not raw:
             return block, skipping
-        hm = MD_HEADING.match(raw)
-        if hm:
-            text = hm.group(2) or ""
+        if RULE.match(raw):
+            self.diag("extra-rule", lineno, "a second rule; only the first divides the document, and this one is not kept", raw)
+            return block, skipping
+        h = md_heading(raw)
+        if h:
+            text = h[1]
             label, sep, tuning_text = text.partition(":")
-            label = label.strip()
-            tuning_text = tuning_text.strip()
+            label = label.strip(" ")
+            tuning_text = tuning_text.strip(" ")
             if not sep or not label or not tuning_text:
                 self.diag(
                     "bad-block-heading",
                     lineno,
-                    f"`{raw.strip()}` comes after the rule, where a heading is a voicings block and needs a tuning "
+                    f"`{raw.strip(' ')}` comes after the rule, where a heading is a voicings block and needs a tuning "
                     "(`## Voicings: E2 A2 D3 G3 B3 E4`). If it is a section of the song, move the rule below it; "
                     "the lines under it are not read",
                     raw,
@@ -415,7 +524,7 @@ class _Parser:
                     raw,
                 )
                 return None, True
-            name = "" if label.lower() == "voicings" else label
+            name = "" if ascii_lower(label) == "voicings" else label
             for existing in self.blocks:
                 if existing["tuning"]["id"] == tuning["id"] and existing["label"] == name:
                     self.diag("duplicate-block", lineno, "a second block for the same tuning and variation; merged", raw)
@@ -428,12 +537,12 @@ class _Parser:
         lm = LIST_ITEM.match(raw)
         if lm:
             if block is None:
-                self.diag("item-outside-block", lineno, "a voicing before any block heading", raw)
+                self.diag("item-outside-block", lineno, "a voicing before any block heading; not kept", raw)
                 return block, skipping
-            key, sep, frets_text = lm.group(1).partition(":")
-            key = key.strip()
-            if not sep or not key or any(ch.isspace() for ch in key):
-                self.diag("bad-voicing", lineno, "a voicing is `- key: frets`", raw)
+            key, sep, frets_text = (lm.group(1) or "").partition(":")
+            key = key.strip(" ")
+            if not sep or not key or " " in key:
+                self.diag("bad-voicing", lineno, "a voicing is `- key: frets`; this line is not kept", raw)
                 return block, skipping
             fingers_text = None
             fm = FINGERING.match(frets_text)
@@ -441,14 +550,14 @@ class _Parser:
                 frets_text, fingers_text = fm.group(1), fm.group(2)
             frets = parse_frets(frets_text)
             if frets is None:
-                self.diag("bad-voicing", lineno, f"not a fret string: {frets_text.strip()!r}", raw)
+                self.diag("bad-voicing", lineno, f"not a fret string: {frets_text.strip(' ')!r}", raw)
                 return block, skipping
             if len(frets) != len(block["tuning"]["pitches"]):
                 self.diag("bad-voicing", lineno, f"{len(frets)} frets for {len(block['tuning']['pitches'])} strings", raw)
                 return block, skipping
             m = CHORD_TOKEN.match(key)
             symbol = m.group(1) or key
-            index = int(m.group(2)) if m.group(2) else 1
+            index = max(int(m.group(2)), 1) if m.group(2) else 1
             entry = {"key": key_for(symbol, index), "symbol": symbol, "index": index, "frets": frets}
             if fingers_text is not None:
                 fingers = parse_fingers(fingers_text)
@@ -468,7 +577,7 @@ class _Parser:
                 block["voicings"].append(entry)
             return block, skipping
         if block is None:
-            self.diag("notes-outside-block", lineno, "text in the voicings part before any block; dropped", raw)
+            self.diag("notes-outside-block", lineno, "text in the voicings part before any block; not kept", raw)
             return block, skipping
         block["notes"].append(raw)
         return block, skipping
@@ -494,7 +603,7 @@ class _Parser:
                     sung, sung_at = True, part["raw"][i][0]
                 elif sh["kind"] == "chords" and i + 1 < len(shapes) and shapes[i + 1]["kind"] == "prose" and shapes[i + 1]["words"] >= 2:
                     sung, sung_at = True, part["raw"][i + 1][0]
-        words = self.properties.get("words", "").strip().lower()
+        words = ascii_lower((self.prop("words") or "").strip(" "))
         if words in ("yes", "no"):
             sung, sung_at = words == "yes", None
         elif words:
@@ -508,9 +617,9 @@ class _Parser:
             for part in section["body"]:
                 if part["type"] == "notes":
                     lines = part["raw"]
-                    while lines and not lines[0][1].strip():
+                    while lines and not lines[0][1]:
                         lines.pop(0)
-                    while lines and not lines[-1][1].strip():
+                    while lines and not lines[-1][1]:
                         lines.pop()
                     if lines:
                         body.append({"type": "notes", "text": "\n".join(t for _, t in lines)})
@@ -519,9 +628,7 @@ class _Parser:
                 elif part["type"] == "verbatim":
                     body.append({"type": "verbatim", "info": part["info"], "text": "\n".join(part["raw"])})
                 else:
-                    lines = self.assemble(part, sung)
-                    if lines:
-                        body.append({"type": "music", "lines": lines})
+                    body.append({"type": "music", "lines": self.assemble(part, sung)})
             section["body"] = body
             if body or section["heading"] is not None:
                 kept_sections.append(section)
@@ -552,6 +659,8 @@ class _Parser:
             if MD_HEADING.match(text) or LIST_ITEM.match(text):
                 continue
             shape = line_shape(text, self.dialect)
+            if shape["scan"] is None:
+                continue
             chords = [it for m in shape["scan"]["measures"] for it in m["items"] if it["type"] in ("chord", "nochord")]
             if shape["kind"] == "chords" and chords:
                 self.diag(
@@ -564,36 +673,40 @@ class _Parser:
                 return
 
     def assemble(self, part, sung):
+        """The lines of one music part. A run of blank lines between two
+        lines of the part is one break (§4.5); a line with no items reads as
+        blank, though its anchor is kept to carry forward (§2.8)."""
         shapes = part["shapes"]
         raws = part["raw"]
         out = []
-        blanks = 0
-        prev_sung = False
+        content = False  # a line other than an anchor carrier has been emitted
+        gap = False  # blank lines since the last content line
         i = 0
         while i < len(shapes):
             sh = shapes[i]
             lineno = raws[i][0]
             if sh["kind"] == "blank":
-                blanks += 1
+                if sh["scan"] is not None and sh["scan"]["trailing"] is not None:
+                    out.append({"kind": "chart", "measures": [], "closeBar": None, "_anchor_only": sh["scan"]["trailing"]})
+                gap = True
                 i += 1
                 continue
+            if gap and content:
+                out.append({"kind": "break"})
+            gap = False
+            content = True
             if sh["kind"] == "annotation":
                 out.append({"kind": "annotation", "text": sh["body"]})
                 i += 1
                 continue
             if not sung:
                 line = self.chart_line(sh)
-                if line is not None:
-                    line["_line"] = lineno
-                    out.append(line)
+                line["_line"] = lineno
+                out.append(line)
                 i += 1
                 continue
             nxt = shapes[i + 1] if i + 1 < len(shapes) else None
             paired = sh["kind"] == "chords" and nxt is not None and nxt["kind"] in ("prose", "forced")
-            sings = paired or sh["kind"] in ("prose", "forced")
-            if blanks > 0 and prev_sung and sings:
-                out.append({"kind": "break"})
-            blanks = 0
             if paired:
                 line = self.sung_line(sh, nxt)
                 line["_line"] = lineno
@@ -604,19 +717,13 @@ class _Parser:
                 i += 1
             else:
                 line = self.chart_line(sh)
-                if line is not None:
-                    line["_line"] = lineno
-                    out.append(line)
+                line["_line"] = lineno
+                out.append(line)
                 i += 1
-            prev_sung = sings
         return out
 
     def chart_line(self, sh):
         scan = sh["scan"]
-        if not scan["measures"]:
-            if scan["trailing"] is None:
-                return None
-            return {"kind": "chart", "measures": [], "closeBar": None, "_anchor_only": scan["trailing"]}
         for m in scan["measures"]:
             for it in m["items"]:
                 it.pop("column", None)
@@ -631,13 +738,11 @@ class _Parser:
         scan = sh["scan"]
         words = nxt["body"]
         measures = scan["measures"]
-        items = [it for m in measures for it in m["items"]]
-        for k, it in enumerate(items):
-            end = items[k + 1]["column"] if k + 1 < len(items) else len(words)
-            it["words"] = words[it["column"] : end] if it["column"] < len(words) else ""
+        items = sorted((it for m in measures for it in m["items"]), key=lambda it: it["column"])
+        divide_words(items, words)
         if items:
             lead = words[: items[0]["column"]]
-            if lead.strip():
+            if lead.strip(" "):
                 measures[0]["items"].insert(0, {"type": "lead", "column": 0, "words": lead})
         for m in measures:
             if "_col" in m:
@@ -660,6 +765,12 @@ class _Parser:
                     if line["kind"] not in ("chart", "sung"):
                         continue
                     for m in line["measures"]:
+                        if "_trailing" in m and not is_bar(m):
+                            # marks alone are not a bar: the number passes on
+                            pending = m.pop("_trailing")
+                            continue
+                        if not is_bar(m):
+                            continue
                         if pending is not None and "anchor" not in m:
                             m["anchor"] = pending
                         pending = None
@@ -679,6 +790,8 @@ class _Parser:
                     if line["kind"] != "chart" or line.get("run"):
                         continue
                     for m in line["measures"]:
+                        if not is_bar(m):
+                            continue
                         if "anchor" in m:
                             bar = m["anchor"]
                         m["number"] = bar
@@ -776,8 +889,9 @@ class _Parser:
             key = (pos["part"], pos["line"], pos["measure"], pos["item"])
             if it["type"] == "ending" and key not in consumed:
                 text = f"{it['number']}."
+                kept = {k: it[k] for k in ("column", "words") if k in it}
                 it.clear()
-                it.update({"type": "unknown", "text": text})
+                it.update({"type": "unknown", "text": text, **kept})
 
     def check_repeat_signs(self):
         previous = None
@@ -827,12 +941,12 @@ def _take_anchor(name: str):
         m = HEADING_ANCHOR.search(name)
         if m and anchor is None:
             anchor = int(m.group(1))
-            name = name[: m.start()].strip()
+            name = name[: m.start()].strip(" ")
             continue
         m = HEADING_COUNT.search(name)
         if m and times is None and m.start() > 0:
             times = _count_times(COUNT.match(m.group(1)))
-            name = name[: m.start()].strip()
+            name = name[: m.start()].strip(" ")
             continue
         break
     return name, anchor, times
@@ -840,7 +954,7 @@ def _take_anchor(name: str):
 
 def _is_chord_run(text: str, dialect: str) -> bool:
     """Every word is a chart item that is not an unknown token (§1.7.3)."""
-    words = [w.rstrip(",;") for w in text.replace("|", " ").split()]
+    words = [w.rstrip(",;") for w in text.replace("|", " ").split(" ") if w]
     for w in words:
         if not w or BAR_ANCHOR.match(w) or COUNT.match(w):
             continue
@@ -852,6 +966,6 @@ def _is_chord_run(text: str, dialect: str) -> bool:
     return True
 
 
-def parse(text: str, dialect: str | None = None) -> dict:
+def parse(text: str | bytes, dialect: str | None = None) -> dict:
     """Read a cifra.md document into its model (schema/cifra.schema.json)."""
     return _Parser(text, dialect).run()

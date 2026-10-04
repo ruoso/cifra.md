@@ -50,17 +50,23 @@ A measure holding only a bar anchor (§2.8), or only an ending marker
 follows.
 
 A measure MUST contain at least one item (§2.3) to be a measure. A chord
-line with no measures at all (one made only of bar lines, or only of
-anchors) contributes nothing to the chart except any anchor it carries.
+line with no items at all (one made only of bar lines, anchors or
+punctuation) contributes nothing to the chart except any anchor it
+carries, and is read as a blank line (§4.1). A line holding only marks,
+counts or ending markers, `|:` or `:| x3` alone, keeps them as items of a
+measure that is not a bar: it is not numbered and an anchor passes over
+it (§2.8).
 
 ## 2.3 Items
 
-Within a measure, items are separated by whitespace. A trailing `,` or `;`
-on a word is punctuation: it is removed before the word is classified, it
-is never part of a chord symbol or key, and a writer does not write it
-back. `Intro: C, G, Am, F` is the chords `C`, `G`, `Am` and `F`. A word
-that is only punctuation is nothing. Each remaining word is classified, in
-this order:
+Within a measure, items are separated by spaces (§1.3). A trailing `,` or
+`;` on a word is punctuation: it is removed before the word is
+classified, and again from what is left when step 7 splits a mark off,
+so `C,)` is the chord `C` and a mark. It is never part of a chord symbol
+or key, and canonical form does not write it back (§8.4.4).
+`Intro: C, G, Am, F` is the chords `C`, `G`, `Am` and `F`. A word that is
+only punctuation is nothing. Each remaining word is classified, in this
+order:
 
 1. **Bar anchor**: `@` followed by one or more digits (§2.8).
 2. **Repeat sign**: exactly `%` (§3.1).
@@ -74,15 +80,16 @@ this order:
 7. **Group marks**: a leading `(` or `:` or a trailing `)` or `:` that is
    not balanced within the word is split off as a mark of its own (§3.2).
    A `:` is a mark only when written against a bar line. What is left, if
-   anything, is classified again from step 2.
+   anything, is classified again from step 1, so `@9)` is an anchor and a
+   mark.
 8. **Chord token**: a chord symbol, optionally followed by a footnote marker
    (§2.4). If the symbol parses under §5, the item is a chord. If it does
    not, the item is an **unknown token** (§2.9).
 
 So `(Cm` is a mark followed by the chord `Cm`; `Dm)` is the chord `Dm`
 followed by a mark; `(` alone is a mark; `Em7(b5)` is one chord, because its
-brackets balance; `(2x)` is an unknown token, because its brackets balance
-and it is not a chord.
+brackets balance; `(solo)` is an unknown token, because its brackets
+balance and it is not a chord; `(2x)` is a count (step 5).
 
 Items keep the order they were written in. A reader MUST NOT reorder,
 merge or drop items.
@@ -113,11 +120,15 @@ Rules:
 
 - The symbol in the key is the text as written, compared character for
   character. `C7M` and `Cmaj7` are the same chord (§5) but different keys.
-  A writer SHOULD spell a chord one way throughout a document.
-- A reader MUST read `[1]` as index 1. A writer MUST NOT emit `[1]`.
-- Indices are small positive integers. A document in canonical form (§8)
-  uses, for each symbol, exactly the indices 1 to *n* with no gaps. A reader
-  MUST accept gaps and MUST NOT renumber on reading.
+  An author does well to spell a chord one way throughout a document;
+  canonicalising never respells one.
+- The digits are read as a decimal number: `Cm[02]` is index 2. A reader
+  MUST read `[1]`, and `[0]`, as index 1, the bare key. Canonical form
+  writes neither (§8.4.4).
+- Indices are small positive integers. A document in canonical form uses,
+  for each symbol, exactly the indices 1 to *n* with no gaps. A reader
+  MUST accept gaps and MUST NOT renumber on reading; the canonical writer
+  renumbers (§8.3 I2).
 - The marker binds to the chord. `Cm [2]` with a space is the chord `Cm`
   followed by an unknown token `[2]`.
 
@@ -147,8 +158,8 @@ is not a chord: it has no symbol, no voicing key, no shape to choose, and
 it never appears among a document's unvoiced chords (§7.7). A reader MUST
 keep it as a no-chord item and MUST NOT treat it as an unknown token.
 
-The spellings `N.C.`, `NC`, `n.c.` and `nc` are accepted. A writer MUST
-emit `N.C.`.
+The spellings `N.C.`, `NC`, `n.c.` and `nc` are accepted. Canonical form
+writes `N.C.` (§8.4.4).
 
 ## 2.7 Repeat items
 
@@ -185,9 +196,9 @@ A heading may state the number of its section's first bar instead (§1.7.4).
 A stated number with no bar of its own belongs to the next bar: `@9 | Dm`,
 `@9` alone on a line, and `## A @9` followed by `Dm` all number the `Dm` bar
 9. A reader MUST carry the number forward, across lines and across section
-boundaries, to the next measure, which then has that number as its stated
-number. Dropping it would be the worst outcome, because nothing would look
-wrong.
+boundaries, to the next measure that is a bar, which then has that number
+as its stated number. Dropping it would be the worst outcome, because
+nothing would look wrong.
 
 Numbers count the chart as written: a `%` measure is a bar, and a repeat
 group's measures are counted once however many times they are played
@@ -229,9 +240,10 @@ an item of its own kind, so that an application can show it and list it.
 It is not an error: a reader MUST NOT raise a diagnostic for one.
 
 Unknown tokens are how typos, annotations the format does not define
-(`(2x)`, `fine`, `rit.`) and chords a reader's grammar does not cover all
-survive a round trip. A reader MUST NOT drop them, and a writer MUST write
-them back unchanged.
+(`fine`, `rit.`, `(solo)`) and chords a reader's grammar does not cover
+all survive a round trip. A reader MUST NOT drop them, and a writer MUST
+write them back unchanged. A voicing key written exactly as an unknown
+token is used by it (§8.3).
 
 A reader SHOULD make the distinct unknown symbols of a document available,
 in first-seen order, so an application can show them.

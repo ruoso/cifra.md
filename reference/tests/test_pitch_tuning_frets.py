@@ -23,7 +23,7 @@ def test_midi():
     assert midi(parse_pitch("E2")) == 40
 
 
-@pytest.mark.parametrize("bad", ["H2", "E", "e2", "Ebb", "2", ""])
+@pytest.mark.parametrize("bad", ["H2", "E", "Ebb", "2", "", "E\u00a02"])
 def test_bad_pitches(bad):
     with pytest.raises(ValueError):
         parse_pitch(bad)
@@ -35,7 +35,17 @@ def test_tuning_separators():
     c = parse_tuning("E2,A2,D3,G3,B3,E4")
     assert a["id"] == b["id"] == c["id"]
     assert len(a["pitches"]) == 6
-    assert a["text"] == "E2, A2, D3, G3, B3, E4"
+    assert a["text"] == b["text"] == c["text"] == "E2 A2 D3 G3 B3 E4"
+
+
+def test_letter_case_is_read_and_written_uppercase():
+    # §6.1: case never matters to a reader; the text holds the letter uppercase,
+    # every other character as written.
+    assert parse_pitch("e2") == parse_pitch("E2")
+    assert parse_pitch("bb2") == parse_pitch("Bb2")
+    t = parse_tuning("e2 a2 d3 g3 b3 e4")
+    assert t["text"] == "E2 A2 D3 G3 B3 E4"
+    assert parse_tuning("eb2 E♭3")["text"] == "Eb2 E♭3"
 
 
 def test_tuning_identity_is_by_sound():

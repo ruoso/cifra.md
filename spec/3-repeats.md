@@ -81,7 +81,7 @@ with the endings, if any, substituted on each pass (§3.4).
 
 The run inside a group may begin or end mid-measure (`C (Am | F) G`). As
 played, the measure is split where the mark falls; as written, nothing
-changes. A writer SHOULD put marks at measure boundaries.
+changes. Marks are clearest at measure boundaries.
 
 ## 3.3 Counts
 
@@ -89,7 +89,7 @@ A **count** is a token of the form `x2`, `2x`, `×2` or `2×`: the letter `x`
 or the sign `×` and a positive integer, in either order; the same in round
 brackets, `(2x)`, `(x3)`, which is how a cifra writes it; or `bis` or
 `(bis)`, which is twice. It says how many times something is played in
-total, so `x2` is twice. A writer emits `x2`.
+total, so `x2` is twice. Canonical form writes `x2` (§8.4.4).
 
 - A count immediately after a group's closing mark, as the next item on the
   same line, is the group's count: `( C | G ) x3`, `|: C | G :| 3x`.

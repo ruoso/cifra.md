@@ -33,18 +33,22 @@ here.
 | 9 | Lines containing a bar line | Always chord lines (§4.1) | Classified by word ratio like any other line |
 | 10 | Two blocks, same tuning and name | Read as one; later line wins (§7.3) | Reading uses the first only; writing merges |
 | 11 | Columns on sung lines | Counted in code points (§4.4) | UTF-16 code units; identical outside the supplementary planes |
-| 12 | Block order when writing | First appearance of the tuning, default variation first (§8.3) | Sorted by normalised tuning text, then name |
-| 13 | Voicing line spacing | Canonical `key = frets` with single spaces; any whitespace accepted | Same |
+| 12 | Block order when writing | First appearance of the tuning, default variation first (§8.4.6) | Sorted by normalised tuning text, then name |
+| 13 | Voicing line spacing | Canonical `- key: frets` with single spaces; any spaces accepted | Bare `key = frets` lines with single spaces |
 | 14 | Lowercase root letters | Not chords (§5.1.1) | Accepted |
-| 15 | Legacy `# Tuning` and unlabelled `# Voicings` | Appendix A: MAY accept, convert on save | Accepted and migrated on load |
+| 15 | Legacy `# Tuning` and unlabelled `# Voicings` | Appendix A: MAY accept; migration is a separate operation, never part of canonicalising (§8.7) | Accepted and migrated on load |
 | 16 | Bracket heading with digits only | Never a heading (§1.7.2) | Same |
 | 17 | `[1]` | Equals the bare key; never written (§2.4) | Same |
 | 18 | Bar anchors | Same rules (§2.8) | Same |
 | 19 | Unknown tokens | Kept, reported (§2.9) | Same |
 | 20 | Section with no lines | Kept (§1.8) | Kept when named |
 
-Items 1 to 10, 2a to 2c, 8a to 8j, 12 and 14 are behavioural changes the reference parser would
-need to make to conform. Items 11, 13 and 15 to 20 are confirmations.
+Items 1 to 10, 2a to 2c, 8a to 8j and 12 to 14 are behavioural changes
+the reference parser would need to make to conform. Items 11 and 15 to 20
+are confirmations. This table predates the canonical form of §8.4 and the
+text layer of §1.3; where explore-chords writes documents, it would also
+have to follow those to produce the same bytes as the reference
+implementation.
 
 ## Decisions taken in this draft that the reference did not have to make
 

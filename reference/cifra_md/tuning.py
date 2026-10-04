@@ -4,18 +4,20 @@ from __future__ import annotations
 
 import re
 
-from .pitch import midi, parse_pitch
+from .pitch import canonical_pitch_text, midi, parse_pitch
 
-_SEP = re.compile(r"[,\s]+")
+_SEP = re.compile(r"[, ]+")
 
 
 def parse_tuning(text: str) -> dict:
     """A list of pitches separated by commas and/or whitespace. Raises ValueError."""
-    parts = [p for p in _SEP.split(text.strip()) if p]
+    parts = [p for p in _SEP.split(text) if p]
     if not parts:
         raise ValueError("a tuning needs at least one pitch")
     pitches = [parse_pitch(p) for p in parts]
-    return {"text": text.strip(), "pitches": pitches, "id": tuning_id(pitches)}
+    # The text is each pitch as written, letter uppercased, one space apart (§6.2).
+    canonical = " ".join(canonical_pitch_text(p) for p in parts)
+    return {"text": canonical, "pitches": pitches, "id": tuning_id(pitches)}
 
 
 def tuning_id(pitches) -> str:

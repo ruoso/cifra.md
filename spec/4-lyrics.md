@@ -23,23 +23,24 @@ walking down the road
 Before the document as a whole is considered, each non-heading line inside
 a fence in the chart has a **shape**, decided by its own content.
 
-Take the line's whitespace-separated words, leaving out bar lines, bare
+Take the line's space-separated words, leaving out bar lines, bare
 marks, repeat signs, beat marks, counts, ending markers and bar anchors
 (§2.3). Annotation lines (§1.9) have no shape and take no part in any of
-this. A word
-is a **chord word** if it is a chord token under §2.4 (after splitting off
-marks) or a no-chord mark (§2.6), otherwise a **plain word**. Then:
+this. A word is a **chord word** if it is a chord token under §2.4 (after splitting off
+marks) or a no-chord mark (§2.6), otherwise a **plain word**. Then the
+line's shape is given by the first row whose condition holds:
 
 | Shape | Condition |
 |---|---|
-| `blank` | No words and no items at all. |
-| `forced` | The line starts with `>` (§4.3). |
+| `forced` | The line starts with `>`, after any spaces, and something other than spaces follows the marker (§4.3). |
+| `blank` | No items at all (§2.3): the line is empty, or holds only bar lines, bar anchors and punctuation. |
 | `chords` | Every word is a chord word, or the line contains a bar line. |
 | `prose` | At least half of the words are plain words. |
 | `chart` | Anything else: a line of chords with a plain word among them, such as `C  Am wobble G`. |
 
-A line containing a bar line is always `chords`. Words are not written with
-bar lines, and a chart line with a typo in it is still a chart line.
+A line containing a bar line and an item is always `chords`. Words are
+not written with bar lines, and a chart line with a typo in it is still a
+chart line.
 
 Note that `prose` includes a line with a single word that is not a chord.
 Whether such a line is read as words depends on the document (§4.2).
@@ -82,9 +83,12 @@ In a sung document:
 ## 4.3 Forcing a line to be words
 
 Where no rule can decide (a verse that really does read "A", against the
-chord of the same name), a line beginning with `>` is words, however it
-would otherwise read. The `>` and one optional following space are not part
-of the words. A reader MUST keep the marker when writing the line back.
+chord of the same name), a line beginning with `>`, after any spaces, is
+words, however it would otherwise read. The `>` and one optional following
+space are not part of the words: the `>` is read as a space, so the words
+keep their columns (§4.4). A line that is `>` and nothing else is blank.
+Canonical form writes the marker back in place of the first character of
+the words, which is that space (§8.4.4).
 
 Inside a fence, `>` has no Markdown meaning, so a forced line renders as
 written. Its one visible cost is the marker itself.
@@ -96,9 +100,18 @@ A `forced` line following a `chords` line makes a sung line, exactly as a
 
 In a sung line the chord line's items are placed over the words by
 **column**: the position of an item's first character, counted in Unicode
-code points from the start of its line. The words from an item's column up
-to the next item's column belong to that item, and a chord written inside a
-word divides that word, which is why it was written there.
+code points from the start of its line, starting at 0, in the text as
+prepared by §1.3 (after NFC and after tabs became spaces). The words from
+an item's column up to the next item's column, in column order, belong to
+that item, and a chord written inside a word divides that word, which is
+why it was written there.
+
+Columns are code points, not bytes and not UTF-16 code units: an
+implementation whose strings are UTF-16, as JavaScript's are, MUST count a
+character outside the Basic Multilingual Plane as one column. Counting in
+NFC is what keeps a chord over an accented syllable whether the file
+spelled the accent as one character or two; it is also how a monospaced
+editor shows it.
 
 ```
 G           D
@@ -128,16 +141,22 @@ The words an item takes are kept exactly, including leading and trailing
 spaces. Trimming is a display decision.
 
 Column counting assumes the author aligned the lines in a monospaced
-editor. A reader cannot do better than what was written; a writer editing a
-sung line MUST keep the columns of every item it did not change (§8.5).
+editor. A reader cannot do better than what was written; a writer keeps
+every item's column wherever it can, and §8.4.5 says exactly how.
 
-## 4.5 Stanza breaks
+## 4.5 Breaks
 
-A blank line between two sung or lyric lines is a stanza break, and a
-reader MUST keep it as a line of kind `break`. A blank line anywhere else is
-the breathing room in the text it has always been, and carries nothing.
+A run of one or more blank lines between two lines of the same fence's
+music is a **break**, and a reader MUST keep it as one line of kind
+`break`, in any document, sung or not. Blank lines at the start or end of
+a fence's music, or next to a cifra-style heading at the start or end of a
+section's music, are not breaks.
 
-Several blank lines together are one break.
+Between two sung or lyric lines a break is a stanza break. Elsewhere it is
+the breathing room in the text it has always been, and means nothing to
+the music; but it is kept all the same, because it is what keeps a chord
+line from taking the words below it (§4.2), and dropping it would change
+what the document says.
 
 ## 4.6 What a sung document does not have
 

@@ -138,15 +138,17 @@ ones. Where it does not yet follow this draft, the gap is listed in
 | [`spec/`](spec/) | The specification, one document per layer | Anyone implementing or extending the format |
 | [`schema/cifra.schema.json`](schema/cifra.schema.json) | JSON Schema (2020-12) of the parsed document model | Readers, to say what they produce; writers, to say what they take |
 | [`reference/`](reference/) | A reader and canonical writer in Python, with a test suite of one file per chapter | A second opinion on every sentence of the spec |
-| [`corpus/`](corpus/) | Reference corpus: per entry an uncanonical `input.md`, its `parsed.json`, and its `canonical.md` | New implementations, to validate themselves in both directions |
+| [`corpus/`](corpus/) | Reference corpus: per entry an uncanonical `input.cifra.md` and its model `input.parsed.json`, its `canonical.cifra.md` and that text's model `parsed.json` | New implementations, to validate themselves in both directions |
 | [`examples/`](examples/) | Complete documents, `*.cifra.md`, one per feature, and two setlists, `*.setlist.md`, all in canonical form | Reading |
 
 The model is what a reader produces and a writer consumes. The schema is its
 normative shape; §0.4 of the overview describes it in prose. A **canonical
-writer** regenerates a document from the model alone, so anything the model
-does not hold (malformed voicing items, the exact spacing of a chord line)
-is not written back, and the canonical form is a fixed point: reading it and
-writing it again gives the same text.
+writer** regenerates a document from the model alone, byte for byte as §8
+says, so anything the model does not hold (malformed voicing items, the
+exact spacing of a chord line) is not written back. Every document has
+exactly one canonical form, two conforming writers produce the same bytes
+for it, and it is a fixed point: reading it and writing it again gives the
+same text. A program can therefore refuse any file that is not canonical.
 
 ## The specification
 
@@ -163,7 +165,7 @@ time. Each document says what it depends on.
 | [5. Chord symbols](spec/5-chord-symbols.md) | The chord symbol grammar, its meaning, notation dialects, the four ambiguities | Knowing what a chord *is* |
 | [6. Tunings](spec/6-tunings.md) | Pitch names, tuning lists, tuning identity | Reading voicings |
 | [7. Voicings](spec/7-voicings.md) | Voicing blocks, variations, fret strings, how a chord in the chart finds its shape | Reading voicings |
-| [8. Normalisation](spec/8-normalisation.md) | The canonical form of a document and the invariants an editor must keep | Writing or editing |
+| [8. Normalisation](spec/8-normalisation.md) | The canonical form of a document, byte for byte, the footnote invariants, and the editing operations | Writing, editing, or checking that a file is canonical |
 | [9. Conformance](spec/9-conformance.md) | Conformance profiles and what each requires | Claiming conformance |
 | [10. Setlists](spec/10-setlists.md) | The setlist file: a numbered list of links to songs, per-song `key` and `note`, paths, resolution, and its canonical form | Reading or writing setlists |
 | [Appendix A. Legacy forms](spec/appendix-a-legacy.md) | Earlier spellings a reader may accept | Compatibility |
@@ -221,7 +223,13 @@ belong in the property list under the title, `- key: G`, not in the music.
 - **Degrade gracefully.** Music is what is inside a fence; everything else
   is notes and is never interpreted. Inside a fence, a token that does not
   parse is still shown, and a voicing that does not parse is reported and
-  skipped. A reader never discards what it did not understand.
+  skipped. A reader never silently discards what it did not understand:
+  it keeps it, or reports it.
+- **One text per song.** Every document has one canonical form, and it
+  takes precedence over preserving what was typed: a writer respells,
+  reflows, and drops what the reader reported, so that a song saved by any
+  conforming program is the same bytes. What a song plays never changes in
+  the process; only how it is written.
 
 ## Open questions
 

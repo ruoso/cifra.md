@@ -1,0 +1,321 @@
+{
+  "title": null,
+  "properties": [],
+  "sections": [
+    {
+      "name": "",
+      "heading": null,
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [
+    {
+      "label": "",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "C",
+          "symbol": "C",
+          "index": 1,
+          "frets": [
+            "x",
+            3,
+            2,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "key": "G",
+          "symbol": "G",
+          "index": 1,
+          "frets": [
+            3,
+            2,
+            0,
+            0,
+            0,
+            3
+          ]
+        }
+      ],
+      "notes": [
+        "keep this note"
+      ]
+    },
+    {
+      "label": "Up the neck",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "G",
+          "symbol": "G",
+          "index": 1,
+          "frets": [
+            3,
+            5,
+            5,
+            4,
+            3,
+            3
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "label": "",
+      "tuning": {
+        "text": "G4 C4 E4 A4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "C",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "67 60 64 69"
+      },
+      "voicings": [
+        {
+          "key": "X",
+          "symbol": "X",
+          "index": 1,
+          "frets": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": [
+    {
+      "code": "notes-outside-block",
+      "message": "text in the voicings part before any block; not kept",
+      "line": 6,
+      "text": "stray notes before any block"
+    },
+    {
+      "code": "item-outside-block",
+      "message": "a voicing before any block heading; not kept",
+      "line": 7,
+      "text": "- C: x32010"
+    },
+    {
+      "code": "extra-rule",
+      "message": "a second rule; only the first divides the document, and this one is not kept",
+      "line": 13,
+      "text": "---"
+    },
+    {
+      "code": "duplicate-block",
+      "message": "a second block for the same tuning and variation; merged",
+      "line": 17,
+      "text": "## Voicings: e2 a2 d3 g3 b3 e4"
+    }
+  ]
+}

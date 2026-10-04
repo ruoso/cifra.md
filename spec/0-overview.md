@@ -23,14 +23,16 @@ The key words MUST, MUST NOT, REQUIRED, SHOULD, SHOULD NOT, MAY and OPTIONAL
 are to be read as in RFC 2119.
 
 Two kinds of implementation are addressed. A **reader** turns a document into
-the structure described here. A **writer** produces or edits documents. Most
-requirements fall on readers; section 8 is for writers. Section 9 defines
-conformance profiles.
+the structure described here. A **writer** produces or edits documents, and
+always saves them in the one **canonical form** that section 8 defines byte
+for byte. Most requirements fall on readers; section 8 is for writers.
+Section 9 defines conformance profiles.
 
 Throughout, "a reader MUST accept" means the construct is part of the format
-and a conforming reader recognises it. "A writer MUST emit" means the
-canonical spelling, which a writer producing a document uses even where a
-reader would accept more.
+and a conforming reader recognises it. Where a chapter says what a writer
+writes, or what canonical form writes, it means the canonical spelling,
+which §8 defines and a writer uses even where a reader would accept more.
+Nothing in the canonical form is left to a writer's choice.
 
 ## 0.3 Terms
 
@@ -55,6 +57,10 @@ section is written inside fences (§1.9).
 
 **Notes.** Text in the chart outside any fence. Kept, never interpreted
 (§1.9).
+
+**Canonical form.** The one text a document's model is written as (§8).
+Reading keeps and reports everything; canonicalising may respell, reflow
+and drop.
 
 **Line.** One line of text. Every line inside a fence is a cifra-style
 heading, a chord line, a lyric line, or blank; every line outside one is a
@@ -109,7 +115,7 @@ to take that JSON back.
 ```
 Document
   title           from the level-1 heading, or none
-  properties      key → value, from the property list
+  properties[]    key and value, in order of first appearance
   sections[]      in document order
   blocks[]        voicing blocks, in document order
 
@@ -117,10 +123,12 @@ Section
   name            text of the heading, "" for music before any heading
   anchor?         bar number stated on the heading
   times?          count on the heading: the section is played n times
+  heading         markdown, bracket, label, or none (§1.7)
   body[]          notes, music fences and verbatim fences, in order (§1.9)
 
 Line
   kind            "chart" | "sung" | "lyric" | "break" | "annotation"
+                  (a break is a run of blank lines between two lines, §4.5)
   run?            (chart) the line has no bar lines: a run of chords (§2.1)
   measures[]      (chart, sung) one or more measures
   closeBar        (chart, sung) the bar line after the last measure, if any
@@ -152,7 +160,7 @@ Item
 Block
   label           variation name, "" for the default variation
   tuning          text as written, pitches, and identity by sound (§6.3)
-  voicings[]      key, symbol, index, frets, fingers?; in canonical order (§8.3)
+  voicings[]      key, symbol, index, frets, fingers?; in canonical order (§8.4.6)
   notes[]         the lines that are not list items, verbatim
 
 Document also carries `sung` and `sungAt`, the line that made it sung
@@ -169,7 +177,8 @@ Two cross-cutting facts about the document, both derivable from the model:
   followed by a lyric line, or any line is explicitly marked as words (§4.2).
 - **Which voicing keys does the chart use?** The set of `key` over every
   chord occurrence, in first-seen order. This is what the voicing blocks are
-  expected to cover, and what normalisation (§8) is computed from.
+  expected to cover, and what the footnote invariants (§8.3) are computed
+  from.
 
 ## 0.5 Markdown compatibility
 
@@ -202,8 +211,9 @@ Two consequences for writers:
 
 ## 0.6 Processing order
 
-A reader classifies lines in a fixed order, because several constructs could
-otherwise claim the same line. The order is:
+A reader first prepares the text (§1.3): every U+FEFF removed, NFC, lines,
+tabs, trailing spaces. It then classifies lines in a fixed order, because
+several constructs could otherwise claim the same line. The order is:
 
 1. The title and properties (§1.4), only at the very start of the
    document.
@@ -213,9 +223,10 @@ otherwise claim the same line. The order is:
 4. Outside a fence, in the chart: a Markdown heading (§1.7.1) opens a
    section. Any other line is notes (§1.9).
 5. Inside a fence, in the chart: a bracket or label heading (§1.7.2,
-   §1.7.3) opens a section. Otherwise the line is a chord line, a lyric
-   line or blank (§2, §4), decided after the whole chart has been read
-   (§4.2).
+   §1.7.3) opens a section; what follows a bracket heading on its line is
+   classified again from this step. Otherwise the line is an annotation, a
+   chord line, a lyric line or blank (§2, §4), decided after the whole
+   chart has been read (§4.2).
 6. In the voicings part: a Markdown heading opens a voicing block (§7.2).
    A list item belongs to the current block (§7.4), or is an error if
    there is none. Any other line is notes.

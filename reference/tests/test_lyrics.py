@@ -65,7 +65,8 @@ class TestSungDecision:
     def test_a_forced_line_on_its_own(self):
         doc, ls = lines("C | G\n\n> A")
         assert doc["sung"] is True
-        assert ls[1] == {"kind": "lyric", "text": "  A", "forced": True}
+        assert ls[1] == {"kind": "break"}
+        assert ls[2] == {"kind": "lyric", "text": "  A", "forced": True}
 
     def test_once_sung_one_word_is_a_lyric_line(self):
         doc, ls = lines("G            D\nWhen I first saw you\nEm\nyou")
@@ -169,9 +170,25 @@ class TestBreaks:
         _, ls = lines("G\nla la\n\n\n\nD\nla la")
         assert [ln["kind"] for ln in ls] == ["sung", "break", "sung"]
 
-    def test_blank_before_a_chart_line_is_nothing(self):
+    def test_blank_before_a_chart_line_is_a_break_too(self):
         _, ls = lines("G\nla la\n\nC | G")
-        assert [ln["kind"] for ln in ls] == ["sung", "chart"]
+        assert [ln["kind"] for ln in ls] == ["sung", "break", "chart"]
+
+    def test_blank_lines_in_a_chart_are_breaks(self):
+        doc, ls = lines("C | G\n\n\nAm | F")
+        assert doc["sung"] is False
+        assert [ln["kind"] for ln in ls] == ["chart", "break", "chart"]
+
+    def test_a_blank_line_keeps_words_from_a_chord_line(self):
+        doc, ls = lines("G            D\nWhen I first saw you\nC  G\n\nthese words are not sung")
+        assert [ln["kind"] for ln in ls] == ["sung", "chart", "break", "lyric"]
+
+    def test_a_line_with_no_items_reads_as_blank(self):
+        doc, ls = lines("G            D\nWhen I first saw you\nC  G\n| |\nnot under the chords")
+        assert [ln["kind"] for ln in ls] == ["sung", "chart", "break", "lyric"]
+        doc, ls = lines("C | G\n@9\nAm | F")
+        assert [ln["kind"] for ln in ls] == ["chart", "break", "chart"]
+        assert ls[2]["measures"][0]["anchor"] == 9
 
     def test_blank_at_the_start_is_nothing(self):
         _, ls = lines("\n\nG\nla la")

@@ -51,37 +51,17 @@ setlist together with its book knows it; one that is given only the text
 
 ## 10.2 Text
 
-A setlist is text encoded as UTF-8. A file that is not valid UTF-8 is not a
-setlist: a reader MUST report it, and a writer MUST NOT rewrite it. Before
-anything else is read, a reader prepares the text in this order:
+A setlist's text is prepared exactly as a song's is, by the text layer of
+§1.3, which is the same for every file this specification defines: a file
+that is not valid UTF-8 is reported and never rewritten; then every
+U+FEFF is removed, the text is normalised to NFC, it is split into lines
+at LF, CR LF or a lone CR, every tab becomes one space, and spaces at the
+end of each line are removed. **Space** means U+0020 and nothing else, and
+a **blank line** is a line that is empty after this.
 
-1. If the text begins with a byte order mark (U+FEFF), that one character
-   is removed. A second U+FEFF is a character of the first line.
-2. The text is normalised to Unicode Normalization Form C (NFC).
-3. The text is split into lines. A line ends at LF, at CR LF, or at a CR
-   not followed by LF; the terminator is not part of the line. A final line
-   without a terminator is a line; a terminator at the very end does not
-   begin another one.
-4. In each line, every tab (U+0009) is replaced by one or more spaces, so
-   that the text after it starts at the next column that is a multiple of
-   4. Columns are counted in code points from the start of the line,
-   starting at 0, after NFC and after earlier tabs on the line have been
-   replaced.
-5. Spaces at the end of each line are removed.
-
-Throughout this chapter, **space** means U+0020 and nothing else. A
-no-break space, an ideographic space or any other character Unicode
-calls whitespace is an ordinary character: it is never trimmed and never
-separates anything. This is deliberate. Which characters count as
-whitespace differs between programming languages, and a rule that depended
-on it would let two readers disagree.
-
-A **blank line** is a line that is empty after step 5.
-
-Unlike a song (§1.3), a setlist treats a lone CR as a line end. This is
-how CommonMark reads it, and in a setlist what a line begins with decides
-what it is (§10.3), so a reader and a Markdown viewer must agree on where
-lines begin.
+A lone CR ends a line because that is how CommonMark reads it, and in a
+setlist what a line begins with decides what it is (§10.3), so a reader
+and a Markdown viewer must agree on where lines begin.
 
 ## 10.3 Structure
 
@@ -117,9 +97,7 @@ everything after those spaces, possibly empty. Any other content is an
 
 The space after the colon is required so that a note such as
 `- https://example.com/` is not read as the key `https` with the value
-`//example.com/`. A song's properties (§1.4.2) are not as strict; in a
-setlist, where canonicalising would otherwise rewrite such a line, the
-stricter rule is the one that never changes what was written.
+`//example.com/`. A song's properties follow the same rule (§1.4.2).
 
 ### 10.3.1 Title and properties
 

@@ -4,6 +4,7 @@ import jsonschema
 import pytest
 
 from cifra_md import parse, write
+from cifra_md.write import canonical
 
 from conftest import EXAMPLES, SCHEMA, chart
 
@@ -25,11 +26,13 @@ def test_examples_validate(path):
 
 
 def roundtrip(text):
+    """Canonicalise, check the result reads back as the canonical model, and
+    that canonicalising again changes nothing."""
     doc = parse(text)
     out = write(doc)
     again = parse(out)
-    strip = lambda d: {k: v for k, v in d.items() if k != "diagnostics"}
-    assert strip(again) == strip(doc), out
+    strip = lambda d: {k: v for k, v in d.items() if k not in ("diagnostics", "sungAt")}
+    assert strip(again) == strip(canonical(doc)), out
     assert write(again) == out
     return out
 
@@ -133,9 +136,9 @@ class TestStructure:
 
 class TestVoicings:
     def test_sorted_and_single_spaced(self):
-        text = "```\nG | C | Cm[2]\n```\n---\n## voicings : E2,A2,D3,G3,B3,E4\n-   G:320003\n- Cm[2] : 8-10-10-8-8-8\n- C: x32010\n"
+        text = "```\nG | C | Cm | Cm[2]\n```\n---\n## voicings : E2,A2,D3,G3,B3,E4\n-   G:320003\n- Cm[2] : 8-10-10-8-8-8\n- C: x32010\n"
         out = roundtrip(text)
-        assert out == "```\nG | C | Cm[2]\n```\n\n---\n\n## Voicings: E2,A2,D3,G3,B3,E4\n- C: x32010\n- Cm[2]: 8-10-10-8-8-8\n- G: 320003\n"
+        assert out == "```\nG | C | Cm | Cm[2]\n```\n\n---\n\n## Voicings: E2 A2 D3 G3 B3 E4\n- C: x32010\n- Cm[2]: 8-10-10-8-8-8\n- G: 320003\n"
 
     def test_blocks_ordered_by_first_tuning_default_first(self):
         text = "```\nC\n```\n---\n## Hard: G4 C4 E4 A4\n- C: 5433\n## Voicings: E2 A2 D3 G3 B3 E4\n- C: x32010\n## Voicings: G4 C4 E4 A4\n- C: 0003\n"

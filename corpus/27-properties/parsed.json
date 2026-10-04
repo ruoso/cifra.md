@@ -1,0 +1,67 @@
+{
+  "title": "Properties",
+  "properties": [
+    {
+      "key": "artist",
+      "value": "Someone Else"
+    },
+    {
+      "key": "key",
+      "value": "G"
+    },
+    {
+      "key": "tempo",
+      "value": ""
+    },
+    {
+      "key": "capo",
+      "value": "2"
+    }
+  ],
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "run": true
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "sungAt": null,
+  "diagnostics": []
+}

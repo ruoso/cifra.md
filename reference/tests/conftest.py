@@ -1,9 +1,11 @@
 import json
 import pathlib
+import sys
 
 import pytest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "reference"))  # for tools.corpus
 EXAMPLES = sorted((ROOT / "examples").glob("*.cifra.md"))
 CASES = sorted((ROOT / "tests" / "cases").glob("*.json"))
 SCHEMA = json.loads((ROOT / "schema" / "cifra.schema.json").read_text())

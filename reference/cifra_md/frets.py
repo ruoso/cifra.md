@@ -9,7 +9,7 @@ _PART = re.compile(r"^\d{1,2}$")
 
 def parse_frets(text: str):
     """Return a list of ints and 'x', or None when the text is not a fret string."""
-    t = text.strip()
+    t = text.strip(" ")
     if not t:
         return None
     parts = t.split("-") if "-" in t else list(t)
@@ -36,10 +36,10 @@ def parse_fingers(text: str):
 
     Returns a list of int | "T" | None, or None when the text is not a fingering.
     """
-    t = text.strip()
+    t = text.strip(" ")
     if not t:
         return None
-    parts = t.split() if " " in t else list(t)
+    parts = [p for p in t.split(" ") if p] if " " in t else list(t)
     out = []
     for part in parts:
         if part in ("-", "0"):

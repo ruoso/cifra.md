@@ -1,8 +1,11 @@
 {
   "title": "Mistakes a reader must survive",
-  "properties": {
-    "notation": "klingon"
-  },
+  "properties": [
+    {
+      "key": "notation",
+      "value": "klingon"
+    }
+  ],
   "sections": [
     {
       "name": "A",
@@ -579,21 +582,7 @@
         ],
         "id": "40 45 50 55 59 64"
       },
-      "voicings": [
-        {
-          "key": "D",
-          "symbol": "D",
-          "index": 1,
-          "frets": [
-            "x",
-            "x",
-            0,
-            2,
-            3,
-            1
-          ]
-        }
-      ],
+      "voicings": [],
       "notes": []
     }
   ],
@@ -606,109 +595,49 @@
       "line": 1
     },
     {
-      "code": "bad-property",
-      "message": "a property is `key: value`",
-      "line": 2,
-      "text": "- not a property"
-    },
-    {
       "code": "stray-mark",
       "message": "an opening mark inside an open repeat group",
-      "line": 7
+      "line": 6
     },
     {
       "code": "stray-mark",
       "message": "a closing mark with no open repeat group",
-      "line": 7
+      "line": 6
     },
     {
       "code": "stray-mark",
       "message": "a closing mark with no open repeat group",
-      "line": 7
+      "line": 6
     },
     {
       "code": "repeat-without-previous",
       "message": "a % with no measure before it",
-      "line": 7
+      "line": 6
     },
     {
       "code": "bad-ending-sequence",
       "message": "endings must be 1. to n. in order, got [2, 1]",
-      "line": 8
+      "line": 7
     },
     {
       "code": "count-with-endings",
       "message": "a group with endings takes its count from them",
-      "line": 9
+      "line": 8
     },
     {
       "code": "ending-outside-group",
       "message": "2. outside a repeat group is not an ending",
-      "line": 9
+      "line": 8
     },
     {
       "code": "count-out-of-place",
       "message": "a count that follows neither a repeat group nor ends a line",
-      "line": 10
+      "line": 9
     },
     {
       "code": "unclosed-group",
       "message": "a repeat group was opened and never closed",
-      "line": 15
-    },
-    {
-      "code": "item-outside-block",
-      "message": "a voicing before any block heading",
-      "line": 20,
-      "text": "- C: x32010"
-    },
-    {
-      "code": "notes-outside-block",
-      "message": "text in the voicings part before any block; dropped",
-      "line": 21,
-      "text": "stray notes"
-    },
-    {
-      "code": "bad-block-heading",
-      "message": "`## Voicings E2 A2 D3 G3 B3 E4` comes after the rule, where a heading is a voicings block and needs a tuning (`## Voicings: E2 A2 D3 G3 B3 E4`). If it is a section of the song, move the rule below it; the lines under it are not read",
-      "line": 23,
-      "text": "## Voicings E2 A2 D3 G3 B3 E4"
-    },
-    {
-      "code": "bad-block-heading",
-      "message": "not a tuning: 'guitar'. A tuning is the open strings as pitches with octave numbers, lowest string first, like E2 A2 D3 G3 B3 E4 for a guitar or G4 C4 E4 A4 for a ukulele",
-      "line": 26,
-      "text": "## Voicings: guitar"
-    },
-    {
-      "code": "bad-voicing",
-      "message": "not a fret string: 'not-a-shape'",
-      "line": 30,
-      "text": "- C: not-a-shape"
-    },
-    {
-      "code": "bad-voicing",
-      "message": "a voicing is `- key: frets`",
-      "line": 31,
-      "text": "- G 320003"
-    },
-    {
-      "code": "bad-voicing",
-      "message": "a voicing is `- key: frets`",
-      "line": 32,
-      "text": "- : x32010"
-    },
-    {
-      "code": "bad-voicing",
-      "message": "5 frets for 6 strings",
-      "line": 33,
-      "text": "- Am: x0221"
-    },
-    {
-      "code": "duplicate-block",
-      "message": "a second block for the same tuning and variation; merged",
-      "line": 36,
-      "text": "## Voicings: E2, A2, D3, G3, B3, E4"
+      "line": 14
     }
   ]
 }

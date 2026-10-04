@@ -29,36 +29,56 @@ class TestMetadata:
     def test_title_and_properties(self):
         doc = parse("# My Song\n- artist: Someone\n- Notation: american\n\n## A\n```\nC\n```\n")
         assert doc["title"] == "My Song"
-        assert doc["properties"] == {"artist": "Someone", "notation": "american"}
+        assert doc["properties"] == [{"key": "artist", "value": "Someone"}, {"key": "notation", "value": "american"}]
         assert names(doc) == ["A"]
 
     def test_no_metadata(self):
         doc = parse("## A\n```\nC\n```\n")
         assert doc["title"] is None
-        assert doc["properties"] == {}
+        assert doc["properties"] == []
 
     def test_properties_without_title(self):
         doc = parse("- notation: american\n\n## A\n```\nC9\n```\n")
         assert doc["title"] is None
-        assert doc["properties"] == {"notation": "american"}
+        assert doc["properties"] == [{"key": "notation", "value": "american"}]
 
     def test_blank_lines_in_the_list(self):
         doc = parse("# T\n\n- a: 1\n\n- b: 2\n\n## A\n```\nC\n```\n")
-        assert doc["properties"] == {"a": "1", "b": "2"}
+        assert doc["properties"] == [{"key": "a", "value": "1"}, {"key": "b", "value": "2"}]
 
     def test_last_value_wins(self):
-        doc = parse("# T\n- a: 1\n- a: 2\n")
-        assert doc["properties"] == {"a": "2"}
+        doc = parse("# T\n- a: 1\n- b: x\n- A: 2\n")
+        assert doc["properties"] == [{"key": "a", "value": "2"}, {"key": "b", "value": "x"}]
+        assert [d["code"] for d in doc["diagnostics"]] == ["duplicate-property"]
 
     def test_reserved_informative_properties_are_just_kept(self):
         doc = parse("# T\n- key: Em\n- capo: 2\n- tempo: 96\n- time: 3/4\n")
-        assert doc["properties"] == {"key": "Em", "capo": "2", "tempo": "96", "time": "3/4"}
+        assert doc["properties"] == [{"key": k, "value": v} for k, v in (("key", "Em"), ("capo", "2"), ("tempo", "96"), ("time", "3/4"))]
         assert doc["diagnostics"] == []
 
     def test_bad_property_is_reported(self):
         doc = parse("# T\n- not a property\n- a: 1\n")
-        assert doc["properties"] == {"a": "1"}
+        assert doc["properties"] == [{"key": "a", "value": "1"}]
         assert [d["code"] for d in doc["diagnostics"]] == ["bad-property"]
+
+    def test_a_property_needs_a_space_after_the_colon(self):
+        doc = parse("# T\n- https://example.com\n- a:\n- b:  two  words\n")
+        assert doc["properties"] == [{"key": "a", "value": ""}, {"key": "b", "value": "two  words"}]
+        assert [d["code"] for d in doc["diagnostics"]] == ["bad-property"]
+
+    def test_an_empty_title_is_no_title(self):
+        for text in ("#\n```\nC\n```\n", "#   \n```\nC\n```\n", "# ##\n```\nC\n```\n"):
+            doc = parse(text)
+            assert doc["title"] is None, text
+            assert [s["name"] for s in doc["sections"]] == [""], text
+
+    def test_title_needs_a_space_after_the_hash(self):
+        doc = parse("#Title\n")
+        assert doc["title"] is None
+        assert doc["sections"][0]["body"] == [{"type": "notes", "text": "#Title"}]
+
+    def test_title_text_is_trimmed_collapsed_and_unclosed(self):
+        assert parse("  #   A   Song   ##\n")["title"] == "A Song"
 
     def test_level_one_heading_elsewhere_is_a_section(self):
         doc = parse("## A\n```\nC\n```\n# B\n```\nG\n```\n")

@@ -38,7 +38,7 @@ class TestBlocks:
     def test_tuning_with_commas(self):
         doc = parse("```\nC\n```\n---\n## Voicings: E2, A2, D3, G3, B3, E4\n- C: x32010\n")
         assert doc["blocks"][0]["tuning"]["id"] == parse(DOC)["blocks"][0]["tuning"]["id"]
-        assert doc["blocks"][0]["tuning"]["text"] == "E2, A2, D3, G3, B3, E4"
+        assert doc["blocks"][0]["tuning"]["text"] == "E2 A2 D3 G3 B3 E4"
 
     def test_heading_without_a_colon(self):
         doc = parse(f"```\nC\n```\n---\n## Voicings {GUITAR}\n- C: x32010\n")

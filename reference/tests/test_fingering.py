@@ -6,8 +6,8 @@ from cifra_md.frets import check_fingers, format_fingers, parse_fingers
 GUITAR = "E2 A2 D3 G3 B3 E4"
 
 
-def doc(items):
-    return parse("```\nC\n```\n---\n## Voicings: " + GUITAR + "\n" + items)
+def doc(items, chart="C | G | Bb | F | D | Cm | Cm[2]"):
+    return parse("```\n" + chart + "\n```\n---\n## Voicings: " + GUITAR + "\n" + items)
 
 
 def test_parse_fingers_forms():
@@ -60,3 +60,17 @@ def test_canonical_form():
     assert out.endswith("## Voicings: E2 A2 D3 G3 B3 E4\n- Bb: 113331 (1 1 2 3 4 1)\n- Cm[2]: 8-10-10-8-8-8 (1 3 4 1 1 1)\n- G: 320003 (3 2 - - - 4)\n")
     assert write(parse(out)) == out
     assert format_fingers(["T", None, 2]) == "T - 2"
+
+
+def test_thumb_is_written_uppercase():
+    out = write(doc("- F: 133211 (t 3 4 2 1 1)\n"))
+    assert "- F: 133211 (T 3 4 2 1 1)\n" in out
+    assert write(parse(out)) == out
+
+
+def test_a_fingering_that_frets_nothing_is_not_written():
+    d = doc("- C: x32010 (- - - - - -)\n- D: xx0232 (0 0 0 0 0 0)\n")
+    assert d["blocks"][0]["voicings"][0]["fingers"] == [None] * 6  # read and kept
+    out = write(d)
+    assert "- C: x32010\n- D: xx0232\n" in out
+    assert write(parse(out)) == out

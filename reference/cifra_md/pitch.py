@@ -12,7 +12,7 @@ _ACCIDENTALS = {"": 0, "#": 1, "♯": 1, "##": 2, "b": -1, "♭": -1, "bb": -2}
 NOTE_RE = r"[A-G](?:bb|##|[b#♯♭])?"
 _NOTE_FULL = re.compile(rf"^({NOTE_RE})$")
 _NOTE_SPLIT = re.compile(r"^([A-G])(bb|##|[b#♯♭])?$")
-_PITCH = re.compile(rf"^({NOTE_RE})(-?\d+)$")
+_PITCH = re.compile(r"^([A-Ga-g](?:bb|##|[b#♯♭])?)(-?[0-9]+)$")
 
 
 def parse_note(text: str) -> dict:
@@ -34,10 +34,17 @@ def format_note(note: dict) -> str:
 
 def parse_pitch(text: str) -> dict:
     """Scientific pitch notation: E2, F#3, Bb1, C-1."""
-    m = _PITCH.match(text.strip())
+    m = _PITCH.match(text.strip(" "))
     if not m:
         raise ValueError(f"not a pitch: {text!r}")
-    return {"note": parse_note(m.group(1)), "octave": int(m.group(2))}
+    name = m.group(1)
+    return {"note": parse_note(name[0].upper() + name[1:]), "octave": int(m.group(2))}
+
+
+def canonical_pitch_text(text: str) -> str:
+    """A pitch as written, with its letter uppercase (§6.1)."""
+    t = text.strip(" ")
+    return t[0].upper() + t[1:]
 
 
 def midi(pitch: dict) -> int:
