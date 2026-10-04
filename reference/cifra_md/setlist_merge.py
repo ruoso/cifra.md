@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from collections import Counter
 
-from .merge import CONFLICT, OURS, SIDES, THEIRS, Outcome, finish_marked, keyed_order, merge_value, other, region
+from .merge import CONFLICT, OURS, SIDES, THEIRS, Outcome, align, finish_marked, keyed_order, merge_value, other, pairs_of, region
 from .setlist import canonicalise_setlist, entry_line, item_content, ordered_entries, parse_setlist, write_path, write_setlist
 
 VERSIONS = ("base", OURS, THEIRS)
@@ -31,23 +31,71 @@ def entry_sort(i: tuple) -> tuple:
     return (i[1], i[2] if i[0] == "u" else 0)
 
 
-def body_ids(body: list[dict]) -> list[tuple]:
+def reference(el: dict) -> tuple:
+    """An item's reference (§11.13): its path, or an unlinked item's content."""
+    return ("song", el["path"]) if el["type"] == "song" else ("unlinked", el["content"])
+
+
+def with_notes(body: list[dict], item_ids: list[tuple]) -> list[tuple]:
+    """The identities of a body, given those of its items in order: a notes
+    block is identified by the item it follows (§11.13)."""
     out = []
-    seen = Counter()
+    items = iter(item_ids)
     last = None
     for el in body:
-        if el["type"] == "song":
-            seen[("song", el["path"])] += 1
-            i = ("song", el["path"], seen[("song", el["path"])])
-            last = i
-        elif el["type"] == "unlinked":
-            seen[("unlinked", el["content"])] += 1
-            i = ("unlinked", el["content"], seen[("unlinked", el["content"])])
-            last = i
+        if el["type"] == "notes":
+            out.append(("notes", last))
         else:
-            i = ("notes", last)
-        out.append(i)
+            last = next(items)
+            out.append(last)
     return out
+
+
+def body_ids(body: list[dict]) -> list[tuple]:
+    """Base's identities: each item's reference and its occurrence among
+    base's items with that reference."""
+    seen = Counter()
+    ids = []
+    for el in body:
+        if el["type"] != "notes":
+            seen[reference(el)] += 1
+            ids.append(reference(el) + (seen[reference(el)],))
+    return with_notes(body, ids)
+
+
+def side_body_ids(base: list[dict], side: list[dict]) -> list[tuple]:
+    """A side's identities, from pairing its items with base's (§11.13):
+    an alignment by reference and value, then one by reference within each
+    stretch between its pairs, then what is left of each reference in order."""
+    B = [el for el in base if el["type"] != "notes"]
+    S = [el for el in side if el["type"] != "notes"]
+    bids = [i for i in body_ids(base) if i[0] != "notes"]
+    pair: dict[int, int] = {}  # side position -> base position
+    exact = lambda a, c: reference(a) == reference(c) and item_value(a) == item_value(c)
+    for i, j in pairs_of(align(B, S, exact)).items():
+        pair[j] = i
+    fixed = sorted((i, j) for j, i in pair.items())
+    bounds = [(-1, -1)] + fixed + [(len(B), len(S))]
+    for (i0, j0), (i1, j1) in zip(bounds, bounds[1:]):
+        sub = pairs_of(align(B[i0 + 1 : i1], S[j0 + 1 : j1], lambda a, c: reference(a) == reference(c)))
+        for i, j in sub.items():
+            pair[j0 + 1 + j] = i0 + 1 + i
+    paired_base = set(pair.values())
+    for ref in dict.fromkeys(reference(el) for el in S):
+        left = [i for i, el in enumerate(B) if reference(el) == ref and i not in paired_base]
+        right = [j for j, el in enumerate(S) if reference(el) == ref and j not in pair]
+        for i, j in zip(left, right):
+            pair[j] = i
+    count = Counter(reference(el) for el in B)
+    new = Counter()
+    ids = []
+    for j, el in enumerate(S):
+        if j in pair:
+            ids.append(bids[pair[j]])
+        else:
+            new[reference(el)] += 1
+            ids.append(reference(el) + (count[reference(el)] + new[reference(el)],))
+    return with_notes(side, ids)
 
 
 def item_name(i: tuple) -> str:
@@ -139,7 +187,9 @@ class SetlistMerge:
             self.title_conflict = {"kind": "title", **{k: m[k]["title"] for k in VERSIONS}}
             self.conflicts.append(self.title_conflict)
         self.props = EntryMerge({k: m[k]["properties"] for k in VERSIONS}, "property", self.conflicts, {})
-        ids = {k: body_ids(m[k]["body"]) for k in VERSIONS}
+        ids = {"base": body_ids(m["base"]["body"])}
+        for k in SIDES:
+            ids[k] = side_body_ids(m["base"]["body"], m[k]["body"])
         by = {k: dict(zip(ids[k], m[k]["body"])) for k in VERSIONS}
         self.by = by
 

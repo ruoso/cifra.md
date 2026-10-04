@@ -264,6 +264,172 @@ def test_a_key_used_only_by_unknown_tokens_merges_by_its_text():
     assert r.result.endswith("- X[2]: 000000\n")
 
 
+# --- §11.9.4 rule 4: a distinction only base made ---
+
+GUITAR = "## Voicings: E2 A2 D3 G3 B3 E4"
+
+
+def song(chart, *voicings):
+    text = f"## A\n{F}\n{chart}\n{F}\n"
+    if voicings:
+        text += f"\n---\n\n{GUITAR}\n" + "".join(f"- {v}\n" for v in voicings)
+    return text
+
+
+def test_keys_both_sides_joined_are_one_key_with_no_shapes():
+    base = song("Cm | F7 | Cm[2] | G7\nF | G7")
+    ours = "- key: Cm\n\n" + song("Cm | F7 | Cm | G7\nF | G7")
+    theirs = song("Cm | F7 | Cm | G7\nF | G7(b9)")
+    want = "- key: Cm\n\n" + song("Cm | F7 | Cm | G7\nF | G7(b9)")
+    assert merge(base, ours, theirs).result == want
+    assert merge(base, theirs, ours).result == want
+
+
+def test_keys_one_side_still_tells_apart_stay_apart():
+    # theirs kept bar 3's marker, so theirs tells the two apart, and with
+    # no shapes nothing joins them again (§8.3 I3)
+    base = song("Cm | F7 | Cm[2] | G7\nF | G7")
+    ours = song("Cm | F7 | Cm | G7\nF | G7")
+    theirs = song("Cm | F7 | Cm[2] | G7\nF | G7(b9)")
+    assert merge(base, ours, theirs).result == song("Cm | F7 | Cm[2] | G7\nF | G7(b9)")
+
+
+def test_a_join_by_one_side_against_an_unchanged_side_is_that_side():
+    base = song("Cm | Cm[2]")
+    assert merge(base, base, song("Cm | Cm")).result == song("Cm | Cm")
+    assert merge(base, song("Cm | Cm"), base).result == song("Cm | Cm")
+
+
+def test_a_joined_variant_has_the_shape_of_the_base_key_most_of_it_continues():
+    # Cm has three bars, Cm[2] one: the joined variant's base voicing is Cm's,
+    # so theirs, which kept it, takes ours's new shape
+    base = song("Cm | Cm | Cm[2] | Cm", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    ours = song("Cm | Cm | Cm | Cm", "Cm: x3554x")
+    theirs = "# Tarde\n\n" + song("Cm | Cm | Cm | Cm", "Cm: x35543")
+    want = "# Tarde\n\n" + song("Cm | Cm | Cm | Cm", "Cm: x3554x")
+    assert merge(base, ours, theirs).result == want
+    assert merge(base, theirs, ours).result == want
+
+
+def test_a_joined_variant_conflicts_when_both_sides_moved_off_its_base_shape():
+    # Cm[2] has three bars: base's voicing is Cm[2]'s, which neither side kept
+    base = song("Cm | Cm[2] | Cm[2] | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    ours = song("Cm | Cm | Cm | Cm", "Cm: x3554x")
+    theirs = song("Cm | Cm | Cm | Cm", "Cm: x35543")
+    r = merge(base, ours, theirs)
+    assert [(c["kind"], c["key"], c["base"], c["ours"], c["theirs"]) for c in r.conflicts] == [
+        ("voicing", "Cm", "8-10-10-8-8-8", "x3554x", "x35543")
+    ]
+
+
+def test_between_equal_numbers_the_joined_variant_continues_the_least_index():
+    base = song("Cm | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    ours = song("Cm | Cm", "Cm: x3554x")
+    theirs = "# Tarde\n\n" + song("Cm | Cm", "Cm: x35543")
+    assert merge(base, ours, theirs).result == "# Tarde\n\n" + song("Cm | Cm", "Cm: x3554x")
+    theirs = "# Tarde\n\n" + song("Cm | Cm", "Cm: 8-10-10-8-8-8")
+    assert merge(base, ours, theirs).conflicts[0]["base"] == "x35543"
+
+
+def test_a_joined_variant_is_numbered_by_the_base_key_it_continues():
+    # Cm[3]'s two bars joined into Cm[2]'s one: the variant continues Cm[3]
+    # and is numbered after Cm, which no one joined
+    base = song("Cm | Cm[2] | Cm[3] | Cm[3]\nF | G")
+    ours = song("Cm | Cm[2] | Cm[2] | Cm[2]\nF | G")
+    theirs = song("Cm | Cm[2] | Cm[2] | Cm[2]\nF | G7")
+    assert merge(base, ours, theirs).result == song("Cm | Cm[2] | Cm[2] | Cm[2]\nF | G7")
+
+
+def test_joining_takes_the_base_key_most_occurrences_have_none_aside():
+    from cifra_md.merge import SongMerge
+
+    a, b, o, t = K("Cm"), K("Cm[2]"), K("Cm[3]"), K("Cm[4]")
+    sigs = [[(None, o, t), (b, o, t)], [(a, o, t), (b, o, t)], [(a, o, None), (b, o, None)]]
+    SongMerge.join_base_only(sigs)
+    assert sigs == [[(b, o, t), (b, o, t)], [(b, o, t), (b, o, t)], [(a, o, None), (b, o, None)]]
+    sigs = [[(None, o, t)]]
+    SongMerge.join_base_only(sigs)
+    assert sigs == [[(None, o, t)]]
+
+
+def test_a_key_of_unknown_tokens_is_not_joined():
+    base = song("Cm | Cm[2] | X[2]\nF | G", "Cm: x35543", "X[2]: x00000")
+    ours = song("Cm | Cm | X[2]\nF | G", "Cm: x35543", "X[2]: x00000")
+    theirs = song("Cm | Cm | X[2]\nF | G7", "Cm: x35543", "X[2]: x00000")
+    assert merge(base, ours, theirs).result == song("Cm | Cm | X[2]\nF | G7", "Cm: x35543", "X[2]: x00000")
+
+
+# --- §11.13 a song played more than once ---
+
+
+def setlist_text(*items):
+    lines = ["# Friday", ""]
+    for n, it in enumerate(items, 1):
+        name, *entries = it.split(";")
+        lines.append(f"{n}. [{name}]({name.lower()}.cifra.md)" if not name.startswith("~") else f"{n}. {name[1:]}")
+        lines.extend(f"{' ' * (len(str(n)) + 2)}- {e}" for e in entries)
+    return "\n".join(lines) + "\n"
+
+
+def ids(base, side):
+    from cifra_md.setlist import parse_setlist
+    from cifra_md.setlist_merge import side_body_ids
+
+    return [(i[1].split(".")[0], i[2]) for i in side_body_ids(parse_setlist(base)["body"], parse_setlist(side)["body"])]
+
+
+def test_a_copy_inserted_before_another_is_the_new_one():
+    b = setlist_text("A", "B", "A")
+    assert ids(b, setlist_text("A;key: D", "A", "B", "A")) == [("a", 3), ("a", 1), ("b", 1), ("a", 2)]
+
+
+def test_a_copy_changed_pairs_with_the_base_copy_in_its_place():
+    b = setlist_text("A", "B", "A")
+    # step 2: the changed last copy is base's second, the new first copy is new
+    assert ids(b, setlist_text("A;key: D", "A", "B", "A;note: encore")) == [("a", 3), ("a", 1), ("b", 1), ("a", 2)]
+
+
+def test_a_copy_moved_pairs_in_order_of_appearance():
+    b = setlist_text("A", "B", "A;note: encore")
+    # step 3: B, unpaired by both alignments, is base's B; the plain A is deleted
+    assert ids(b, setlist_text("A;note: encore", "B")) == [("a", 2), ("b", 1)]
+    assert ids(setlist_text("A", "B"), setlist_text("B", "A")) == [("b", 1), ("a", 1)]
+
+
+def test_new_copies_are_numbered_after_base_s():
+    assert ids(setlist_text("A"), setlist_text("A", "B", "A", "A")) == [("a", 1), ("b", 1), ("a", 2), ("a", 3)]
+    assert ids(setlist_text("~a song", "~a song"), setlist_text("~a song", "~a song", "~a song")) == [
+        ("a song", 1), ("a song", 2), ("a song", 3)
+    ]
+
+
+def test_a_song_played_twice_keeps_each_copy_s_entries():
+    b = setlist_text("A", "B", "A")
+    o = setlist_text("A;key: D", "A", "B", "A")
+    t = setlist_text("A", "B", "A;note: encore")
+    want = setlist_text("A;key: D", "A", "B", "A;note: encore")
+    assert merge(b, o, t, setlist=True).result == want
+    assert merge(b, t, o, setlist=True).result == want
+    # the note on the first copy stays on the first copy
+    t = setlist_text("A;note: slow", "B", "A")
+    want = setlist_text("A;key: D", "A;note: slow", "B", "A")
+    assert merge(b, o, t, setlist=True).result == want
+
+
+def test_a_copy_added_by_both_sides_is_one_item():
+    b = setlist_text("A", "B")
+    assert merge(b, setlist_text("A", "B", "A"), setlist_text("A", "B", "A", "C"), setlist=True).result == setlist_text(
+        "A", "B", "A", "C"
+    )
+
+
+def test_a_copy_removed_and_changed_names_its_occurrence():
+    b = setlist_text("A", "B", "A;key: D")
+    r = merge(b, setlist_text("A", "B"), setlist_text("A;note: slow", "B", "A;key: E"), setlist=True)
+    data = json.loads(conflicts_json(r))["conflicts"]
+    assert [(c["kind"], c["item"], c.get("occurrence")) for c in data] == [("item", "a.cifra.md", 2)]
+
+
 # --- §11.14 the git merge driver ---
 
 

@@ -2,6 +2,7 @@
 and sides made from it by the edits people make."""
 
 import random
+import re
 
 from cifra_md import parse, write
 
@@ -128,6 +129,9 @@ def edit(rnd, text: str, scope=None) -> str:
                 lines.insert(k + rnd.choice([0, 1]), chord_line(rnd))
             elif r < 0.75:
                 lines[k] = chord_line(rnd)
+            elif "Cm[" in lines[k] and r < 0.85:
+                # two keys joined on this line (§8.3 I3)
+                lines[k] = re.sub(r"Cm\[\d+\]", "Cm", lines[k])
             else:
                 # a marker split off, or a key moved
                 lines[k] = lines[k].replace("Cm", "Cm[2]", 1) if "Cm" in lines[k] and "Cm[" not in lines[k] else lines[k] + " Cm[3]"
@@ -145,7 +149,17 @@ def edit(rnd, text: str, scope=None) -> str:
             lines[k] = rnd.choice(["## Bridge", "## A", lines[k] + " x2", "## Intro @5"])
         elif what == "property":
             lines[k] = rnd.choice(["- artist: Bia", "- key: D", "- words: no", "- notation: realbook", "- tempo: 120"])
+    if scope is None and rnd.random() < 0.15:
+        return join(write(parse("\n".join(lines) + "\n")))
     return write(parse("\n".join(lines) + "\n"))
+
+
+def join(text: str) -> str:
+    """Every `Cm[n]` of the chart written `Cm`: the keys of `Cm` joined into
+    one, as someone who drops the markers does. The blocks are left as they
+    are, and canonical form drops the keys nothing uses any more (§8.3 I1)."""
+    chart, rule, rest = text.partition("\n---\n")
+    return write(parse(re.sub(r"Cm\[\d+\]", "Cm", chart) + rule + rest))
 
 
 def section_texts(text: str) -> list[str]:
@@ -179,7 +193,8 @@ def setlist(rnd) -> str:
             lines.extend(["", rnd.choice(["Second set.", "Tune to the piano.", "```", "Break"]), ""])
             continue
         n += 1
-        song = rnd.choice(SONGS)
+        # a set that plays a song more than once, often
+        song = rnd.choice(SONGS[:3] if rnd.random() < 0.4 else SONGS)
         lines.append(f"{n}. [{song.title()}]({song}.cifra.md)" if rnd.random() < 0.9 else f"{n}. {song} (unlinked)")
         for e in rnd.sample(["key: D", "key: E", "note: slow", "singer: Ana", "a remark"], rnd.randint(0, 2)):
             lines.append("   - " + e)
@@ -203,8 +218,54 @@ def edit_setlist(rnd, text: str) -> str:
         elif r < 0.7:
             ln = lines.pop(k)
             lines.insert(rnd.randrange(len(lines) + 1), ln)
-        elif r < 0.85:
+        elif r < 0.78:
             lines.insert(k + 1, "   - " + rnd.choice(["key: F", "note: fast", "singer: Bia"]))
+        elif r < 0.85:
+            # a song played again: a copy of an item line, elsewhere
+            items = [ln for ln in lines if re.match(r"\d+\. ", ln)]
+            if items:
+                lines.insert(k, rnd.choice(items))
         else:
             lines[k] = rnd.choice(["# Saturday", "- place: upstairs", "Second set, later.", "2. [Wave](wave.cifra.md)"])
     return canonicalise_setlist("\n".join(lines) + "\n")
+
+
+def insert_copy(rnd, text: str):
+    """A setlist with a bare copy of one of its songs inserted at an item
+    boundary whose neighbours are other songs, so that where it went is not
+    ambiguous; or None if there is no such place."""
+    from cifra_md.setlist import canonicalise_setlist, parse_setlist, write_setlist
+
+    doc = parse_setlist(text)
+    body = doc["body"]
+    songs = [el for el in body if el["type"] == "song"]
+    if not songs:
+        return None
+    song = rnd.choice(songs)
+    copy = {"type": "song", "number": 0, "text": song["text"], "path": song["path"], "entries": []}
+    places = []
+    for p in range(len(body) + 1):
+        before = next((el for el in reversed(body[:p]) if el["type"] != "notes"), None)
+        after = next((el for el in body[p:] if el["type"] != "notes"), None)
+        if all(el is None or el["type"] != "song" or el["path"] != song["path"] for el in (before, after)):
+            places.append(p)
+    if not places:
+        return None
+    p = rnd.choice(places)
+    doc["body"] = body[:p] + [copy] + body[p:]
+    return canonicalise_setlist(write_setlist(doc)), p, copy
+
+
+def add_note(rnd, text: str, k: int | None = None):
+    """A setlist with a note no item has yet given to its k-th item."""
+    from cifra_md.setlist import canonicalise_setlist, parse_setlist, write_setlist
+
+    doc = parse_setlist(text)
+    body = doc["body"]
+    items = [n for n, el in enumerate(body) if el["type"] != "notes"]
+    if not items:
+        return None
+    n = items[rnd.randrange(len(items))] if k is None else items[k]
+    body[n]["entries"] = [e for e in body[n]["entries"] if not (e["type"] == "property" and e["key"] == "note")]
+    body[n]["entries"].append({"type": "property", "key": "note", "value": f"take {rnd.randrange(10**6)}"})
+    return canonicalise_setlist(write_setlist(doc)), n, body[n]

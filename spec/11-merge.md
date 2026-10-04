@@ -142,9 +142,10 @@ chapter is written so that it does.
   voicings, to different blocks, and to different variants in one block,
   never conflict. Neither do arrangements made for different
   instruments or different variations, including the footnote markers
-  they add to the chart (§11.9). What conflicts is two changes to the
-  same line, two insertions at the same place, two values for one thing,
-  and a deletion of something the other side changed. The one change that
+  they add to the chart (§11.9), nor, in a setlist, changes to different
+  items, two copies of one song included (§11.13). What conflicts is two
+  changes to the same line, two insertions at the same place, two values
+  for one thing, and a deletion of something the other side changed. The one change that
   reaches past what it touches is one that makes the document sung or not
   sung (§4.2): every line of words then reads otherwise, and is a change
   of the side that made it (§11.8.1).
@@ -642,26 +643,54 @@ or none:
    in the merged chart. Otherwise none for base and *v* for *V*, and for
    *W*: *v* if *v* is a symbol alone (its index is 1) and *W* has *v* as a
    key that is new in *W* (§11.9.2 step 3), and none otherwise.
+4. Last, a distinction only base made does not survive. For each key *o*
+   of ours and key *t* of theirs, the occurrences whose signatures have
+   *o* for ours and *t* for theirs all take for base the same key: the
+   base key that most of them have, between equal numbers the one
+   with the least index, and none if none of them has a base key. An
+   occurrence whose signature has none for ours or for theirs is left as
+   it is. Rule 3 looks at the signatures of rules 1 and 2 as they are
+   before this rule.
 
 Occurrences of one symbol with the same signature are one variant.
-Occurrences that any version tells apart are therefore different
+Occurrences that either side tells apart are therefore different
 variants, and occurrences no version has seen together are different too,
 unless rule 3 joins them: a line one side added with a key that side also
 gave to a bar that both sides kept, or that both sides added alike, joins
 that bar's variant; and a chord that base does not have, written bare by
 both sides in lines each added on its own, is one chord (§11.15.16). A
 marker that both sides added is not joined that way: `Cm[2]` new on each
-side may be two decisions under one name (§11.9.1).
+side may be two decisions under one name (§11.9.1). Occurrences that only
+base told apart are one variant, **joined** by rule 4 from the base keys
+they had; the base key it gives them is the one the variant
+**continues**.
 
-Keeping apart whatever any version tells apart is safe, because the
+Keeping apart whatever either side tells apart is safe, because the
 canonical form joins variants again when some block has a shape for both
 and no block tells them apart (§8.3 I3). So a side that joined two keys
-loses nothing: each is merged on its own with the shapes the joining side
-gave it, and they are one key again in the result unless the other side
-gave them different shapes on some instrument, in which case keeping them
-apart is what that instrument's arrangement needs. Where no instrument
-has a shape for either any more, nothing tells them apart and nothing
-joins them, and they stay two keys.
+the other side kept apart loses nothing: each is merged on its own with
+the shapes the joining side gave it, and they are one key again in the
+result unless the other side gave them different shapes on some
+instrument, in which case keeping them apart is what that instrument's
+arrangement needs. A side keeps two keys apart even when it only left
+them as base had them: where no instrument has a shape for either, nothing
+joins them again, and they stay two keys, as that side has them.
+
+Where both sides joined two keys, nothing but base tells them apart, and
+the bars are one variant whatever the blocks hold: two people who both
+dropped a marker have both said that its bars and the others are one
+decision. Kept apart, each would be merged against its own shape in
+base: the bars whose shape was not the one the joined key kept would be
+changed by both sides, a `voicing` conflict even where one side only kept
+the shape most of the bars had; and with no shapes, they would stay two
+keys that neither side has (§11.15.19). The joined variant continues the
+base key that most of its bars had, as a side's key continues the base
+key whose occurrences it mostly kept (§11.9.2); that key decides its
+place in the numbering (§11.9.5) and its voicing in base (§11.10.3). The
+other base keys it joined have no variant of their own, so their items
+are not merged, as an item for a key nothing plays is not (§11.10.3), and
+the result does not keep them (§8.3 I1). A key used only by unknown
+tokens is not a variant (§11.9.5), has no signature, and is never joined.
 
 ### 11.9.5 Numbering
 
@@ -685,7 +714,8 @@ A key used only by unknown tokens is not a variant: it keeps its text
 The first rule keeps the numbering both sides already agree on: a key
 neither side renamed keeps its relative place, a key a side renumbered
 takes its new place, and a variant either side split off comes after the
-ones it was split from. The second only decides between variants that the
+ones it was split from. A joined variant is ordered by its signature as
+rule 4 of §11.9.4 leaves it, so by the base key it continues. The second only decides between variants that the
 first cannot tell apart, such as two that the two sides split off at
 the same time. Ordering by position in the merged chart is symmetric
 except between two variants whose first occurrences are on opposite sides
@@ -753,6 +783,16 @@ occurrence of *β* and so made no decision about its shape, and its
 voicing is base's. A side that deleted the only line playing a chord has
 not cleared that chord's shape for a line the other side added
 (§11.15.17).
+
+A variant joined from several base keys (§11.9.4 rule 4) has for *β* the
+base key it continues, and base's voicing for it is base's item for that
+key; base's items for the other keys it joined are not its voicing. Each
+side has one key for it, and so one voicing. So the shape most of its bars
+played in base is the joined variant's shape in base: a side that kept it
+for the joined key left the variant as it was, and the other side's
+choice is taken; and the two conflict only where each side gave the
+joined key a shape other than that one, and they are not the same
+(§11.15.19).
 
 **Weak absence.** A side that splits an occurrence off a key, for one
 instrument, leaves it with no voicing on every other instrument, though it
@@ -1023,10 +1063,13 @@ unrecognised entry has no value, only presence, and never conflicts.
 
 **The body** (§10.6) is a keyed list of items and notes blocks:
 
-- A song item is identified by its path, as §10.9.2 writes it, and its
-  occurrence among the song items with that path: the same song played
-  twice is two items. An unlinked item is identified by its content and
-  its occurrence among the unlinked items with that content.
+- An item is identified by its **reference**, a song item's path as
+  §10.9.2 writes it or an unlinked item's content, and its
+  **occurrence**, a number that tells apart the items with one reference:
+  the same song played twice is two items. Base's items are numbered in
+  order, 1 for the first item with a reference and 2 for the second; each
+  side's items take their occurrences by being paired with base's, as
+  below.
 - A notes block is identified by the item it follows, or by being first
   when it precedes every item. Two notes blocks never stand next to each
   other, so this is unique.
@@ -1040,6 +1083,34 @@ unrecognised entry has no value, only presence, and never conflicts.
 - A song item's value is its link text and its entries; an unlinked
   item's, its entries; a notes block's, its lines. A side **changed** an
   element when its value differs from base's.
+
+**Pairing items.** Each side's items are paired with base's, for each
+side alone and with notes blocks left out, in three steps:
+
+1. Base's items and the side's are aligned (§11.5.1), two items matching
+   when their references are the same and their values are the same.
+2. Each stretch that step 1 left between two of its pairs, or before the
+   first, or after the last, is aligned again: base's items in it with the
+   side's items in it, two items matching when their references are the
+   same.
+3. For each reference, base's items with it that are still unpaired, in
+   base's order, are paired with the side's items with it that are still
+   unpaired, in the side's order: the first with the first, the second
+   with the second, as far as both go.
+
+A side's item paired with a base item has that item's occurrence. A
+side's item left unpaired is **new**, and its occurrence is the number of
+base's items with its reference plus its place among the side's new items
+with that reference, 1 for the first. An item whose reference occurs at
+most once in each version is paired whenever base and the side both have
+it, so it is identified by its reference alone, as a property is by its
+key. The steps matter for a song played more than once. Step 1 pairs the
+copies the side left as they were, so a copy inserted before another is
+an insertion, and not a change to the copy that was there; step 2 pairs a
+copy the side changed with base's copy in its place; step 3 pairs a copy
+the side moved, as a song played once that a side moved is the same item
+(§11.15.20). A new copy on each side with the same occurrence is one item,
+as a song both sides added is.
 
 Items move freely: a reorder by one side is kept, and two reorders are
 combined (§11.5.5). An item each side added is in the result, both
@@ -1073,13 +1144,13 @@ numbers of items on the two sides. Entry lines are indented for the
 number on their item line.
 
 In the JSON (§11.12.5), an `item`, `text` or `entry` conflict has
-`item`, the item's identity (its path as written, or its content), and
-`occurrence` when that is more than 1; an `entry` conflict has `key`; a
-`notes` conflict has `after`, the identity of the item the block follows
-(with `occurrence` when more than 1), and no `after` when it is first. An
-item's string is its line without the number, then its entry lines
-without their indentation, joined by LFs; a notes block's, its lines
-joined by LFs.
+`item`, the item's reference (its path as written, or its content), and
+its `occurrence` (above) when that is more than 1; an `entry` conflict
+has `key`; a `notes` conflict has `after`, the reference of the item the
+block follows (with `occurrence` when more than 1), and no `after` when
+it is first. An item's string is its line without the number, then its
+entry lines without their indentation, joined by LFs; a notes block's,
+its lines joined by LFs.
 
 ## 11.14 The git merge driver
 
@@ -1953,6 +2024,110 @@ labels, a `|||||||` section and CR LF line ends, and ours unchanged from
 base, the merge would not take theirs as it otherwise would (§11.2 step
 3): the conflict would name theirs, and ours would stay as it is.
 
+### 11.15.19 Keys joined on both sides
+
+Base:
+
+````
+## A
+```
+Cm | F7 | Cm[2] | G7
+Cm | F7 | Cm | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
+- F7: 131211
+- G7: 320001
+````
+
+Both sides decide that bar 3 is played as every other `Cm`: each writes
+it `Cm`, and canonical form drops `- Cm[2]` from the block. Ours also adds
+`- key: Cm`; theirs voices `Cm` as `x3554x`.
+
+The three bars of `Cm` that base also wrote `Cm` have the signature
+(`Cm`, `Cm`, `Cm`), and bar 3 (`Cm[2]`, `Cm`, `Cm`): only base tells them
+apart, so they are one variant (§11.9.4 rule 4), which continues `Cm`,
+the base key three of its four bars had. Its guitar voicing is
+`x35543` in base and on ours's side, and `x3554x` on theirs's: theirs's.
+The result:
+
+````
+- key: Cm
+
+## A
+```
+Cm | F7 | Cm | G7
+Cm | F7 | Cm | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x3554x
+- F7: 131211
+- G7: 320001
+````
+
+Kept apart, bar 3 would have been a variant of its own, with
+`8-10-10-8-8-8` in base, `x35543` on ours's side and `x3554x` on
+theirs's: a `voicing` conflict over a shape ours never touched. Had base
+no voicings, the result would be the same chart without them, where kept
+apart bar 3 would have stayed `Cm[2]`, a marker neither side has. Had
+theirs kept bar 3's `Cm[2]` instead, theirs would tell the two apart, and
+the result would have `Cm` as `x3554x` and `Cm[2]` as `x35543`, ours's
+shape for the bar.
+
+### 11.15.20 A song played twice
+
+Base:
+
+```
+# Friday
+
+1. [Corcovado](corcovado.cifra.md)
+2. [Wave](wave.cifra.md)
+3. [Corcovado](corcovado.cifra.md)
+```
+
+Ours opens with another *Corcovado*, in D, before the first. Theirs asks
+for the last *Corcovado* slower, to close. Ours's first item matches no
+base item by its value, `- key: D` being new, so step 1 of the pairing
+(§11.13) pairs base's two copies with ours's second and fourth items, and
+ours's first is new: *Corcovado*, occurrence 3. Theirs's last item
+changed, and step 2 pairs it with base's in its place, occurrence 2. The
+result:
+
+```
+# Friday
+
+1. [Corcovado](corcovado.cifra.md)
+   - key: D
+2. [Corcovado](corcovado.cifra.md)
+3. [Wave](wave.cifra.md)
+4. [Corcovado](corcovado.cifra.md)
+   - note: slower, to close
+```
+
+Numbered by order alone, ours's first *Corcovado* would have been base's
+first, changed, and ours's second base's second, and the note would have
+gone on the second item. Had theirs given a note to the first
+*Corcovado* instead, it would stay on the copy base had, the second:
+
+```
+# Friday
+
+1. [Corcovado](corcovado.cifra.md)
+   - key: D
+2. [Corcovado](corcovado.cifra.md)
+   - note: bossa, not too fast
+3. [Wave](wave.cifra.md)
+4. [Corcovado](corcovado.cifra.md)
+```
+
 ## 11.16 Corpus entries
 
 The merge corpus is `corpus/merge/`, one directory per entry, numbered
@@ -2005,7 +2180,8 @@ different sides, conflicts that force a section to be written whole
 (§11.12.2), a sung line whose words are pushed because the merged marker
 grew, non-canonical inputs, and for setlists, two reorders of one
 stretch, the same song added twice, a notes block changed on both sides,
-and entries merged under the title and under an item.
+entries merged under the title and under an item, and a copy of a song
+played twice removed by one side and changed by the other.
 
 ## Open questions
 
@@ -2040,10 +2216,6 @@ Deferred to a later version:
 - **Marker lines in notes.** §11.12.3 forbids a notes line of seven `=`
   that someone might have meant. A narrower rule, markers only in the
   shapes this chapter writes them, would allow it and still catch git's.
-- **Joins without shapes.** Two keys that one side joined stay two keys
-  in the result when no instrument has a shape for either (§11.9.4),
-  since nothing then tells I3 they are one. A merge could join variants
-  that only base told apart, at the cost of a rule beside I3.
 - **Sung or not.** A change that makes the document sung or not sung
   changes every line of words (§11.3, §11.8.1), and conflicts with any
   change the other side made to one. Comparing such lines by their text

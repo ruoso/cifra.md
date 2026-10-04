@@ -5,7 +5,8 @@ Each case is a base and two sides made from it by the edits people make
 canonical and a fixed point; exchanging the sides mirrors the outcome, but
 for the numbering of §11.9.5; resolving a marked text by either side gives
 a document; changes to different sections, and to the voicings of different
-tunings, never conflict.
+tunings, never conflict; keys both sides joined stay joined (§11.9.4); and
+a song played twice keeps each copy's entries on that copy (§11.13).
 """
 
 import random
@@ -14,9 +15,9 @@ import pytest
 
 from cifra_md import is_canonical, parse
 from cifra_md.merge import canonical_song, merge
-from cifra_md.setlist import canonicalise_setlist
+from cifra_md.setlist import canonicalise_setlist, parse_setlist, write_setlist
 from cifra_md.text import marker_lines
-from merge_gen import document, edit, edit_setlist, only_section_changed, setlist
+from merge_gen import add_note, document, edit, edit_setlist, insert_copy, join, only_section_changed, section_texts, setlist
 from merge_props import resolve, symmetric
 
 SEEDS = range(12)
@@ -138,3 +139,53 @@ def test_setlists(seed):
                 assert not marker_lines(resolved)
                 text = canonicalise_setlist(resolved)
                 assert canonicalise_setlist(text) == text
+
+
+def chart_of(text: str) -> str:
+    return text.partition("\n---\n")[0]
+
+
+@pytest.mark.parametrize("seed", SEEDS)
+def test_keys_both_sides_joined_stay_joined(seed):
+    """Both sides drop every `Cm` marker, and then one retitles the song and
+    the other edits the voicings of one tuning. Every bar of `Cm` is then one
+    variant, whatever shapes base had, so the result's chart is the joined
+    chart: base alone told the bars apart (§11.9.4 rule 4)."""
+    rnd = random.Random(seed)
+    tried = 0
+    while tried < N:
+        b = document(rnd)
+        if "Cm[" not in chart_of(b):
+            continue
+        tried += 1
+        j = join(b)
+        o = canonical_song(j.replace("# ", "# Joined ", 1) if j.startswith("# ") else "# Joined\n\n" + j)
+        t = edit(rnd, j, ("tuning", rnd.choice(["E2 A2 D3 G3 B3 E4", "G4 C4 E4 A4"])))
+        for r in (merge(b, o, t), merge(b, t, o)):
+            if r.result is not None:
+                assert section_texts(r.result) == section_texts(j), (b, o, t, r.result)
+        # a side that joined, against one that did not change the chart
+        assert merge(b, b, j).result == canonical_song(j)
+        assert merge(b, j, b).result == canonical_song(j)
+
+
+@pytest.mark.parametrize("seed", SEEDS)
+def test_a_copy_inserted_does_not_take_another_copy_s_entries(seed):
+    """Ours inserts a bare copy of a song the set already plays; theirs gives
+    one item a note. The result is base with both: the note stays on the item
+    theirs gave it to, however many copies of its song the set has (§11.13)."""
+    rnd = random.Random(seed)
+    tried = 0
+    while tried < N:
+        b = setlist(rnd)
+        ins, note = insert_copy(rnd, b), add_note(rnd, b)
+        if ins is None or note is None:
+            continue
+        tried += 1
+        (o, p, copy), (t, n, noted) = ins, note
+        want = parse_setlist(b)
+        want["body"][n] = noted
+        want["body"].insert(p, copy)
+        want = canonicalise_setlist(write_setlist(want))
+        assert merge(b, o, t, setlist=True).result == want, (b, o, t)
+        assert merge(b, t, o, setlist=True).result == want, (b, o, t)

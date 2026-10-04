@@ -1,0 +1,12 @@
+{
+  "conflicts": [
+    {
+      "kind": "item",
+      "line": 7,
+      "item": "corcovado.cifra.md",
+      "occurrence": 2,
+      "base": "[Corcovado](corcovado.cifra.md)\n- key: D",
+      "theirs": "[Corcovado](corcovado.cifra.md)\n- key: E"
+    }
+  ]
+}

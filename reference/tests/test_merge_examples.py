@@ -83,6 +83,11 @@ EXAMPLES = [
     ("11.15.17", 1, "56-only-line-of-a-chord-deleted", "result.cifra.md", "whole"),
     ("11.15.18", 0, "26-marked-ours", "ours.cifra.md", "whole"),
     ("11.15.18", 1, "26-marked-ours", "conflicts.json", "whole"),
+    ("11.15.19", 0, "69-joined-on-both-sides", "base.cifra.md", "whole"),
+    ("11.15.19", 1, "69-joined-on-both-sides", "result.cifra.md", "whole"),
+    ("11.15.20", 0, "66-setlist-song-played-twice", "base.setlist.md", "whole"),
+    ("11.15.20", 1, "66-setlist-song-played-twice", "result.setlist.md", "whole"),
+    ("11.15.20", 2, "67-setlist-note-on-the-first-copy", "result.setlist.md", "whole"),
 ]
 
 

@@ -811,6 +811,7 @@ class SongMerge:
                 w = v if v[1] == 1 and v in self.v[other(side)].keys and v not in W.mu else None
                 out.append((None, v, w) if side == OURS else (None, w, v))
             sigs[n] = out
+        self.join_base_only(sigs)
         first = {}
         pos = 0
         for n, pc in enumerate(units):
@@ -848,6 +849,24 @@ class SongMerge:
                         self.fixed[(sym, (k, k, k))] = k
         self.variants = sorted(self.vindex, key=lambda key: (key[0], self.vindex[key]))
         self.variants += sorted(self.fixed, key=lambda key: self.fixed[key])
+
+    @staticmethod
+    def join_base_only(sigs):
+        """A distinction only base made does not survive (§11.9.4 rule 4):
+        the occurrences whose signatures have one key for ours and one for
+        theirs are one variant, under the base key most of them have, between
+        equal numbers the one with the least index, or none if none has one."""
+        counts: dict[tuple, Counter] = {}
+        for s in sigs:
+            for b, o, t in s:
+                if o is not None and t is not None:
+                    counts.setdefault((o, t), Counter())[b] += 1
+        rep = {}
+        for ot, c in counts.items():
+            keys = [b for b in c if b is not None]
+            rep[ot] = min(keys, key=lambda b: (-c[b], b[1])) if keys else None
+        for n, s in enumerate(sigs):
+            sigs[n] = [(rep[(o, t)], o, t) if o is not None and t is not None else (b, o, t) for b, o, t in s]
 
     @staticmethod
     def piece_id(pc):

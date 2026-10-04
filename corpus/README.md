@@ -144,3 +144,5 @@ and `--check` checks them.
 | 59-numbering-inside-a-conflict | Variants numbered inside a conflict, the exception to symmetry (marked `asymmetric`) |
 | 60 to 64 | Setlists: two reorders of one stretch, the same song added twice, a notes block changed on both sides, `title`, `text` and `entry` conflicts, and entries merged under the title and under an item |
 | 65-setlist-marked-side | A setlist whose theirs is a marked text: an `unresolved` conflict |
+| 66 to 68 | The example of spec §11.15.20 and its alternative, a song played twice: a copy inserted before another while the other side changes a copy, the later or the earlier, each change staying on its copy; and a copy removed by one side and changed by the other, whose `item` conflict names its `occurrence` |
+| 69 to 71 | The example of spec §11.15.19 and its alternatives: keys joined on both sides, so that the joined variant takes the other side's new shape, and joined on both sides with no shapes at all, where the marker goes; and joined on one side while the other kept them apart and revoiced one, where they stay two keys |
