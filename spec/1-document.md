@@ -86,14 +86,14 @@ that needs structure belongs in an application's own key.
 | Key | Meaning |
 |---|---|
 | `artist` | Who the song is by. Free text. |
-| `notation` | The dialect the chart's symbols are written in: `brazilian`, `american` or `realbook` (§5.6). Affects only the three ambiguous spellings. Default `brazilian`. |
+| `notation` | The dialect the chart's symbols are written in: `brazilian`, `american` or `realbook` (§5.6). Affects only the four ambiguous spellings. Default `brazilian`. |
 | `language` | BCP 47 tag for the words, when the song has them. Informative. |
 
 The title is not a property; it is the heading. Any other key is
 application-defined. A reader MUST keep keys it does not know; a writer
 MUST write them back unchanged.
 
-A document that uses one of the three ambiguous spellings (§5.6) SHOULD
+A document that uses one of the four ambiguous spellings (§5.6) SHOULD
 declare `notation`.
 
 ## 1.5 The two parts
