@@ -55,6 +55,17 @@ significant.
   the previous block.
 - A heading with no colon is an error, handled the same way.
 
+A teacher will write `## Voicings: cavaquinho`, or `## Voicings: D G B D`
+without octaves, because that is how an instrument is named in a lesson.
+The format does not keep a table of instrument names: the pitch list is
+what makes a block usable on any instrument at all, and a name would be
+one more thing to get wrong in four languages. So the diagnostic does the
+teaching. A reader's report for a heading whose tuning does not parse MUST
+say what a tuning is and show one, for example: *a tuning is the open
+strings as pitches with octave numbers, lowest string first, like
+`E2 A2 D3 G3 B3 E4` for a guitar or `G4 C4 E4 A4` for a ukulele*. An
+application MAY offer to fill the pitches in from a name it knows.
+
 Because the block heading is recognised by its position after the rule and
 not by its words, a section in the chart called `Voicings: something` is
 just a section, and a block label may be any word in any language.
@@ -199,6 +210,25 @@ simply unchosen there, which is the truth.
 
 Defaults are never written into the document. A block holds what somebody
 chose; writing defaults in would hide the choices among the guesses.
+
+### 7.6.1 Names derived from shapes
+
+Three things about a chord are kept apart:
+
+| Layer | Where it lives | Example |
+|---|---|---|
+| The harmony | the chart, shared by every instrument | `Gm7` |
+| The shape | the block for one tuning | `x1303x` |
+| What the shape sounds, or is called | derived, shown, never stored | `Gm7/Bb`; "an E shape" under a capo |
+
+A reader MAY derive the third from the second and the tuning: the bass the
+shape actually sounds, so that an inversion reads `Gm7/Bb` beside the
+chart's `Gm7`; or the name the shape would have at the nut, so that a `G`
+voiced `022100` under a capo at the third fret reads "E shape" (§6.3). An
+application MAY show these, and MAY offer to show the whole chart by them.
+A writer MUST NOT write them into the text. They go stale when a shape is
+edited and they differ for every tuning, which is what the chart is
+independent of.
 
 ## 7.7 The legend
 

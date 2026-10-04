@@ -361,7 +361,13 @@ class _Parser:
             try:
                 tuning = parse_tuning(tuning_text)
             except ValueError:
-                self.diag("bad-block-heading", lineno, f"not a tuning: {tuning_text!r}", raw)
+                self.diag(
+                    "bad-block-heading",
+                    lineno,
+                    f"not a tuning: {tuning_text!r}. A tuning is the open strings as pitches with octave numbers, "
+                    "lowest string first, like E2 A2 D3 G3 B3 E4 for a guitar or G4 C4 E4 A4 for a ukulele",
+                    raw,
+                )
                 return None, True
             name = "" if label.lower() == "voicings" else label
             for existing in self.blocks:

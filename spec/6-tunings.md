@@ -65,6 +65,21 @@ a capo does, and a document arranged for "guitar, capo 2" has a block for
 capo, which is the convention capo users want. There is deliberately no
 separate capo field.
 
+The chart does not change for a capo. It names the harmony as it sounds
+(§0.1, §7.1): a song in G says `G`, on every instrument. The capo'd block
+voices that `G` with the frets a hand makes above the capo, which for a
+capo at the third fret is the shape a guitarist calls *E*, `022100`. That
+the shape is "an E shape" is a fact a reader can derive from the shape and
+the tuning, and an application MAY show it beside the chord, the way it may
+show that a shape sounds an inversion (§7.6.1). It is never written into
+the text: the chart holds one name for the harmony, and the shape names
+would have to be repeated for every capo'd tuning and would go stale the
+moment a shape changed.
+
+This is also why a document arranged for guitar with a capo and for
+ukulele is coherent: both blocks voice the same `G`, each in its own
+tuning.
+
 ## 6.4 What is not a tuning
 
 A single pitch is a pitch, not a tuning. This matters nowhere in the current

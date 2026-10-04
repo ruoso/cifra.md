@@ -20,18 +20,18 @@ def _ids():
 @pytest.mark.parametrize("entry", ENTRIES, ids=_ids())
 def test_parse_matches(entry):
     expected = json.loads((entry / "parsed.json").read_text(encoding="utf-8"))
-    assert parse((entry / "input.md").read_text(encoding="utf-8")) == expected
+    assert parse((entry / "input.cifra.md").read_text(encoding="utf-8")) == expected
 
 
 @pytest.mark.parametrize("entry", ENTRIES, ids=_ids())
 def test_write_matches(entry):
     expected = json.loads((entry / "parsed.json").read_text(encoding="utf-8"))
-    assert write(expected) == (entry / "canonical.md").read_text(encoding="utf-8")
+    assert write(expected) == (entry / "canonical.cifra.md").read_text(encoding="utf-8")
 
 
 @pytest.mark.parametrize("entry", ENTRIES, ids=_ids())
 def test_canonical_is_a_fixed_point(entry):
-    canonical = (entry / "canonical.md").read_text(encoding="utf-8")
+    canonical = (entry / "canonical.cifra.md").read_text(encoding="utf-8")
     again = parse(canonical)
     assert write(again) == canonical
     expected = json.loads((entry / "parsed.json").read_text(encoding="utf-8"))

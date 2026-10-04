@@ -4,7 +4,7 @@ import pathlib
 import pytest
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-EXAMPLES = sorted(p for p in (ROOT / "examples").glob("*.md") if p.name != "README.md")
+EXAMPLES = sorted((ROOT / "examples").glob("*.cifra.md"))
 CASES = sorted((ROOT / "tests" / "cases").glob("*.json"))
 SCHEMA = json.loads((ROOT / "schema" / "cifra.schema.json").read_text())
 

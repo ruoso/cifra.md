@@ -50,6 +50,7 @@ class TestBlocks:
         assert [b["tuning"]["text"] for b in doc["blocks"]] == [GUITAR, UKE]
         assert doc["blocks"][0]["notes"] == []
         assert [d["code"] for d in doc["diagnostics"]] == ["bad-block-heading"]
+        assert "E2 A2 D3 G3 B3 E4" in doc["diagnostics"][0]["message"]
 
     def test_duplicate_blocks_merge_with_the_later_winning(self):
         doc = parse(f"```\nC\n```\n---\n## Voicings: {GUITAR}\n- C: x32010\n- G: 320003\n## Voicings: E2, A2, D3, G3, B3, E4\n- C: x35553\n")

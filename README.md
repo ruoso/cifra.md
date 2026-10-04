@@ -120,7 +120,7 @@ ones. Where it does not yet follow this draft, the gap is listed in
 | [`schema/cifra.schema.json`](schema/cifra.schema.json) | JSON Schema (2020-12) of the parsed document model | Readers, to say what they produce; writers, to say what they take |
 | [`reference/`](reference/) | A reader and canonical writer in Python, with a test suite of one file per chapter | A second opinion on every sentence of the spec |
 | [`corpus/`](corpus/) | Reference corpus: per entry an uncanonical `input.md`, its `parsed.json`, and its `canonical.md` | New implementations, to validate themselves in both directions |
-| [`examples/`](examples/) | Complete documents, one per feature, all in canonical form | Reading |
+| [`examples/`](examples/) | Complete documents, `*.cifra.md`, one per feature, all in canonical form | Reading |
 
 The model is what a reader produces and a writer consumes. The schema is its
 normative shape; §0.4 of the overview describes it in prose. A **canonical
