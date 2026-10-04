@@ -11,7 +11,7 @@ from cifra_md.write import canonical
 from conftest import ROOT, SCHEMA
 from tools.corpus import dump
 
-ENTRIES = sorted(p for p in (ROOT / "corpus").iterdir() if p.is_dir())
+ENTRIES = sorted(p for p in (ROOT / "corpus").iterdir() if p.is_dir() and (p / "input.cifra.md").exists())
 
 
 def _ids():

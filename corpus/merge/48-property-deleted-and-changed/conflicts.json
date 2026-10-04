@@ -1,0 +1,11 @@
+{
+  "conflicts": [
+    {
+      "kind": "property",
+      "line": 3,
+      "key": "tempo",
+      "base": "96",
+      "theirs": "120"
+    }
+  ]
+}

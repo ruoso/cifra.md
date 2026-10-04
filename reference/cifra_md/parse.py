@@ -9,7 +9,7 @@ import re
 
 from .chord import DEFAULT_DIALECT, DIALECTS, parse_chord
 from .frets import check_fingers, parse_fingers, parse_frets
-from .text import prepare
+from .text import is_marker_line, prepare
 from .tuning import parse_tuning
 
 # Whitespace is U+0020 only (§1.3); tabs are already spaces and trailing
@@ -373,6 +373,10 @@ class _Parser:
         return section
 
     def run(self):
+        for idx, raw in enumerate(self.lines):
+            if is_marker_line(raw):
+                # A marked text is a merge waiting for someone (§11.12.3).
+                self.diag("marker-line", idx + 1, "a conflict marker: this text is an unresolved merge, and cannot be saved until it is resolved", raw)
         start = self.read_metadata()
         dialect = ascii_lower((self.dialect_override or self.prop("notation") or DEFAULT_DIALECT).strip(" "))
         if dialect not in DIALECTS:

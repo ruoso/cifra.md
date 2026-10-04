@@ -1,0 +1,15 @@
+{
+  "conflicts": [
+    {
+      "kind": "chart",
+      "line": 11,
+      "base": [],
+      "ours": [
+        "G | G | C | G"
+      ],
+      "theirs": [
+        "G | G7 | C | G"
+      ]
+    }
+  ]
+}

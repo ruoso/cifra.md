@@ -1,0 +1,17 @@
+{
+  "conflicts": [
+    {
+      "kind": "chart",
+      "line": 3,
+      "base": [
+        "G           D\nWhen I first saw you"
+      ],
+      "ours": [
+        "G           D7\nWhen I first saw you"
+      ],
+      "theirs": [
+        "G           D\nWhen I first met you"
+      ]
+    }
+  ]
+}

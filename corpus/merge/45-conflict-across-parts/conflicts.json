@@ -1,0 +1,17 @@
+{
+  "conflicts": [
+    {
+      "kind": "sections",
+      "line": 1,
+      "base": [
+        "## A\n```\nC | G\n```"
+      ],
+      "ours": [
+        "## A\nPlay it softly.\n\n```\nC | G\n```"
+      ],
+      "theirs": [
+        "## A\n```tab\ne|-----0-----|\n```\n\n```\nC | G\n```"
+      ]
+    }
+  ]
+}

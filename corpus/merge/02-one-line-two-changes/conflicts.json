@@ -1,0 +1,17 @@
+{
+  "conflicts": [
+    {
+      "kind": "chart",
+      "line": 5,
+      "base": [
+        "Dm | G7 | C7 | F"
+      ],
+      "ours": [
+        "Dm | G7 | C7 | F7M"
+      ],
+      "theirs": [
+        "Dm | G7 | C7 | Fmaj7"
+      ]
+    }
+  ]
+}

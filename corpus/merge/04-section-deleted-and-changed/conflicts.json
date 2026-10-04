@@ -1,0 +1,15 @@
+{
+  "conflicts": [
+    {
+      "kind": "sections",
+      "line": 9,
+      "base": [
+        "## B\n```\nGm | C7 | F Dm | Gm A7\n```"
+      ],
+      "ours": [],
+      "theirs": [
+        "## B\n```\nGm | C7 | F Dm | Gm7 A7\n```"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "conflicts": [
+    {
+      "kind": "chart",
+      "line": 3,
+      "base": [
+        "Cm | F7"
+      ],
+      "ours": [
+        "Cm[2] | Fm"
+      ],
+      "theirs": [
+        "Cm[3] | F9"
+      ]
+    }
+  ]
+}

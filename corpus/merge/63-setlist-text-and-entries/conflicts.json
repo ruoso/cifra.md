@@ -1,0 +1,21 @@
+{
+  "conflicts": [
+    {
+      "kind": "text",
+      "line": 7,
+      "item": "garota.cifra.md",
+      "base": "Garota de Ipanema",
+      "ours": "The Girl from Ipanema",
+      "theirs": "Garota"
+    },
+    {
+      "kind": "entry",
+      "line": 12,
+      "item": "garota.cifra.md",
+      "key": "key",
+      "base": "D",
+      "ours": "E",
+      "theirs": "F"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "conflicts": [
+    {
+      "kind": "sections",
+      "line": 5,
+      "base": [
+        "```\n[Verse] Em C\nG D\n```"
+      ],
+      "ours": [
+        "```\n[Verse 1] Em C\nG D\n```"
+      ],
+      "theirs": [
+        "```\n[Estrofe] Em C\nG D\n```"
+      ]
+    }
+  ]
+}

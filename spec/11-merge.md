@@ -134,7 +134,10 @@ chapter is written so that it does.
   instruments or different variations, including the footnote markers
   they add to the chart (§11.9). What conflicts is two changes to the
   same line, two insertions at the same place, two values for one thing,
-  and a deletion of something the other side changed.
+  and a deletion of something the other side changed. The one change that
+  reaches past what it touches is one that makes the document sung or not
+  sung (§4.2): every line of words then reads otherwise, and is a change
+  of the side that made it (§11.8.1).
 
 ## 11.4 Whole files
 
@@ -287,9 +290,10 @@ A cluster is settled by the policy of its sequence's kind:
   once, as made by both sides. Then, if the kind allows **pairing**, the
   remaining runs have the same length, at least one, and each ours element
   matches the theirs element at the same offset, the pairs are merged as
-  elements in both, each with the base element at the same offset as its
-  base if the base run has the same length and each of its elements
-  matches both, and with none otherwise. Otherwise what remains is a
+  elements in both. Each has for its base the element of the base run at
+  its offset in the remaining runs, if the base run has as many elements
+  as each remaining run and every one of them matches both elements at its
+  offset; otherwise every pair has none. Otherwise what remains is a
   **conflict region**, holding the base run and the two remaining runs.
 - **Combine.** The two runs are combined (below), and no conflict is
   reported.
@@ -299,8 +303,10 @@ element, the result is *X*. Otherwise each element has a **sort string**,
 which its kind defines; the run whose sort strings come first, compared
 element by element by code point and with a run that is a prefix of the
 other coming first, is written first, followed by every element of the
-other run whose identity is not already in it. Combining is symmetric: it
-gives the same sequence whichever run is ours.
+other run whose identity is not already in it. Two elements with
+different identities never have the same sort string, or their kind says
+what decides between them (§11.13), so combining is symmetric: it gives
+the same sequence whichever run is ours.
 
 ### 11.5.5 Keyed lists
 
@@ -328,7 +334,7 @@ says, with an absent base where it was added.
 and every cluster combined. Then every identity that is not in the result
 is removed, and every repeat of an identity after its first. Last, each
 identity in the result that the sequence lacks is inserted, taking them
-in code-point order of their sort strings, right after the nearest
+in order of their sort strings, right after the nearest
 identity that precedes it in the side that holds it and is already in the
 sequence, or first if there is none. Only one side can hold an identity
 the sequence lacks: it is one that side kept and the other side deleted,
@@ -389,9 +395,14 @@ sections and of units).
   conflict: a `reading` conflict.
 
 A `reading` conflict takes the place of the property's merge; resolving
-it chooses the property's value, and the music stays as merged. Where the
-property was changed by both sides, it is merged as any property, and a
-difference is a `property` conflict.
+it chooses the property's value, and the music stays as merged. The
+property is in the result until the conflict is resolved, even where *V*
+deleted it, and stands where §11.5.5 puts an identity one side kept. Where
+the property was changed by both sides, it is merged as any property, and
+a difference is a `property` conflict.
+
+While `notation` is in conflict, the merged text is laid out (§11.11 step
+3) in base's dialect.
 
 ## 11.8 The chart
 
@@ -407,12 +418,16 @@ The body of a section (§1.9) is merged as a sequence of **units**:
 - for each verbatim part, a fence unit carrying its info string, then one
   unit per line, blank lines included.
 
-Each unit has a **kind**: notes, fence (with its info string), music, or
+Each unit has a **kind**: notes, fence (with its info string), music
+(with its line's kind: chart, sung, lyric, break or annotation, §0.4), or
 verbatim (with its part's info string). Its **text** is what canonical
 form writes for it: the line as held, for notes and verbatim; ```` ``` ````
 and the info string, for a fence unit; and for a music line its line, or
 for a sung line its two lines joined by a LF, as §8.4.4 and §8.4.5 write
-them.
+them. Two lines can have one text and still be read apart, `E agora` as
+words in a sung document and as the chord `E` in one that is not; the
+line's kind is what tells them apart, and what makes two units that
+match hold the same chords.
 
 Its **masked text** is its text written with every chord's symbol in
 place of its key, so that `Cm[2]` is written `Cm`. On a sung line each
@@ -538,8 +553,9 @@ corresponding occurrences whose key is *b* in base and *v* in *V*. Then:
 
 1. Among the pairs with *c*(*b*, *v*) > 0 whose *b* and *v* are both
    unmatched, the pair with the greatest count is **matched**; between
-   equal counts, the one with the least index of *b*, then the least
-   index of *v*. This is repeated until no such pair is left.
+   equal counts, a pair whose two keys have the same index, then the one
+   with the least index of *b*, then the least index of *v*. This is
+   repeated until no such pair is left.
 2. Then, for each index in ascending order: if base and *V* both have a
    key of that symbol with that index, both are unmatched, and neither
    has any corresponding occurrence, they are matched. This is the key
@@ -553,7 +569,10 @@ corresponding occurrences whose key is *b* in base and *v* in *V*. Then:
 The greatest count wins because a side that splits one occurrence off a
 key (§8.5.1 step 4) leaves most of them where they were: the key that
 keeps most of a base key's occurrences continues it, and the one split
-off is new.
+off is new. Between equal counts, a key that kept its name continues it:
+a side that moved the one bar of `Cm` it kept to the existing `Cm[2]`
+(§8.5.1 step 2) re-keyed that bar, not every other `Cm[2]` in the song
+(§11.15.15).
 
 ### 11.9.3 Re-keyed occurrences
 
@@ -588,23 +607,31 @@ or none:
    side of a conflict region), with key *v*, and *W* the other side: if
    μ_V_(*v*) is a base key *b*, the signature has *b* for base, *v* for
    *V* and match_W_(*b*) for *W*. Otherwise, if some occurrence under rule
-   1 has key *v* on side *V*, the signature that most such occurrences
-   have, and between equal numbers the one that occurs first in the merged
-   chart. Otherwise none for base, *v* for *V*, none for *W*.
+   1 or 2 has key *v* on side *V*, the signature that most such
+   occurrences have, and between equal numbers the one that occurs first
+   in the merged chart. Otherwise none for base and *v* for *V*, and for
+   *W*: *v* if *v* is a symbol alone (its index is 1) and *W* has *v* as a
+   key that is new in *W* (§11.9.2 step 3), and none otherwise.
 
 Occurrences of one symbol with the same signature are one variant.
 Occurrences that any version tells apart are therefore different
 variants, and occurrences no version has seen together are different too,
 unless rule 3 joins them: a line one side added with a key that side also
-gave to a bar that both sides kept joins that bar's variant.
+gave to a bar that both sides kept, or that both sides added alike, joins
+that bar's variant; and a chord that base does not have, written bare by
+both sides in lines each added on its own, is one chord (§11.15.16). A
+marker that both sides added is not joined that way: `Cm[2]` new on each
+side may be two decisions under one name (§11.9.1).
 
 Keeping apart whatever any version tells apart is safe, because the
-canonical form joins variants again when no block tells them apart
-(§8.3 I3). So a side that joined two keys loses nothing: each is merged
-on its own with the shapes the joining side gave it, and they are one key
-again in the result unless the other side gave them different shapes on
-some instrument, in which case keeping them apart is what that
-instrument's arrangement needs.
+canonical form joins variants again when some block has a shape for both
+and no block tells them apart (§8.3 I3). So a side that joined two keys
+loses nothing: each is merged on its own with the shapes the joining side
+gave it, and they are one key again in the result unless the other side
+gave them different shapes on some instrument, in which case keeping them
+apart is what that instrument's arrangement needs. Where no instrument
+has a shape for either any more, nothing tells them apart and nothing
+joins them, and they stay two keys.
 
 ### 11.9.5 Numbering
 
@@ -620,6 +647,10 @@ marker. For each symbol, its variants are ordered:
 
 The first variant takes index 1, the next 2, and so on. The canonical
 form then joins and renumbers as §8.3 says (§11.11).
+
+A key used only by unknown tokens is not a variant: it keeps its text
+(§11.9.1), and a block's item for it is merged as a variant's voicing is
+(§11.10.3), with that key in every version.
 
 The first rule keeps the numbering both sides already agree on: a key
 neither side renamed keeps its relative place, a key a side renumbered
@@ -653,10 +684,12 @@ on the other keeps the edits.
 
 The blocks are a keyed list (§11.5.5). A block's identity is its tuning
 and its name in base, through a rename where there is one; its sort string
-is its heading as the result writes it. A side **changed** a block when it
-renamed it, when its notes differ from base's, or when some variant's
-voicing in it differs from base's and is not weak (§11.10.3). A block
-deleted by one side and changed by the other is a `block` conflict.
+is its heading as the result writes it, with its **name in the result**:
+the merged name, or, where that is none or in conflict, the least by code
+point of the sides' names that are not none. A side **changed** a block
+when it renamed it, when its notes differ from base's, or when some
+variant's voicing in it differs from base's and is not weak (§11.10.3). A
+block deleted by one side and changed by the other is a `block` conflict.
 
 A block's name is a value: base's, and each side's after any rename. A
 conflict, both sides renaming one block differently, is a `variation`
@@ -667,12 +700,14 @@ one and keeping one are changes of presence like any other.
 
 ### 11.10.2 Tunings
 
-A tuning's **spelling** is the text a version writes for it (§6.2,
-§8.4.6), or none where the version has no block for it. The spelling is a
-value, but it never conflicts: where §11.6 would report a conflict, the
-result is whichever of the two sides' spellings that is not none comes
-first by code point. Spelling is not music, and two people who wrote one
-tuning two ways have not disagreed about anything.
+A block's **spelling** of its tuning is the text a version writes in its
+heading (§6.2, §8.4.6), or none where the version does not have the
+block. The spelling is a value, but it never conflicts: where §11.6 would
+report a conflict, the result is whichever of the two sides' spellings
+that is not none comes first by code point; and where the result would be
+none, as for a block one side deleted and the other changed, it is base's.
+Spelling is not music, and two people who wrote one tuning two ways have
+not disagreed about anything.
 
 ### 11.10.3 Voicings
 
@@ -681,7 +716,13 @@ its **voicing** in that block: the fret string and fingering, as §8.4.6
 writes them after the key, or none. For a variant with signature
 (*β*, *ω*, *τ*), its voicing on each version is that version's item for
 its key there in that version's counterpart of the block, and none where
-the key, the block or the item is absent.
+the key, the block or the item is absent, with one exception: where the
+variant has a base key *β* and a side that has the block has no key for
+it (rule 3 of §11.9.4, with match_W_(*β*) none), that side kept no
+occurrence of *β* and so made no decision about its shape, and its
+voicing is base's. A side that deleted the only line playing a chord has
+not cleared that chord's shape for a line the other side added
+(§11.15.17).
 
 **Weak absence.** A side that splits an occurrence off a key, for one
 instrument, leaves it with no voicing on every other instrument, though it
@@ -832,16 +873,18 @@ Further:
   blank line directly after `<<<<<<< ours` or `=======` or directly before
   `=======` or `>>>>>>> theirs`, other than a side's own blank lines.
 - A `chart` region is written inside a part only when every unit of its
-  two runs is a line of one kind (§11.8.1), not a fence unit: it then
-  stands in the merged body as a line of that kind, and the body is put
-  into parts with it (§11.8.4). If its runs hold a fence unit or lines of
-  different kinds, the region cannot stand in one part, and the section
-  is written whole instead: every conflict in the section, its heading's
-  included, becomes one `sections` region whose sides are the whole
-  section with each of those conflicts settled ours's way and theirs's
-  way. So does a section with a `heading` conflict whose heading is a
-  bracket or a label heading on either side, since that heading line is
-  written inside a fence on one side and might not be on the other.
+  two runs is a line, not a fence unit, and all are lines of one part:
+  notes lines, music lines, or verbatim lines with one info string
+  (§11.8.1). It then stands in the merged body as a line of that part's
+  kind, and the body is put into parts with it (§11.8.4). If its runs
+  hold a fence unit or lines of different parts, the region cannot stand
+  in one part, and the section is written whole instead: every conflict
+  in the section, its heading's included, becomes one `sections` region
+  whose sides are the whole section with each of those conflicts settled
+  ours's way and theirs's way. So does a section with a `heading`
+  conflict whose heading is a bracket or a label heading on either side,
+  since that heading line is written inside a fence on one side and
+  might not be on the other.
 - A section whose first line is in a region does not have it written on
   its bracket or label heading line (§8.4.3 step 2).
 - A fence that canonical form would continue across sections (§8.4.3) is
@@ -927,9 +970,11 @@ canonicalised as §10.9 says.
 **The setlist's entries** (§10.3.1) are a keyed list. A property is
 identified by its key; an unrecognised entry by its text and, if the
 same text occurs more than once, by its **occurrence**, 1 for the first,
-2 for the second. The sort string is the key, or the text. A property's
-value merges as a value, a conflict being a `property` conflict; an
-unrecognised entry has no value, only presence.
+2 for the second. The sort string is the key, or the text, and between a
+key and a text that are the same, the key comes first, then the lower
+occurrence. A property's value merges as a value, a conflict being a
+`property` conflict, as is one of presence (deleted against changed); an
+unrecognised entry has no value, only presence, and never conflicts.
 
 **The body** (§10.6) is a keyed list of items and notes blocks:
 
@@ -940,8 +985,13 @@ unrecognised entry has no value, only presence.
 - A notes block is identified by the item it follows, or by being first
   when it precedes every item. Two notes blocks never stand next to each
   other, so this is unique.
-- The sort string of an item is its line as §10.9.2 writes it without the
-  number and the space after it; of a notes block, its first line.
+- The sort string of an item is the least, by code point, of its lines as
+  §10.9.2 writes them in the versions that have it, without the number and
+  the space after it; of a notes block, the least of its first lines.
+  Between equal sort strings, an item comes before a notes block, the
+  lower occurrence before the higher, and a notes block that is first
+  before one that follows an item, then by the sort string of the item it
+  follows, then by that item's occurrence.
 - A song item's value is its link text and its entries; an unlinked
   item's, its entries; a notes block's, its lines. A side **changed** an
   element when its value differs from base's.
@@ -954,7 +1004,8 @@ or `note`, is an `item` conflict: deleted against changed.
 
 The merge of an item in the result: its link text is a value, a conflict
 being a `text` conflict; its entries are a keyed list as the setlist's
-are, each property's value a value, a conflict being an `entry` conflict.
+are, each property's value a value, a conflict on it or on its presence
+being an `entry` conflict.
 A notes block's lines are a value, a conflict on them or on its presence
 being a `notes` conflict. Canonical form writes an item's `key` and
 `note` first whatever the merged order says (§10.9.2).
@@ -1310,12 +1361,37 @@ the result no longer has.
 ### 11.15.7 A line changed under a new marker
 
 From 11.15.5's base, ours changes the first line to
-`Cm | Fm7 | Cm | G7`; theirs, as in 11.15.5, splits off bar 3 for the
-ukulele. Theirs's first line matches base's but its bar 3 is re-keyed, so
-it is not the same, and its change touches ours's. The result is a
-`chart` conflict on the first line, with theirs's `Cm[2]` in its run and
-`- Cm[2]: 5333` in the ukulele's block of the marked text. Taking ours's
-line drops theirs's shape, which then nothing plays.
+`Cm | Fm7 | Cm | G7`; theirs splits off bar 3 for the ukulele, with
+`- Cm[2]: 5333`, as 11.15.5's theirs did bar 7. Theirs's first line
+matches base's but its bar 3 is re-keyed, so it is not the same, and its
+change touches ours's. The result is a `chart` conflict on the first
+line, with theirs's `Cm[2]` in its run and `- Cm[2]: 5333` in the
+ukulele's block of the marked text:
+
+````
+## A
+```
+<<<<<<< ours
+Cm | Fm7 | Cm | G7
+=======
+Cm | F7 | Cm[2] | G7
+>>>>>>> theirs
+Cm | F7 | Cm | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- F7: 131211
+- G7: 320001
+
+## Voicings: G4 C4 E4 A4
+- Cm: 0333
+- Cm[2]: 5333
+````
+
+Taking ours's line drops theirs's shape, which then nothing plays.
 
 ### 11.15.8 Two shapes for one chord
 
@@ -1656,53 +1732,177 @@ would conflict with the removal:
 }
 ```
 
-## 11.16 Corpus entries (proposal)
+### 11.15.15 A bar moved to an existing marker
 
-*This section is a proposal. The corpus holds no merge entries yet, and
-their layout may change when the first are written.*
+Base:
 
-Merge entries would live in `corpus/merge/`, one directory per entry,
-numbered and named as the other entries are:
+````
+## A
+```
+C | Cm
+```
+
+## B
+```
+F | Cm[2]
+```
+
+## C
+```
+Cm | G
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: x3554x
+````
+
+Ours plays the `Cm` of *A* as the `Cm[2]` of *B*, `C | Cm[2]`, and makes
+*C*'s line `Cm | G7`. Theirs makes *B*'s line `F | Bb | Cm[2]`. In ours,
+*A*'s bar corresponds to base's `Cm` and *B*'s to base's `Cm[2]`, one
+occurrence each; *C*'s line changed, so its `Cm` corresponds to nothing.
+Between the equal counts, ours's `Cm[2]` continues base's `Cm[2]`, whose
+index it kept, so *A*'s bar is the one re-keyed and *B*'s line is the same
+in ours: theirs's change to it does not touch anything ours did. The
+result:
+
+````
+## A
+```
+C | Cm[2]
+```
+
+## B
+```
+F | Bb | Cm[2]
+```
+
+## C
+```
+Cm | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: x3554x
+````
+
+*A*'s bar and *B*'s are two variants, (`Cm`, `Cm[2]`, `Cm`) and
+(`Cm[2]`, `Cm[2]`, `Cm[2]`), with the same shape, which the canonical form
+joins.
+
+### 11.15.16 One new chord, added on both sides
+
+From 11.15.1's base, ours adds `E7 | A7` at the end of *A*, and theirs
+`E7 | A7 | Dm` at the end of *B*. Base has no `E7`; each side's is new,
+and no line holds both. Each side wrote it bare, so the two are one
+chord, and the result has no `E7[2]`:
+
+````
+# Blues in D minor
+
+## A
+```
+Dm | G7 | C7 | F
+Bb | A7 | Dm | %
+E7 | A7
+```
+
+## B
+```
+Gm | C7 | F Dm | Gm A7
+E7 | A7 | Dm
+```
+````
+
+### 11.15.17 The only line of a chord deleted
+
+Base:
+
+````
+## A
+```
+Cm | F
+G | G
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- F: 133211
+````
+
+Ours adds a line `Cm | G`; theirs deletes the line `Cm | F`, and with it
+every `Cm` and its shape. The new line's `Cm` continues base's in ours, and
+theirs has no key for it: theirs made no decision about its shape, which
+stays base's.
+
+````
+## A
+```
+G | G
+Cm | G
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+````
+
+## 11.16 Corpus entries
+
+The merge corpus is `corpus/merge/`, one directory per entry, numbered
+and named as the other entries are:
 
 | File | What it is |
 |---|---|
 | `base.cifra.md`, `ours.cifra.md`, `theirs.cifra.md` | The three inputs. A file that is missing is an absent input. For a setlist, `.setlist.md`. |
-| `result.cifra.md` | The result, when the merge gives one. |
+| `result.cifra.md` | The result, when the merge gives one. For a setlist, `result.setlist.md`. |
 | `result.deleted` | An empty file, when the merge deletes. |
 | `conflicts.json` | The conflicts as JSON (§11.12.5), when there are any. |
-| `marked.cifra.md` | The marked text, when a conflict has a region. |
+| `marked.cifra.md` | The marked text, when a conflict has a region. For a setlist, `marked.setlist.md`. |
+| `asymmetric` | An empty file, in an entry whose conflicts number variants under the exception of §11.9.5. |
 
 Exactly one of `result.cifra.md`, `result.deleted` and `conflicts.json`
 is present. Inputs are written by hand, and need not be canonical; the
 expected files are generated by the reference implementation and
 reviewed, as the other entries' are.
 
-An implementation would validate itself by checking, for every entry:
+An implementation validates itself by checking, for every entry:
 
 1. Merging base, ours and theirs gives the expected files, byte for byte.
 2. Merging base, theirs and ours gives the same `result.cifra.md` or
    `result.deleted`; or a `conflicts.json` equal to the expected one with
    every `ours` and `theirs` member, and every `"ours"` and `"theirs"`
-   value, exchanged. An entry whose conflicts number variants under the
-   exception of §11.9.5 is marked as such and skips this check.
+   value, exchanged, and a marked text that is the expected one with the
+   two sides of every region exchanged. An entry marked `asymmetric`
+   skips this check.
 3. `result.cifra.md` is canonical: canonicalising it gives it.
 4. Resolving every conflict of `marked.cifra.md` by ours, and every one by
-   theirs (§11.12.4), gives a canonical text, and neither holds a marker
-   line.
+   theirs (§11.12.4), gives a text that holds no marker line and whose
+   canonical form is a fixed point.
 
 and, generated from every entry's files rather than stored: merging
-*b*, *x*, *x*, and *b*, *b*, *x*, gives the canonical text of *x*, for
-each of the entry's inputs as *b* and *x*.
+*b*, *x*, *x*, and *b*, *b*, *x*, and *b*, *x*, *b*, gives the canonical
+text of *x*, for each of the entry's readable inputs as *b* and *x*.
 
-The first entries would cover the examples of §11.15, one each, then:
-every row of §11.4; a pure renumbering on each side; a key joined by I3
-on one side and revoiced on the other; a key used only by unknown tokens;
-a heading changed in two fields by two sides; a repeat group whose marks
-and inner lines were changed by different sides; a conflict that forces a
-section to be written whole (§11.12.2); a sung line whose words are pushed
-because the merged marker grew; a non-canonical input; and for setlists,
-two reorders of one stretch, the same song added twice, and a notes block
-changed on both sides.
+The entries cover the examples of §11.15, one each, and the alternatives
+their text describes; every row of §11.4 and a file that is not UTF-8;
+every kind of conflict of §11.12.1 and of §11.13; and a pure renumbering
+on each side, a key joined on one side and revoiced on the other, a key
+used only by unknown tokens, a heading changed in two fields by two
+sides, a repeat group whose marks and inner lines were changed by
+different sides, conflicts that force a section to be written whole
+(§11.12.2), a sung line whose words are pushed because the merged marker
+grew, non-canonical inputs, and for setlists, two reorders of one
+stretch, the same song added twice, a notes block changed on both sides,
+and entries merged under the title and under an item.
 
 ## Open questions
 
@@ -1737,11 +1937,23 @@ Deferred to a later version:
 - **Marker lines in notes.** §11.12.3 forbids a notes line of seven `=`
   that someone might have meant. A narrower rule, markers only in the
   shapes this chapter writes them, would allow it and still catch git's.
-  §8.1 should, in any case, say that a marked text is not canonical.
+- **Marked inputs.** An input that is itself a marked text, a merge
+  someone left unresolved, is canonicalised as any text is (§11.2), its
+  marker lines kept as notes or tokens, and they reach the result, which
+  is then not canonical (§11.12.3). Whether such an input should instead
+  be a `file` conflict, as an unreadable one is, is open.
+- **Joins without shapes.** Two keys that one side joined stay two keys
+  in the result when no instrument has a shape for either (§11.9.4),
+  since nothing then tells I3 they are one. A merge could join variants
+  that only base told apart, at the cost of a rule beside I3.
+- **Sung or not.** A change that makes the document sung or not sung
+  changes every line of words (§11.3, §11.8.1), and conflicts with any
+  change the other side made to one. Comparing such lines by their text
+  alone would let them merge, but the chords in them would then not
+  correspond.
 - **Labels and marker size.** A git user expects the labels of the
   branches merged, and git can ask for longer markers. A driver that
   honoured them would write a marked text the corpus does not hold; the
   driver's labels are fixed for now (§11.14).
 - **A JSON Schema** for `conflicts.json`, as there is for the document
-  model, and the merge in the reference implementation. Until they exist,
-  §11.12 is the normative description.
+  model. Until it exists, §11.12 is the normative description.

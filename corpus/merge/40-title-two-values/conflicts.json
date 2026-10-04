@@ -1,0 +1,11 @@
+{
+  "conflicts": [
+    {
+      "kind": "title",
+      "line": 1,
+      "base": "Small",
+      "ours": "Pequena",
+      "theirs": "Tiny"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "conflicts": [
+    {
+      "kind": "block-notes",
+      "line": 16,
+      "tuning": "E2 A2 D3 G3 B3 E4",
+      "variation": "Simple",
+      "base": [
+        "Use the thumb for the bass."
+      ],
+      "ours": [
+        "Use the index for the bass."
+      ],
+      "theirs": [
+        "Use the thumb for the low note."
+      ]
+    }
+  ]
+}

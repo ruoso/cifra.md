@@ -1,0 +1,10 @@
+{
+  "conflicts": [
+    {
+      "kind": "file",
+      "unreadable": [
+        "theirs"
+      ]
+    }
+  ]
+}

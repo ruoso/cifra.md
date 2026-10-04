@@ -5,14 +5,16 @@ from .frets import format_frets, parse_frets
 from .parse import parse
 from .tuning import parse_tuning, tuning_id
 from .text import NotUTF8Error
-from .write import canonical, write
+from .write import MarkedTextError, canonical, is_canonical, write
 
 __all__ = [
     "DIALECTS",
+    "MarkedTextError",
     "NotUTF8Error",
     "canonical",
     "chord_tones",
     "format_frets",
+    "is_canonical",
     "parse",
     "parse_chord",
     "parse_frets",

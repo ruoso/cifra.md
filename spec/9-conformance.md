@@ -130,6 +130,8 @@ The reference corpus in `corpus/` holds, per entry, an uncanonical input
 and the model a reader must produce from it, and the canonical text a
 writer must produce and the model a reader must produce from that. An
 implementation claiming any profile SHOULD pass every entry, in both
-directions, as `corpus/README.md` describes. The corpus has no setlist
-entries yet (§10, *Open questions*), and no merge entries; §11.16
-proposes their layout.
+directions, as `corpus/README.md` describes. The merge corpus in
+`corpus/merge/` holds, per entry, the three inputs of a merge and its
+outcome, for songs and for setlists; a merger SHOULD pass every entry, as
+§11.16 describes. The corpus has no entries for reading setlists yet (§10,
+*Open questions*).

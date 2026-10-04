@@ -1,0 +1,12 @@
+{
+  "conflicts": [
+    {
+      "kind": "block",
+      "line": 14,
+      "tuning": "E2 A2 D3 G3 B3 E4",
+      "variation": "Simple",
+      "base": "## Simple: E2 A2 D3 G3 B3 E4\n- F: xx3211",
+      "theirs": "## Simple: E2 A2 D3 G3 B3 E4\n- F: xx3210\n- G: 320033"
+    }
+  ]
+}

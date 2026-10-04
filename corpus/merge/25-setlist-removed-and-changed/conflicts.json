@@ -1,0 +1,11 @@
+{
+  "conflicts": [
+    {
+      "kind": "item",
+      "line": 4,
+      "item": "garota.cifra.md",
+      "base": "[Garota de Ipanema](garota.cifra.md)\n- key: D",
+      "theirs": "[Garota de Ipanema](garota.cifra.md)\n- key: E"
+    }
+  ]
+}

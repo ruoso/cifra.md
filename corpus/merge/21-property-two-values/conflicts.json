@@ -1,0 +1,12 @@
+{
+  "conflicts": [
+    {
+      "kind": "property",
+      "line": 2,
+      "key": "artist",
+      "base": "Nobody",
+      "ours": "Ana",
+      "theirs": "Bia"
+    }
+  ]
+}

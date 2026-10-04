@@ -1,6 +1,10 @@
 # Reference corpus
 
-Each entry is a directory with four files:
+The corpus has two kinds of entry: reading entries, here, which pin the
+reader and the canonical writer, and merge entries, in `merge/`, which pin
+the merge (see [Merge entries](#merge-entries)).
+
+Each reading entry is a directory with four files:
 
 | File | What it is | Made by |
 |---|---|---|
@@ -69,14 +73,68 @@ and read what came out before committing it. `python -m tools.corpus
 | 33-sung-anchors | Bar anchors on sung lines kept at their columns: against bar lines and brackets, the last of several, past a token that grows, and numbers carried in from an anchor-only line and from the end of the line before |
 | 34-pushed-words | Sung lines whose words are pushed so that every chord stays over its character: brackets, a token that grows, `_` padding inside words (one, several, two in one word), padding written in excess or too little, underscores that are words, a chord line longer than its words, a carried anchor with no room, and words forced because they would read as chords without their padding |
 
-## Merge entries (proposed)
+## Merge entries
 
-*A proposal, not yet in use: there are no merge entries.* The merge of
-spec §11 would be pinned the same way, by entries in `corpus/merge/`,
-each holding `base`, `ours` and `theirs` inputs (a missing file is an
-absent input) and exactly one of `result.cifra.md`, `result.deleted` or
-`conflicts.json`, the last with `marked.cifra.md` when the conflicts have
-a marked text. Every implementation would reproduce the expected files
-byte for byte, give the same outcome with ours and theirs exchanged, and
-produce canonical results. Spec §11.16 gives the layout and the checks in
-full.
+The merge of spec §11 is pinned by the entries in `merge/`, one directory
+each. An entry holds the three inputs of a merge, and the outcome it must
+give:
+
+| File | What it is | Made by |
+|---|---|---|
+| `base.cifra.md`, `ours.cifra.md`, `theirs.cifra.md` | The three inputs. A missing file is an absent input (spec §11.4). For a setlist, `.setlist.md`, and the entry is merged as a setlist. | Hand |
+| `result.cifra.md` | The result, when the merge gives one: a canonical text. For a setlist, `result.setlist.md`. | Generated |
+| `result.deleted` | An empty file, when the merge deletes the file. | Generated |
+| `conflicts.json` | The conflicts, as spec §11.12.5 writes them, when there are any. | Generated |
+| `marked.cifra.md` | The marked text (spec §11.12.2), when a conflict has a region. For a setlist, `marked.setlist.md`. | Generated |
+| `asymmetric` | An empty file, in an entry whose conflicts number footnote variants under the one exception to symmetry (spec §11.9.5). | Hand |
+
+Exactly one of the result, `result.deleted` and `conflicts.json` is
+present. Inputs need not be canonical, and one of them need not be UTF-8.
+
+An implementation validates its merge by checking, for every entry:
+
+1. Merging base, ours and theirs gives the expected files, byte for byte,
+   and no other.
+2. Merging base, theirs and ours gives the same result or deletion; or
+   the expected conflicts with every `ours` and `theirs` member, and every
+   `"ours"` and `"theirs"` value, exchanged, and the expected marked text
+   with the two sides of every region exchanged. An entry marked
+   `asymmetric` skips this check.
+3. The result is canonical.
+4. Resolving every region of the marked text by ours, and every one by
+   theirs (spec §11.12.4), gives a text with no marker line, whose
+   canonical form is a fixed point.
+
+and, generated from the files rather than stored: merging *b*, *x*, *x*,
+*b*, *b*, *x* and *b*, *x*, *b* gives the canonical text of *x*, for each
+readable input of the entry as *b* and as *x*.
+
+The reference implementation's checks are
+`reference/tests/test_merge_corpus.py`, and
+`reference/tests/test_merge_examples.py` holds every text the examples of
+spec §11.15 show to the files of the entries below. `python -m
+tools.corpus --write` writes the expected files of the merge entries too,
+and `--check` checks them.
+
+| Entry | Shows |
+|---|---|
+| 01 to 25 | The examples of spec §11.15, one each, and the alternatives their text describes: different sections, a rename and an edit (§11.15.1); one line changed twice, and two lines once each (§11.15.2); a section deleted and changed, and one renamed and edited (§11.15.3); a sung line changed twice, and two sung lines once each (§11.15.4); two instruments with two new markers, and with one (§11.15.5); a renumbered marker (§11.15.6); a line changed under a new marker (§11.15.7); two shapes for one chord, and for two instruments (§11.15.8); a bar split off with its chord revoiced elsewhere, and not (§11.15.9); a variation renamed and edited, deleted and edited, and variations added apart (§11.15.10); one tuning in two spellings (§11.15.11); properties added, a property given two values, and a `reading` conflict on `notation` (§11.15.12); a song added on both sides (§11.15.13); a setlist reordered and added to, and one whose item was removed and changed (§11.15.14) |
+| 30 to 38 | Whole files (spec §11.4): added by one side, by both alike, deleted by both, deleted by one side with the other's unchanged or only respelled, deleted against changed on either side, and an input that is not UTF-8 |
+| 40-title-two-values | A `title` conflict |
+| 41-reading-words | A `reading` conflict on `words` |
+| 42-heading-two-fields | A heading changed in two fields by two sides, merged |
+| 43-heading-two-names | A `heading` conflict |
+| 44-bracket-heading-two-names | A `heading` conflict on a bracket heading, written as a `sections` region |
+| 45-conflict-across-parts | A `chart` conflict holding fence units, written as a `sections` region |
+| 46-variation-two-names | A `variation` conflict |
+| 47-block-notes-two-changes | A `block-notes` conflict |
+| 48-property-deleted-and-changed | A `property` conflict of presence |
+| 50-renumbered-on-each-side | A pure renumbering on each side |
+| 51-joined-and-revoiced | A key joined on one side and revoiced on the other |
+| 52-key-of-unknown-tokens | A key used only by unknown tokens, merged by its text |
+| 53-repeat-marks-and-inner-line | A repeat group's closing mark moved by one side and an inner line changed by the other |
+| 54-words-pushed-by-merged-marker | A sung line whose words are pushed because the merged marker grew |
+| 55-non-canonical-inputs | Inputs spelled every way canonical form does not keep |
+| 56 to 58 | The examples of spec §11.15.17, §11.15.16 and §11.15.15: the only line of a chord deleted, one new chord added on both sides, a bar moved to an existing marker |
+| 59-numbering-inside-a-conflict | Variants numbered inside a conflict, the exception to symmetry (marked `asymmetric`) |
+| 60 to 64 | Setlists: two reorders of one stretch, the same song added twice, a notes block changed on both sides, `title`, `text` and `entry` conflicts, and entries merged under the title and under an item |

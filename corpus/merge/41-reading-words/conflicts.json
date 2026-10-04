@@ -1,0 +1,13 @@
+{
+  "conflicts": [
+    {
+      "kind": "reading",
+      "line": 2,
+      "key": "words",
+      "changed": "ours",
+      "base": "yes",
+      "ours": "no",
+      "theirs": "yes"
+    }
+  ]
+}

@@ -19,6 +19,7 @@ from .layout import (
     lyric_text,
     sung_text,
 )
+from .text import NotUTF8Error, marker_lines, prepare
 from .parse import (
     CLOSING_SEQUENCE,
     COUNT,
@@ -313,6 +314,45 @@ def serialize(doc: dict) -> str:
     return "\n\n".join("\n".join(b) for b in blocks) + "\n"
 
 
+class MarkedTextError(ValueError):
+    """The text holds a marker line (§11.12.3): a merge waiting for someone,
+    which a writer refuses to save. `line` is the first marker line's number
+    in the text that would have been written, `text` that line."""
+
+    def __init__(self, line: int, text: str):
+        super().__init__(f"line {line} is a conflict marker ({text!r}): resolve the merge before saving")
+        self.line = line
+        self.text = text
+
+
+def check_unmarked(text: str) -> None:
+    """Raise MarkedTextError at the first marker line of a text (§11.12.3)."""
+    found = marker_lines(text)
+    if found:
+        raise MarkedTextError(found[0], prepare(text)[found[0] - 1])
+
+
 def write(doc: dict) -> str:
-    """The canonical text of a document model (§8)."""
-    return serialize(canonical(doc))
+    """The canonical text of a document model (§8). A model whose text would
+    hold a marker line is refused with MarkedTextError (§8.1, §11.12.3)."""
+    text = serialize(canonical(doc))
+    check_unmarked(text)
+    return text
+
+
+def is_canonical(text: str | bytes) -> bool:
+    """Is the text a document in canonical form (§8.1)? A text that is not
+    UTF-8 is not a document, and a marked text is never canonical."""
+    from .parse import parse
+
+    if isinstance(text, bytes):
+        try:
+            text = text.decode("utf-8")
+        except UnicodeDecodeError:
+            return False
+    if marker_lines(text):
+        return False
+    try:
+        return write(parse(text)) == text
+    except (MarkedTextError, NotUTF8Error):
+        return False

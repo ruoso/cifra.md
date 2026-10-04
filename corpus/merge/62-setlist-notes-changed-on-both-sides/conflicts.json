@@ -1,0 +1,12 @@
+{
+  "conflicts": [
+    {
+      "kind": "notes",
+      "line": 7,
+      "after": "wave.cifra.md",
+      "base": "Second set, after the break.",
+      "ours": "Second set, after a short break.",
+      "theirs": "Second set, after the break.\nTune to the piano."
+    }
+  ]
+}

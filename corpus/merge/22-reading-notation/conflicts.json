@@ -1,0 +1,14 @@
+{
+  "conflicts": [
+    {
+      "kind": "reading",
+      "line": 3,
+      "key": "notation",
+      "changed": "ours",
+      "symbols": [
+        "C7+"
+      ],
+      "ours": "american"
+    }
+  ]
+}

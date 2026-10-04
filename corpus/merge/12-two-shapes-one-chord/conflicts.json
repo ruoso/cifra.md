@@ -1,0 +1,14 @@
+{
+  "conflicts": [
+    {
+      "kind": "voicing",
+      "line": 10,
+      "tuning": "E2 A2 D3 G3 B3 E4",
+      "variation": "",
+      "key": "Cm",
+      "base": "x35543",
+      "ours": "x3554x",
+      "theirs": "8-10-10-8-8-8"
+    }
+  ]
+}

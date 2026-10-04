@@ -1,0 +1,11 @@
+{
+  "conflicts": [
+    {
+      "kind": "heading",
+      "line": 1,
+      "base": "## B",
+      "ours": "## Bridge",
+      "theirs": "## Ponte"
+    }
+  ]
+}
