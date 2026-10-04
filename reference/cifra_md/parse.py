@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 
 from .chord import DEFAULT_DIALECT, DIALECTS, parse_chord
-from .frets import parse_frets
+from .frets import check_fingers, parse_fingers, parse_frets
 from .tuning import parse_tuning
 
 RULE = re.compile(r"^\s*-{3,}\s*$")
@@ -29,6 +29,7 @@ BARS = re.compile(r"(:)?(\|+)(:)?")
 WORD = re.compile(r"\S+")
 
 REPEAT = "%"
+FINGERING = re.compile(r"^(.*?)\s*\(([^()]*)\)\s*$")
 
 
 def key_for(symbol: str, index: int) -> str:
@@ -382,6 +383,10 @@ class _Parser:
             if not sep or not key or any(ch.isspace() for ch in key):
                 self.diag("bad-voicing", lineno, "a voicing is `- key: frets`", raw)
                 return block, skipping
+            fingers_text = None
+            fm = FINGERING.match(frets_text)
+            if fm:
+                frets_text, fingers_text = fm.group(1), fm.group(2)
             frets = parse_frets(frets_text)
             if frets is None:
                 self.diag("bad-voicing", lineno, f"not a fret string: {frets_text.strip()!r}", raw)
@@ -393,9 +398,19 @@ class _Parser:
             symbol = m.group(1) or key
             index = int(m.group(2)) if m.group(2) else 1
             entry = {"key": key_for(symbol, index), "symbol": symbol, "index": index, "frets": frets}
+            if fingers_text is not None:
+                fingers = parse_fingers(fingers_text)
+                problem = "not a fingering" if fingers is None else check_fingers(fingers, frets)
+                if problem:
+                    self.diag("bad-fingering", lineno, problem, raw)
+                else:
+                    entry["fingers"] = fingers
             for existing in block["voicings"]:
                 if existing["key"] == entry["key"]:
                     existing["frets"] = frets
+                    existing.pop("fingers", None)
+                    if "fingers" in entry:
+                        existing["fingers"] = entry["fingers"]
                     break
             else:
                 block["voicings"].append(entry)

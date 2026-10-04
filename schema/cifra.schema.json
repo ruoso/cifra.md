@@ -337,7 +337,13 @@
               "key": { "type": "string" },
               "symbol": { "type": "string" },
               "index": { "type": "integer", "minimum": 1 },
-              "frets": { "type": "array", "minItems": 1, "items": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 99 }, { "const": "x" }] } }
+              "frets": { "type": "array", "minItems": 1, "items": { "oneOf": [{ "type": "integer", "minimum": 0, "maximum": 99 }, { "const": "x" }] } },
+              "fingers": {
+                "type": "array",
+                "minItems": 1,
+                "description": "Optional fingering, one position per string (§7.5.1): 1 to 4, \"T\" for the thumb, null for a string the hand does not fret.",
+                "items": { "oneOf": [{ "type": "integer", "minimum": 1, "maximum": 4 }, { "const": "T" }, { "type": "null" }] }
+              }
             }
           }
         },

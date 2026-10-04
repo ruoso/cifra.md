@@ -151,7 +151,7 @@ Item
 Block
   label           variation name, "" for the default variation
   tuning          text as written, pitches, and identity by sound (§6.3)
-  voicings[]      key, symbol, index, frets; in canonical order (§8.3)
+  voicings[]      key, symbol, index, frets, fingers?; in canonical order (§8.3)
   notes[]         the lines that are not list items, verbatim
 
 Document also carries `sung` (§4.2) and `diagnostics`: everything the

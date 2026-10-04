@@ -173,6 +173,14 @@
             2,
             2,
             0
+          ],
+          "fingers": [
+            null,
+            null,
+            1,
+            2,
+            3,
+            null
           ]
         },
         {
@@ -242,6 +250,23 @@
       },
       "voicings": [
         {
+          "key": "A",
+          "symbol": "A",
+          "index": 1,
+          "frets": [
+            2,
+            1,
+            0,
+            0
+          ],
+          "fingers": [
+            2,
+            1,
+            null,
+            null
+          ]
+        },
+        {
           "key": "Cm",
           "symbol": "Cm",
           "index": 1,
@@ -250,6 +275,29 @@
             3,
             3,
             3
+          ],
+          "fingers": [
+            null,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "key": "Cm[2]",
+          "symbol": "Cm",
+          "index": 2,
+          "frets": [
+            5,
+            3,
+            3,
+            3
+          ],
+          "fingers": [
+            4,
+            1,
+            1,
+            1
           ]
         }
       ],

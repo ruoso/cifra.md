@@ -6,7 +6,7 @@ not; the chart's layout is regenerated, except the columns of sung lines.
 
 from __future__ import annotations
 
-from .frets import format_frets
+from .frets import format_fingers, format_frets
 
 
 def _item_text(it: dict) -> str:
@@ -212,7 +212,10 @@ def write(doc: dict) -> str:
     for b in ordered:
         lines = [f"## {b['label'] or 'Voicings'}: {b['tuning']['text']}"]
         for e in sorted(b["voicings"], key=_sort_key):
-            lines.append(f"- {e['key']}: {format_frets(e['frets'])}")
+            item = f"- {e['key']}: {format_frets(e['frets'])}"
+            if e.get("fingers"):
+                item += f" ({format_fingers(e['fingers'])})"
+            lines.append(item)
         lines.extend(b["notes"])
         written.append("\n".join(lines))
     text = "\n".join(out).rstrip("\n")

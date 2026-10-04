@@ -23,6 +23,7 @@ here.
 | 8a | Repeat groups | Paired, with counts and endings; expansion defined (§3) | Brackets kept as marks with no pairing; `x2` and `1.` are unknown tokens |
 | 8b | `%` beside other items | Reported | Kept silently |
 | 8c | `N.C.` | A no-chord item (§2.6) | An unknown token |
+| 8d | Fingering on a voicing item | Optional, `(3 2 - - - 4)` after the fret string (§7.5.1) | Not read; fingers always computed |
 | 9 | Lines containing a bar line | Always chord lines (§4.1) | Classified by word ratio like any other line |
 | 10 | Two blocks, same tuning and name | Read as one; later line wins (§7.3) | Reading uses the first only; writing merges |
 | 11 | Columns on sung lines | Counted in code points (§4.4) | UTF-16 code units; identical outside the supplementary planes |
@@ -36,7 +37,7 @@ here.
 | 19 | Unknown tokens | Kept, reported (§2.9) | Same |
 | 20 | Section with no lines | Kept (§1.7) | Kept when named |
 
-Items 1 to 10, 2a to 2c, 8a to 8c, 12 and 14 are behavioural changes the reference parser would
+Items 1 to 10, 2a to 2c, 8a to 8d, 12 and 14 are behavioural changes the reference parser would
 need to make to conform. Items 11, 13 and 15 to 20 are confirmations.
 
 ## Decisions taken in this draft that the reference did not have to make

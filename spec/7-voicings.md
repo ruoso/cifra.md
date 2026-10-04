@@ -86,6 +86,7 @@ The voicings of a block are a Markdown list, one item per key:
 
 ```
 - <key>: <fret string>
+- <key>: <fret string> (<fingering>)
 ```
 
 - The list marker is `-`, a space, as for properties (§1.3.2). `*` and `+`
@@ -93,7 +94,8 @@ The voicings of a block are a Markdown list, one item per key:
 - `key` is a voicing key (§2.4): a chord symbol, optionally followed by a
   footnote marker. It MUST NOT contain whitespace, `:`, `[` or `]` except
   as the marker. `Cm[1]` is the key `Cm`.
-- `:` with optional whitespace around it, then a fret string (§7.5).
+- `:` with optional whitespace around it, then a fret string (§7.5),
+  then optionally a fingering in round brackets (§7.5.1).
 
 The symbol in a key is text, matched character for character against the
 chart's tokens (§2.4). It is not required to parse as a chord, and a reader
@@ -139,8 +141,43 @@ hyphenated form otherwise. `x` is lowercase in both.
 
 A fret string is a shape, not a fingering. Which finger goes where, and
 whether a barre is used, is for the application to work out from the shape
-and the instrument. This keeps the text to what a player would actually
-write.
+and the instrument, unless the document says (§7.5.1). This keeps the text
+to what a player would actually write.
+
+### 7.5.1 Fingering
+
+A fingering is a choice, not a fact of the shape: open G, `320003`, is
+fingered 2-1-3 or 3-2-4 depending on what comes next, and a teacher may
+want to say which. So a voicing item MAY carry one, in round brackets
+after the fret string, one position per string in tuning order:
+
+```
+- G: 320003 (3 2 - - - 4)
+- Bb: 113331 (1 1 2 3 4 1)
+- F: 133211 (134211)
+```
+
+- Each position is a finger `1` to `4` (index to little finger), `T` for
+  the thumb, or `-` for a string the hand does not fret: an open string, a
+  muted string, or a fretted string whose finger is left unstated. `0` is
+  read as `-`.
+- Positions MAY be separated by spaces or run together; a writer MUST
+  separate them with single spaces.
+- The number of positions MUST equal the number of strings.
+- A finger on a string whose fret is `x` or `0` is a contradiction.
+- The same finger on several strings is a barre, and those strings MUST be
+  at the same fret.
+
+A fingering that breaks one of these rules is a problem of its own,
+`bad-fingering`: a reader MUST report it, drop the fingering, and keep the
+shape. A fingering is the one optional part of a voicing item, and a reader
+that does not use fingerings MUST still keep it, so that a writer can
+write it back.
+
+A fingering overrides whatever the application would have worked out, in
+the same way a written shape overrides the application's default shape.
+Where none is written, the application's fingering is the default and is
+never written in.
 
 ## 7.6 Resolving a chord to its shape
 
@@ -174,8 +211,6 @@ printed sheet and an editor need.
 
 ## Open questions
 
-- Whether to allow a fingering after the fret string (`- Cm: x35543 (1 3 4 2 1 1)`)
-  for applications that cannot derive one, or want to override it.
 - Whether a block for a tuning should be able to say which *kind* of
   instrument it is for (guitar, cavaquinho) for display, given that the
   tuning does not say.

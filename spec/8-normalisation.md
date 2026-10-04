@@ -55,7 +55,9 @@ Where:
   variations in order of first appearance. A block the writer creates for a
   new tuning goes last.
 - Items are `- <key>: <fret string>`, no space before the colon and one
-  after, the fret string in the form §7.5 requires.
+  after, the fret string in the form §7.5 requires, then a space and the
+  fingering in brackets with single spaces between positions, if the item
+  has one (§7.5.1).
 - Items within a block are ordered by symbol, comparing code points, then by
   index ascending, so a chord's variants sit together: `A`, `Cm`, `Cm[2]`,
   `G`. Code points rather than a locale collation, so that the order is the
