@@ -178,6 +178,25 @@ class TestAmbiguities:
         assert parse_chord("B°7")["ambiguities"] == []
         assert parse_chord("Bdim7")["ambiguities"] == []
 
+    def test_bare_four_after_a_degree(self):
+        assert tones("C7(4)", "brazilian") == "C F G Bb"
+        assert tones("C7(4)", "american") == "C E F G Bb"
+        assert tones("C7(4)", "realbook") == "C E F G Bb"
+        r = parse_chord("C7(4)", "brazilian")
+        assert r["ambiguities"] == [{"kind": "bareFour", "chosen": "suspended", "alternative": "added"}]
+        assert tones("C9(4)", "brazilian") == "C F G D"  # bare 9 is add9 in Brazilian too
+
+    def test_bare_four_on_a_minor_triad_is_added_everywhere(self):
+        for d in DIALECTS:
+            assert tones("Cm7(4)", d) == "C Eb F G Bb"
+            assert parse_chord("Cm7(4)", d)["ambiguities"] == []
+
+    def test_sus4_and_add4_spelled_out_are_not_ambiguous(self):
+        for f in ("C7sus4", "C7sus", "C7add4", "Csus4", "C4"):
+            assert parse_chord(f)["ambiguities"] == [], f
+        assert tones("C7sus4") == "C F G Bb"
+        assert tones("C7add4") == "C E F G Bb"
+
     def test_unknown_dialect(self):
         r = parse_chord("C", "klingon")
         assert r["chord"] is None

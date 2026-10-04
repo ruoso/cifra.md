@@ -7,9 +7,9 @@ import re
 from .pitch import NOTE_RE, parse_note
 
 DIALECTS = {
-    "brazilian": {"sevenPlus": "majorSeventh", "bareNine": "add", "degreeSign": "diminishedSeventh"},
-    "american": {"sevenPlus": "dominantSharpFive", "bareNine": "dominant", "degreeSign": "diminishedSeventh"},
-    "realbook": {"sevenPlus": "dominantSharpFive", "bareNine": "dominant", "degreeSign": "diminishedSeventh"},
+    "brazilian": {"sevenPlus": "majorSeventh", "bareNine": "add", "degreeSign": "diminishedSeventh", "bareFour": "suspended"},
+    "american": {"sevenPlus": "dominantSharpFive", "bareNine": "dominant", "degreeSign": "diminishedSeventh", "bareFour": "added"},
+    "realbook": {"sevenPlus": "dominantSharpFive", "bareNine": "dominant", "degreeSign": "diminishedSeventh", "bareFour": "added"},
 }
 DEFAULT_DIALECT = "brazilian"
 
@@ -17,6 +17,7 @@ _ALTERNATIVES = {
     "sevenPlus": ("majorSeventh", "dominantSharpFive"),
     "bareNine": ("add", "dominant"),
     "degreeSign": ("diminishedSeventh", "diminishedTriad"),
+    "bareFour": ("suspended", "added"),
 }
 
 # Longest and most specific first. `#`/`b` are separate from `+`/`-`/`°`
@@ -265,6 +266,15 @@ def parse_chord(text: str, dialect: str = DEFAULT_DIALECT) -> dict:
                 saw_quality_word = True
                 i = j
                 continue
+            if not handled and degree == 4 and quality == "major":
+                # The fourth ambiguity (§5.6): a cifra writes C7(4) for C7sus4.
+                reading = readings["bareFour"]
+                ambiguity("bareFour", reading)
+                if reading == "suspended":
+                    quality = "sus4"
+                    saw_quality_word = True
+                    i = j
+                    continue
 
             is_primary = primary_top is None and not handled and degree >= 5
             if is_primary:

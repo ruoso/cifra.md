@@ -126,6 +126,44 @@
                   "items": [
                     {
                       "type": "chord",
+                      "symbol": "C7(4)",
+                      "index": 1,
+                      "key": "C7(4)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 4,
+                            "alter": 0
+                          },
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      },
+                      "ambiguities": [
+                        {
+                          "kind": "bareFour",
+                          "chosen": "added",
+                          "alternative": "suspended"
+                        }
+                      ]
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
                       "symbol": "C7(9)",
                       "index": 1,
                       "key": "C7(9)",
@@ -149,7 +187,7 @@
                       }
                     }
                   ],
-                  "number": 4,
+                  "number": 5,
                   "stated": false
                 },
                 {
@@ -171,7 +209,7 @@
                       }
                     }
                   ],
-                  "number": 5,
+                  "number": 6,
                   "stated": false
                 },
                 {
@@ -198,7 +236,34 @@
                       }
                     }
                   ],
-                  "number": 6,
+                  "number": 7,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7sus4",
+                      "index": 1,
+                      "key": "C7sus4",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "sus4",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 8,
                   "stated": false
                 }
               ],

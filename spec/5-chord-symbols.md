@@ -100,7 +100,7 @@ A ♭5 on a dim chord, or ♯5 on an aug chord, is redundant and dropped.
 Elements are read left to right. Each is listed with its spellings and its
 effect on the model. Where an element has a Brazilian spelling, an American
 spelling and a Real Book spelling, all are accepted by every reader; the
-dialect (§5.6) matters only for the three cases marked *ambiguous*.
+dialect (§5.6) matters only for the four cases marked *ambiguous*.
 
 Whitespace, commas and round brackets inside the body are separators and
 grouping with no meaning of their own: `C7(9)`, `C7 9` and `C7,9` are the
@@ -117,7 +117,7 @@ At most one, and it comes first in the body. Absent, the quality is major.
 | `aug`, `+` | aug |
 | `sus2` | sus2 |
 | `sus4`, `sus` | sus4 |
-| `4`, as the first element | sus4 (Brazilian: `C4`) |
+| `4`, as the first element | sus4 (Brazilian: `C4`); later, see §5.6 |
 | `5`, as the only element | power chord (`C5`) |
 | `ø`, `Ø` | dim, with a minor seventh: the half-diminished seventh |
 
@@ -227,9 +227,9 @@ from pitch class: `#11` on C is F♯, `b5` on C is G♭, and the seventh of
 root's letter, with the accidental that makes it *a* semitones from the
 major-scale degree. This is what keeps `Db7` from coming out as `C# F G#`.
 
-## 5.6 Notation dialects and the three ambiguities
+## 5.6 Notation dialects and the four ambiguities
 
-Three dialects are named. Each is a *default reading* for the three
+Three dialects are named. Each is a *default reading* for the four
 spellings below and a *preferred spelling* for writers (§5.7). Everything
 not in this table means the same thing in every dialect.
 
@@ -238,6 +238,7 @@ not in this table means the same thing in every dialect.
 | `7+` (`C7+`) | major seventh: `C7M` | dominant seventh with ♯5: `C7#5` | as american | whichever was not chosen |
 | bare `9` with no seventh stated (`C9`) | added ninth, no seventh: `Cadd9` | dominant ninth, ♭7 included | as american | the other |
 | bare `°` with no seventh stated (`B°`) | diminished seventh: `B°7` | diminished seventh | diminished seventh | the diminished triad, `Bdim` |
+| `4` after a stated degree, on a major triad (`C7(4)`) | suspended fourth: `C7sus4` | added fourth: `C7add4` | as american | the other |
 
 `C7+` is the dangerous one: three identical characters, two chords
 differing by a semitone in two places. A literally sharpened seventh would
@@ -250,21 +251,29 @@ shape every guitarist knows for it has the diminished seventh in it. So a
 bare `°` reads as the seventh in every dialect, the word `dim` is the triad,
 and `°7` and `dim7` are unambiguous.
 
+`C7(4)` is the Brazilian suspended chord: a cifra writes `C7(4)` for what
+American notation spells `C7sus4`. The suspended reading applies only when
+the triad is major, since a suspension replaces a major third; `Cm7(4)` is
+an added fourth in every dialect and is not reported. `add4` and `sus4`
+spelled out are never ambiguous.
+
 Rules:
 
 - The document's dialect is the `notation` property (§1.3.3), or
   `brazilian` if absent.
-- A reader MUST apply the document's dialect to these three spellings and
+- A reader MUST apply the document's dialect to these four spellings and
   MUST report that it did, so that an application can show which reading
   was taken and offer the other.
 - A reader MUST NOT apply the dialect to anything else.
-- A writer SHOULD avoid the three spellings and write the unambiguous
-  form: `C7M` or `Cmaj7`, `Cadd9` or `C7(9)`, `B°7` or `Bdim`. A writer that
-  emits one of them MUST declare `notation`.
+- A writer SHOULD avoid the four spellings and write the unambiguous
+  form: `C7M` or `Cmaj7`, `Cadd9` or `C7(9)`, `B°7` or `Bdim`, `C7sus4` or
+  `C7add4`. A writer that emits one of them MUST declare `notation`.
+- Where a spelling is unclear, the format's answer is the same: the
+  document says which notation it is in, and the reader follows it.
 
-Three spellings that look ambiguous but are not: `5+` and `9+` are plain
-sharps; `C7(9)`, `Cmaj9` and `Cadd9` each state their seventh or its
-absence.
+Spellings that look ambiguous but are not: `5+` and `9+` are plain sharps;
+`C7(9)`, `Cmaj9` and `Cadd9` each state their seventh or its absence; `C4`
+in first position is sus4 everywhere (§5.3.1).
 
 ## 5.7 Preferred spellings
 
@@ -295,6 +304,3 @@ MUST NOT emit a spelling the grammar of §5.3 does not accept.
   defines only letter names.
 - Nashville and Roman numeral charts need a key context and are a different
   input mode, not a dialect. Out of scope for this draft.
-- Whether `C7(4)` should be `C7sus4`, as it is commonly meant, rather than a
-  seventh with an added fourth. This draft reads a `4` as sus4 only in first
-  position.

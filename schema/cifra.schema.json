@@ -293,7 +293,7 @@
       "required": ["kind", "chosen", "alternative"],
       "additionalProperties": false,
       "properties": {
-        "kind": { "enum": ["sevenPlus", "bareNine", "degreeSign"] },
+        "kind": { "enum": ["sevenPlus", "bareNine", "degreeSign", "bareFour"] },
         "chosen": { "type": "string" },
         "alternative": { "type": "string" }
       }
