@@ -183,7 +183,10 @@ from being read as a heading. The first word (the label) MUST NOT contain
 whitespace, `:` or `|`.
 
 A label heading is recognised only inside a fence in the chart, and only
-on a line that is not a bracket heading.
+on a line that is not a bracket heading. A line of words that happens to
+fit the pattern, `Amor: A`, is forced to read as words with a leading `>`
+(§4.3), which is the same marker that settles every other line no rule can
+call.
 
 ### 1.6.4 Bar number on a heading
 

@@ -156,6 +156,12 @@ class TestHeadings:
         assert names(doc)[:2] == ["Intro", "Chorus"]
         assert "Note" not in names(doc)
 
+    def test_forced_line_is_never_a_label_heading(self):
+        doc = parse("```\nG      D\n> Amor: A\nC\n```\n")
+        assert names(doc) == [""]
+        lines = doc["sections"][0]["body"][0]["lines"]
+        assert lines[0]["kind"] == "sung" and lines[0]["forced"] is True
+
     def test_label_heading_with_a_close_mark_against_a_chord_is_not_a_heading(self):
         doc = parse(chart("|: C | G7:| F"))
         assert names(doc) == ["A"]
