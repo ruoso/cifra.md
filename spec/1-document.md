@@ -100,6 +100,9 @@ names a section; a heading in the voicings part names a voicing block. This
 is the only thing the rule does, and it is why the voicings heading does not
 need to be recognised by its words.
 
+In the chart, the music itself is written inside fences (§1.8). A section is
+a heading, then notes and fences in any order.
+
 ## 1.5 The rule
 
 The rule is a line consisting of three or more `-` characters and nothing
@@ -109,7 +112,9 @@ else, with optional surrounding whitespace.
 ---
 ```
 
-The first rule in the document ends the chart. A reader MUST ignore any later rule. A writer MUST emit exactly
+The first rule in the document, outside any fence (§1.8), ends the chart.
+A reader MUST ignore any later rule. A line of hyphens inside a fence is
+not a rule; it is an unknown token (§2.8). A writer MUST emit exactly
 one, and MUST put a blank line before it (§0.5).
 
 A rule is never a chord. `---` does not occur in the chord grammar, so there
@@ -131,7 +136,8 @@ of the line.
 ## Chorus
 ```
 
-Heading level is significant in one place only: a level-1 heading that is
+A Markdown heading is recognised only outside a fence (§1.8). Heading
+level is significant in one place only: a level-1 heading that is
 the first non-blank line of the document is the title (§1.3.1). Every other
 Markdown heading, of any level, is a section heading in the chart or a
 block heading in the voicings part. A writer MUST emit `##` for those, so
@@ -157,7 +163,9 @@ footnote marker standing at the start of a line is never mistaken for a
 heading. Anything after the `]` on the same line is a chord line belonging
 to the new section.
 
-A bracket heading is recognised only in the chart.
+A bracket heading is recognised only inside a fence in the chart (§1.8):
+it is how a cifra pasted whole names its sections. Outside a fence, a line
+in brackets is notes.
 
 ### 1.6.3 Label heading
 
@@ -174,8 +182,8 @@ follows the colon be chords is what keeps a lyric line containing a colon
 from being read as a heading. The first word (the label) MUST NOT contain
 whitespace, `:` or `|`.
 
-A label heading is recognised only in the chart, and only on a line that is
-not a Markdown heading or bracket heading.
+A label heading is recognised only inside a fence in the chart, and only
+on a line that is not a bracket heading.
 
 ### 1.6.4 Bar number on a heading
 
@@ -187,12 +195,13 @@ forms.
 ## 1.7 Sections
 
 A heading in the chart opens a new section whose name is the heading's text
-(after removing an anchor, §1.6.4). Every following line until the next
-heading or the rule belongs to it.
+(after removing an anchor, §1.6.4). Everything until the next heading or
+the rule belongs to it: its fences hold its music (§1.8), and its other
+lines are its notes.
 
-Lines before the first heading belong to a section with the empty name. A
-reader MUST keep them; they are as much a part of the song as any other
-line.
+Music and notes before the first heading belong to a section with the empty
+name. A reader MUST keep them; they are as much a part of the song as any
+other line.
 
 A section with no lines is still a section: a heading alone names a part of
 the song the author has not written out, and a reader MUST keep it so that a
@@ -201,7 +210,57 @@ writer can round-trip it.
 Section names are free text. They have no reserved values; `Voicings` as a
 section name in the chart is just a section called Voicings.
 
+## 1.8 Fences and notes
+
+The music of the chart, its chord lines and lyric lines, is written inside
+Markdown fenced code blocks. A fence is a line of three or more backticks
+(or three or more tildes), with nothing else on it but an optional info
+string; the block runs to the next line that is a fence of the same kind
+and at least the same length.
+
+````
+## Verse
+```
+G           D
+When I first saw you
+Em              C
+walking down the road
+```
+````
+
+Inside a fence:
+
+- every line is music: a chord line, a lyric line, a cifra-style heading
+  (§1.6.2, §1.6.3) or blank (§2, §4);
+- nothing is a Markdown heading, the rule, a list item or notes, whatever
+  it looks like.
+
+Outside a fence, in the chart, every line that is not a Markdown heading or
+the rule is **notes**: free text for whoever reads the sheet. A reader MUST
+keep notes verbatim, attached to the section they are in and in their
+position relative to the section's fences, and MUST NOT interpret them. A
+writer MUST write them back unchanged.
+
+Rules:
+
+- A section MAY contain any number of fences, and its music is the
+  concatenation of their lines in order. A fence MAY contain several
+  sections, when cifra-style headings inside it open them.
+- A fence's info string (` ```chords `) is ignored by this version and
+  reserved. A writer MUST emit a bare fence.
+- A fence that is not closed runs to the end of the document. A reader
+  MUST report it. A writer MUST close every fence it opens.
+- Fences are not recognised in the voicings part. A fence there is notes.
+
+The fence is what makes the document render: a Markdown viewer sets the
+block in a monospaced face and keeps its line breaks, so the chords stay
+over the syllables they were written over. It is also what makes the
+format safe to annotate: anything a reader cannot parse is, by position,
+not music.
+
 ## Open questions
 
 - Whether `###` should one day nest sections (a *Verse* with *a* and *b*
   halves). Reserved for that reason.
+- Whether the fence info string should select a dialect or a mode (a
+  `tab` block, say) in a later version.

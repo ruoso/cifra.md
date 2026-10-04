@@ -6,10 +6,11 @@ repeat constructs it mentions are defined in §3.
 
 ## 2.1 Chord lines
 
-Every line in the chart that is not a heading, not blank and not a lyric
-line (§4) is a chord line. In a document that has no words, that is every
-such line, and a reader that does not implement §4 treats every such line
-as a chord line.
+Every line inside a fence (§1.8) in the chart that is not a cifra-style
+heading, not blank and not a lyric line (§4) is a chord line. In a document
+that has no words, that is every such line, and a reader that does not
+implement §4 treats every such line as a chord line. Lines outside a fence
+are never chord lines.
 
 ```
 C  Am | F  G
@@ -157,14 +158,21 @@ group's measures are counted once however many times they are played
 
 Numbers may repeat and may jump; that is the point.
 
-```
+````
 ## A
-Dm | G7 | C7 | F              bars 1 2 3 4
+```
+Dm | G7 | C7 | F
+```
 
 ## A, written out again @1
-Dm | G7 | C7 | F              bars 1 2 3 4
-Dm | G7 | @17 Em | A7         bars 5 6 17 18
 ```
+Dm | G7 | C7 | F
+Dm | G7 | @17 Em | A7
+```
+````
+
+The first section is bars 1 to 4. The second is bars 1 to 4 again, then
+5, 6, 17 and 18.
 
 Bar numbers exist only in a document that is not sung (§4.2). Under a line
 of words a chord may last four bars or half of one, and the text does not

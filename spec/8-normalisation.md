@@ -26,7 +26,11 @@ A writer MUST write the chart back exactly as read, except for:
 
 In particular a writer MUST NOT reflow lines, change spacing between items,
 rewrite a chord symbol into another spelling, change a heading's form
-(§1.6), remove unknown tokens, or touch the title or properties it does not know.
+(§1.6), move music between fences, remove unknown tokens, alter notes, or
+touch the title or properties it does not know.
+
+A writer that creates a section emits its heading, a blank line, and one
+fence holding its music.
 
 ## 8.3 Canonical voicings part
 
@@ -35,7 +39,8 @@ The voicings part of a document in canonical form is:
 1. The metadata and the chart, with trailing blank lines removed.
 2. One blank line, the rule `---`, one blank line.
 3. The blocks, each followed by one blank line. For each block: the heading
-   `## <label>: <tuning>`, then one line per key.
+   `## <label>: <tuning>`, then one list item per key, then the block's
+   notes if it had any.
 
 Where:
 
@@ -48,15 +53,15 @@ Where:
   document, and within a tuning the default variation first, then the named
   variations in order of first appearance. A block the writer creates for a
   new tuning goes last.
-- Lines are `<key> = <fret string>`, one space either side of `=`, the fret
-  string in the form §7.5 requires.
-- Lines within a block are ordered by symbol, comparing code points, then by
+- Items are `- <key>: <fret string>`, no space before the colon and one
+  after, the fret string in the form §7.5 requires.
+- Items within a block are ordered by symbol, comparing code points, then by
   index ascending, so a chord's variants sit together: `A`, `Cm`, `Cm[2]`,
   `G`. Code points rather than a locale collation, so that the order is the
   same on every machine.
-- A block with no lines is omitted if it is the default variation and kept
-  if it is named (§7.3).
-- Problem lines (§7.4) are not written back. A writer that would lose
+- A block with no items is omitted if it is the default variation and kept
+  if it is named (§7.3), unless it has notes, in which case it is kept.
+- Problem items (§7.4) are not written back. A writer that would lose
   information this way SHOULD tell the user before saving.
 
 If no block remains, the rule is omitted too, and the document is the chart

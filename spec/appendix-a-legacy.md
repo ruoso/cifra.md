@@ -58,7 +58,22 @@ reader given an arbitrary file MUST NOT guess, because a one-section song
 whose first line is `# Verse` is indistinguishable from a song titled
 *Verse*.
 
-## A.6 Several documents for one song
+## A.6 Unfenced music
+
+Earlier documents had no fences: every line of the chart was music. A
+reader MAY accept such a document by treating the whole chart as one fence
+per section, in which case Markdown headings are still headings (they were
+in the old form) and nothing is notes.
+
+Conversion: wrap the music of each section in a fence.
+
+## A.7 `key = frets` voicing lines
+
+Earlier documents wrote a voicing as a bare line, `Cm[2] = 8-10-10-8-8-8`,
+rather than a list item. A reader MAY accept the form. Conversion: rewrite
+as `- Cm[2]: 8-10-10-8-8-8`.
+
+## A.8 Several documents for one song
 
 The earliest form produced a *separate copy* of a song per instrument. Two
 copies are the same song if their charts are the same (same sections,

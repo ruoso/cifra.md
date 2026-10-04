@@ -3,32 +3,42 @@
 A Markdown profile for chord charts.
 
 A song is one plain-text file. The smallest valid document is a chart: the
-sections of the song, with the chords of each bar.
+sections of the song, each with the chords of its bars in a fenced block.
 
-```
+````
 # Blues in D minor
 
 ## Intro
+```
 Dm | G7 | C7 | F
-
-## A
-Dm | G7 | C7 | F
-Bb | A7 | Dm | %
-
-## B
-Gm | C7 | F  Dm | Gm  A7
 ```
 
-That is a complete document. Nothing else is required.
+## A
+```
+Dm | G7 | C7 | F
+Bb | A7 | Dm | %
+```
+
+## B
+```
+Gm | C7 | F  Dm | Gm  A7
+```
+````
+
+That is a complete document. Nothing else is required. The fences are what
+mark the music; anything else written in a section is notes, kept for the
+reader and not interpreted.
 
 A song may also be written with its words, the way a cifra is: a line of
 chords over each line of words, the chords placed by column over the
-syllables they change on. Sections may be named in brackets, as a cifra
-names them, or with `##`.
+syllables they change on. A whole cifra can be pasted into one
+fence: the bracket headings inside it name the sections, exactly as `##`
+headings outside it would.
 
-```
+````
 # Walking Down the Road
 
+```
 [Intro] G  D  Em  C
 
 [Verse]
@@ -37,36 +47,41 @@ When I first saw you
 Em              C
 walking down the road
 ```
+````
 
 Both are the **chart**, the song as music, independent of any instrument.
 Either may be followed by a rule and a second part, the **voicings**: how
 each chord is actually fingered on each instrument the song has been
 arranged for.
 
-```
+````
 # Walking Down the Road
 - artist: Nobody
 - notation: american
 
 ## Intro
+```
 A | Cm | A | Cm[2]
+```
 
 ## Verse
+```
 A           Cm
 When I first saw you
 A           Cm[2]
 walking down the road
+```
 
 ---
 
 ## Voicings: E2 A2 D3 G3 B3 E4
-A = x02220
-Cm = x35543
-Cm[2] = 8-10-10-8-8-8
+- A: x02220
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
 
 ## Voicings: G4 C4 E4 A4
-Cm = 0333
-```
+- Cm: 0333
+````
 
 The chart is the same on every instrument. What differs per instrument is
 how each chord is played, so voicings are kept in blocks headed by the
@@ -80,10 +95,11 @@ properties. Both are optional. The `notation` property says which
 chord-spelling convention the chart uses, Brazilian cifra, American jazz or
 Real Book, for the few symbols that mean different things in each.
 
-Every cifra.md file is also a valid Markdown file. The title is the title,
-sections are headings, the rule is a rule, lyric lines read as text, and a chart line reads as the line
-of chords it is. A song opened in any Markdown viewer is still readable; a
-cifra.md reader gets the structure.
+Every cifra.md file is also a valid Markdown file, and renders as one: the
+title and sections are an outline, the music is a monospaced block that
+keeps every chord over its syllable, the voicings are a list, and notes are
+prose. A song opened in any Markdown viewer is readable as a sheet; a
+cifra.md reader adds the structure.
 
 ## Status
 
@@ -103,7 +119,7 @@ time. Each document says what it depends on.
 | Document | Covers | Needed for |
 |---|---|---|
 | [0. Overview](spec/0-overview.md) | Scope, terms, the document model, Markdown compatibility, conformance language | Everything |
-| [1. Document structure](spec/1-document.md) | Encoding, lines, title and properties, the two parts, the rule, headings, sections | Everything |
+| [1. Document structure](spec/1-document.md) | Encoding, lines, title and properties, the two parts, the rule, headings, sections, fences and notes | Everything |
 | [2. The chart](spec/2-chart.md) | Chord lines, measures, bar lines, chord tokens, footnote markers, bar numbers | Reading a chart |
 | [3. Repeats](spec/3-repeats.md) | The measure repeat sign, repeat groups and counts, first and second endings, expansion | Reading a chart |
 | [4. Words](spec/4-lyrics.md) | Lyric lines, how chords are placed over syllables, stanza breaks | Reading a cifra with its words |
@@ -135,9 +151,10 @@ The [examples](examples/) directory holds complete documents, one per feature.
 - **Chords are stored as written, understood canonically.** `C7M`, `Cmaj7`
   and `C∆7` are the same chord. A document keeps the spelling its author
   used; a reader knows what it means.
-- **Degrade gracefully.** A line that does not parse is still shown. A
-  voicing that does not parse is reported and skipped. A reader never
-  discards what it did not understand.
+- **Degrade gracefully.** Music is what is inside a fence; everything else
+  is notes and is never interpreted. Inside a fence, a token that does not
+  parse is still shown, and a voicing that does not parse is reported and
+  skipped. A reader never discards what it did not understand.
 
 ## Open questions
 

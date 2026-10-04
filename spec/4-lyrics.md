@@ -20,8 +20,8 @@ walking down the road
 
 ## 4.1 Line shapes
 
-Before the document as a whole is considered, each non-heading line in the
-chart has a **shape**, decided by its own content.
+Before the document as a whole is considered, each non-heading line inside
+a fence in the chart has a **shape**, decided by its own content.
 
 Take the line's whitespace-separated words, leaving out bar lines, bare
 marks, repeat signs, counts, ending markers and bar anchors (§2.3). A word is a **chord word** if it
@@ -56,8 +56,8 @@ like a chord line with one word under it. Once a song is known to be sung,
 one word is a line of words like any other; a verse that wraps often ends
 in one.
 
-In a document that is not sung, every non-blank, non-heading line of the
-chart is a chord line (§2.1), whatever its shape. This is the guarantee for
+In a document that is not sung, every non-blank, non-heading line inside a
+fence is a chord line (§2.1), whatever its shape. This is the guarantee for
 every chart written without words: it reads exactly as it would under §2
 alone.
 
@@ -77,8 +77,8 @@ chord of the same name), a line beginning with `>` is words, however it
 would otherwise read. The `>` and one optional following space are not part
 of the words. A reader MUST keep the marker when writing the line back.
 
-In Markdown, `>` is a block quote, so a forced line renders as quoted text.
-That is an acceptable rendering of a line of words.
+Inside a fence, `>` has no Markdown meaning, so a forced line renders as
+written. Its one visible cost is the marker itself.
 
 A `forced` line following a `chords` line makes a sung line, exactly as a
 `prose` line would.

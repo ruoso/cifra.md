@@ -50,8 +50,15 @@ of any instrument.
 **Section.** A named division of the chart, opened by a heading: *Intro*,
 *Verse*, *Chorus* (§1.6).
 
-**Line.** One line of text. Every line in the chart is a heading, a chord
-line, a lyric line, or blank (§1.4).
+**Fence.** A Markdown fenced code block. In the chart, the music of a
+section is written inside fences (§1.8).
+
+**Notes.** Text in the chart outside any fence. Kept, never interpreted
+(§1.8).
+
+**Line.** One line of text. Every line inside a fence is a cifra-style
+heading, a chord line, a lyric line, or blank; every line outside one is a
+heading, a fence, the rule, or notes (§1.4).
 
 **Chord line.** A line whose content is chords and chart punctuation (§2).
 
@@ -105,9 +112,11 @@ Document
   blocks[]        voicing blocks, in document order
 
 Section
-  name            text of the heading, "" for text before any heading
+  name            text of the heading, "" for music before any heading
   anchor?         bar number stated on the heading
-  lines[]         chord lines, sung lines and lyric lines, in order
+  lines[]         chord lines, sung lines and lyric lines, in order,
+                  from every fence in the section
+  notes           the text outside fences, verbatim
 
 Line
   kind            "chart" | "sung" | "lyric" | "break"
@@ -132,8 +141,9 @@ Block
   tuning          the pitches, as parsed
   tuningText      the tuning as written on the heading
   variation       name, "" for the default variation
-  voicings        key → frets
-  problems[]      lines in the block that could not be read
+  voicings        key → frets, from the block's list items
+  notes           the text that is not a list item, verbatim
+  problems[]      list items that could not be read
 ```
 
 `words` is present only on items of a sung line: the syllables under that
@@ -157,24 +167,24 @@ Markdown constructs, and gives each its ordinary meaning:
 | `# Name` as the first line | ATX heading, level 1 | The song's title |
 | `- key: value` under the title | Bullet list | A property |
 | `## Name` | ATX heading | Section heading, or voicing block heading after the rule |
+| ```` ``` ```` fenced block | Code block | The music of a section: chord lines and lyric lines |
 | `---` on its own line, after a blank line | Thematic break | The rule between chart and voicings |
-| `> words` | Block quote | A line forced to be read as words |
-| Everything else | Paragraph text | Chord lines, lyric lines, voicing lines |
+| `- Cm: x35543` after a block heading | Bullet list | A voicing |
+| Everything else | Paragraph text | Notes, kept and not interpreted |
 
-This means a cifra.md document shown by a Markdown renderer is readable:
-headings and the rule render as such, and the chords and words appear as
-text. The renderer does not know a chart line from a lyric line, and
-consecutive lines flow into one paragraph, so a Markdown render is a
-fallback, not a chart.
+This means a cifra.md document shown by a Markdown renderer is readable,
+and more than readable: the title and sections make an outline, the music
+is set in a monospaced block that keeps every chord over the syllable it
+was written over, the voicings are a list, and notes are prose. What the
+renderer does not know is which lines are chords and which are words, or
+what a shape looks like; that is what a cifra.md reader adds.
 
 Two consequences for writers:
 
 - The rule MUST be preceded by a blank line. In Markdown, `---` directly
   under a line of text turns that text into a heading.
-- A chord line SHOULD NOT begin with a Markdown block marker (`#`, `>`, `-`,
-  `*`, `+`, a digit followed by `.` or `)`), since a renderer would read it
-  as a heading, quote or list item. Chord symbols never start with these, so
-  this only matters for a line that opens with an annotation.
+- Music outside a fence is not music (§1.8). A writer MUST fence every
+  chord line and lyric line it emits.
 
 ## 0.6 Processing order
 
@@ -183,13 +193,18 @@ otherwise claim the same line. The order is:
 
 1. The title and properties (§1.3), only at the very start of the
    document.
-2. The rule (§1.5). The first rule ends the chart.
-3. In the chart: a heading (§1.6), in any of its three forms, opens a
-   section. Otherwise the line is a chord line, a lyric line or blank (§2,
-   §4), decided after the whole chart has been read (§4.2).
-4. In the voicings part: a heading opens a voicing block (§7.2). Any other
-   non-blank line belongs to the current block (§7.4), or is an error if
-   there is none.
+2. Fences (§1.8). A fence opens a run of music that ends at the next
+   fence; nothing inside it is a Markdown heading, the rule or notes.
+3. Outside a fence: the rule (§1.5), and the first rule ends the chart.
+4. Outside a fence, in the chart: a Markdown heading (§1.6.1) opens a
+   section. Any other line is notes (§1.8).
+5. Inside a fence, in the chart: a bracket or label heading (§1.6.2,
+   §1.6.3) opens a section. Otherwise the line is a chord line, a lyric
+   line or blank (§2, §4), decided after the whole chart has been read
+   (§4.2).
+6. In the voicings part: a Markdown heading opens a voicing block (§7.2).
+   A list item belongs to the current block (§7.4), or is an error if
+   there is none. Any other line is notes.
 
 Within a chord line, tokens are read left to right and classified in the
 order given in §2.3. Repeat groups are paired after the section's lines

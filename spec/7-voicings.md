@@ -10,12 +10,12 @@ blocks, one per tuning and variation.
 ---
 
 ## Voicings: E2 A2 D3 G3 B3 E4
-A     = x02220
-Cm    = x35543
-Cm[2] = 8-10-10-8-8-8
+- A: x02220
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
 
 ## Voicings: G4 C4 E4 A4
-Cm = 0333
+- Cm: 0333
 ```
 
 ## 7.1 Why per tuning
@@ -76,34 +76,39 @@ different label.
   a later line for a key replaces an earlier one.
 - The order of blocks is the order written. The **first** block for a
   tuning is the one an application uses when no variation is chosen.
-- An empty block (a heading with no lines) is a variation that exists and
-  has nothing chosen in it yet. A reader MUST keep it.
+- An empty block (a heading with no list items) is a variation that exists
+  and has nothing chosen in it yet. A reader MUST keep it.
 
-## 7.4 Voicing lines
+## 7.4 Voicing items
 
-Every non-blank line in a block is a voicing line:
+The voicings of a block are a Markdown list, one item per key:
 
 ```
-<key> = <fret string>
+- <key>: <fret string>
 ```
 
+- The list marker is `-`, a space, as for properties (§1.3.2). `*` and `+`
+  are accepted; a writer MUST emit `-`.
 - `key` is a voicing key (§2.4): a chord symbol, optionally followed by a
-  footnote marker. It MUST NOT contain whitespace, `=`, `[` or `]` except
+  footnote marker. It MUST NOT contain whitespace, `:`, `[` or `]` except
   as the marker. `Cm[1]` is the key `Cm`.
-- `=` with optional whitespace around it.
-- A fret string (§7.5).
+- `:` with optional whitespace around it, then a fret string (§7.5).
 
 The symbol in a key is text, matched character for character against the
 chart's tokens (§2.4). It is not required to parse as a chord, and a reader
 MUST NOT validate it against §5; a block may name a chord the chart does not
 use, and a key for an unknown token (§2.8) is as good as any other.
 
-A line that is not of this form, or whose fret string does not parse or has
-the wrong number of strings (§7.5), is a **problem**. A reader MUST skip it,
-MUST report it with the text of the line, and MUST continue with the rest
-of the block. A writer MUST NOT write problems back; see §8.
+A list item that is not of this form, or whose fret string does not parse
+or has the wrong number of strings (§7.5), is a **problem**. A reader MUST
+skip it, MUST report it with the text of the item, and MUST continue with
+the rest of the block. A writer MUST NOT write problems back; see §8.
 
-Keys within a block are unique. If a key repeats, the last line wins.
+A line in a block that is not a list item and not blank is **notes**, as in
+the chart (§1.8): kept verbatim, not interpreted. Blank lines are not
+significant.
+
+Keys within a block are unique. If a key repeats, the last item wins.
 
 ## 7.5 Fret strings
 
@@ -164,7 +169,7 @@ printed sheet and an editor need.
 
 ## Open questions
 
-- Whether to allow a fingering after the fret string (`Cm = x35543 (1 3 4 2 1 1)`)
+- Whether to allow a fingering after the fret string (`- Cm: x35543 (1 3 4 2 1 1)`)
   for applications that cannot derive one, or want to override it.
 - Whether a block for a tuning should be able to say which *kind* of
   instrument it is for (guitar, cavaquinho) for display, given that the

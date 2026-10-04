@@ -18,8 +18,9 @@ ambiguous spellings it met. It MAY stop short of building the chord model.
 
 Must, specifically:
 
-- keep text before the first heading, empty sections, unknown tokens, marks
-  and repeat signs;
+- read music only inside fences, and keep notes verbatim;
+- keep music before the first heading, empty sections, unknown tokens,
+  marks and repeat signs;
 - read all three heading forms;
 - read `[1]` as the bare key and accept index gaps;
 - number bars, carrying stated numbers forward, unless the document is sung

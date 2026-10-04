@@ -12,3 +12,4 @@ valid Markdown file.
 | [bar-numbers.md](bar-numbers.md) | Stated bar numbers for a repeat written out straight |
 | [variations.md](variations.md) | Two variations of the voicings for one tuning |
 | [metadata.md](metadata.md) | A title, properties and a declared notation dialect |
+| [notes.md](notes.md) | Free notes outside the fences, kept but not interpreted |
