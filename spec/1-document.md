@@ -88,6 +88,11 @@ that needs structure belongs in an application's own key.
 | `artist` | Who the song is by. Free text. |
 | `notation` | The dialect the chart's symbols are written in: `brazilian`, `american` or `realbook` (§5.6). Affects only the four ambiguous spellings. Default `brazilian`. |
 | `language` | BCP 47 tag for the words, when the song has them. Informative. |
+| `key` | The song's key, as a chord symbol root with `m` for minor: `G`, `Em`, `Bb`. Informative: it changes nothing a reader does. |
+| `capo` | Where the song is commonly played with a capo, as a fret number: `2`. Informative: the arrangement itself is in the voicing blocks, where a capo is a tuning (§6.3). |
+| `tempo` | Beats per minute: `96`. Informative. |
+| `time` | Time signature: `4/4`, `3/4`, `6/8`. Informative. |
+| `words` | `yes` or `no`: whether the document is to be read as sung (§4.2), overriding the rule that decides it from the text. |
 
 The value of `notation` compares case-insensitively: `American` is
 `american`. A reader given any other value MUST fall back to `brazilian`
@@ -187,7 +192,8 @@ in brackets is notes.
 ### 1.7.3 Label heading
 
 A line whose first word ends in `:`, where everything after the colon is
-chord tokens (§2.3) or nothing.
+chart items that are not unknown tokens (chords, no-chord marks, repeat
+signs, beat marks, counts, group marks, §2.3) or nothing.
 
 ```
 Intro: Fm  Fm/D#
@@ -205,12 +211,25 @@ fit the pattern, `Amor: A`, is forced to read as words with a leading `>`
 (§4.3), which is the same marker that settles every other line no rule can
 call.
 
-### 1.7.4 Bar number on a heading
+A cifra copied from the web opens with header lines in this shape: `Tom: G`
+for the key, `Capo: 2`. Inside a fence they read as sections called *Tom*
+and *Capo*. A reader MUST report a label heading whose whole content is a
+single chord, saying that a key belongs in the properties as `- key: G`
+(§1.4.3). The heading is still read as written.
+
+### 1.7.4 Bar number and count on a heading
 
 A heading's text MAY end with `@` and a number: `## A second time @1`. The
 number is removed from the section's name and becomes the section's
-*anchor*, the bar number of its first bar (§2.8). This applies to all three
-forms.
+*anchor*, the bar number of its first bar (§2.8).
+
+It MAY also end with a count (§3.3): `## Refrão x2`, `[Refrão] (2x)`,
+`## Chorus bis`. The count is removed from the name and becomes the
+section's *times*: the whole section is played that many times. Both may
+be present, in either order: `## A @9 x2`.
+
+This applies to the Markdown and bracket forms. A label heading's name is
+one word and carries neither.
 
 ## 1.8 Sections
 
@@ -266,8 +285,16 @@ Rules:
 - A section MAY contain any number of fences, and its music is the
   concatenation of their lines in order. A fence MAY contain several
   sections, when cifra-style headings inside it open them.
-- A fence's info string (` ```chords `) is ignored by this version and
-  reserved. A writer MUST emit a bare fence.
+- A fence's info string decides what the fence holds. Empty, or `cifra`,
+  is music. Anything else is **verbatim**: a block of text kept as it is,
+  shown in a monospaced face, and not read as music. `tab` is the name to
+  use for tablature, `strum` for a strumming pattern; a reader does not
+  interpret either in this version. A writer emits the info string it
+  read, and a bare fence for music.
+- Inside a music fence, a line beginning with `//` is an **annotation**:
+  free text kept in its place among the lines, shown as text, never read as
+  chords or words, and counted neither as a bar nor towards whether the
+  document is sung. `// repete o refrão` between two verses is the use.
 - A fence that is not closed runs to the end of the document. A reader
   MUST report it. A writer MUST close every fence it opens.
 - Fences are not recognised in the voicings part. A fence there is notes.
@@ -291,5 +318,5 @@ Deferred to a later version:
 
 - Whether `###` should one day nest sections (a *Verse* with *a* and *b*
   halves). Reserved for that reason.
-- Whether the fence info string should select a dialect or a mode (a
-  `tab` block, say) in a later version.
+- Whether a `tab` or `strum` fence should one day be read rather than kept
+  verbatim.

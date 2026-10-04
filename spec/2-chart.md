@@ -18,7 +18,12 @@ Dm | % | G7 | C
 ```
 
 A chord line is a sequence of measures separated by bar lines. A line with
-no bar line is one measure.
+no bar line at all is a **run**: a sequence of chords in order, `Intro: G
+D Em C`, which is how a cifra writes an intro or a turnaround. A run says
+which chords and in what order, and nothing about bars: usually one bar
+each, but the text does not say. A reader keeps a run as one measure with
+no bar line on either side, and §2.8 neither numbers it nor lets it
+advance the count, for the same reason a sung line is not numbered.
 
 ## 2.2 Measures and bar lines
 
@@ -60,13 +65,17 @@ this order:
 1. **Bar anchor**: `@` followed by one or more digits (§2.8).
 2. **Repeat sign**: exactly `%` (§3.1).
 3. **No-chord mark**: `N.C.` or `NC`, in any letter case (§2.6).
-4. **Count**: `x` or `×` with a positive integer, either order (§3.3).
-5. **Ending marker**: a positive integer followed by `.` (§3.4).
-6. **Group marks**: a leading `(` or `:` or a trailing `)` or `:` that is
+4. **Beat mark**: exactly `/`, `.` or `-`: one beat on which the previous
+   chord carries on, as American charts write `C / / / | G / / /` and
+   ChordPro grids write `C . . .`. Not a chord, not a word; it takes words
+   on a sung line like any item.
+5. **Count**: `x2`, `2x`, `(2x)`, `bis`, `(bis)` and the forms in §3.3.
+6. **Ending marker**: a positive integer followed by `.` (§3.4).
+7. **Group marks**: a leading `(` or `:` or a trailing `)` or `:` that is
    not balanced within the word is split off as a mark of its own (§3.2).
    A `:` is a mark only when written against a bar line. What is left, if
    anything, is classified again from step 2.
-7. **Chord token**: a chord symbol, optionally followed by a footnote marker
+8. **Chord token**: a chord symbol, optionally followed by a footnote marker
    (§2.4). If the symbol parses under §5, the item is a chord. If it does
    not, the item is an **unknown token** (§2.9).
 
@@ -114,8 +123,10 @@ Rules:
 
 ## 2.5 Several chords in a measure
 
-A measure may hold several chords: `C  Am | F  G`. This says the bar is
-divided between them, in order. It does not say how. A display convention
+A measure of a line that has bar lines may hold several chords: `C  Am |
+F  G`. This says the bar is divided between them, in order. It does not say
+how. Beat marks (§2.3) say how many beats the chord before them lasts, and
+a reader MAY use them for display. A display convention
 is to divide the bar equally, and a reader MAY present it so, but the
 format carries no durations and a reader MUST NOT infer any for another
 purpose.
@@ -155,7 +166,8 @@ footnote marker.
 ## 2.8 Bar anchors and bar numbers
 
 Bars are numbered continuously from 1 through the chart, the way a score
-numbers them, counting every measure of every chord line in order. Section
+numbers them, counting every measure of every chord line that has bar
+lines, in order. A run (§2.1) is not a bar and does not advance the count. Section
 boundaries do not restart the count.
 
 A player transcribing from a score often writes a repeat out straight. The
@@ -211,9 +223,10 @@ stated or counted, so that a display can show the stated ones.
 
 ## 2.9 Unknown tokens
 
-A word that reaches step 7 of §2.3 and does not parse as a chord symbol is
-an unknown token. It is kept as written, in its place among the items, and
-reported.
+A word that reaches step 8 of §2.3 and does not parse as a chord symbol is
+an unknown token. It is kept as written, in its place among the items, as
+an item of its own kind, so that an application can show it and list it.
+It is not an error: a reader MUST NOT raise a diagnostic for one.
 
 Unknown tokens are how typos, annotations the format does not define
 (`(2x)`, `fine`, `rit.`) and chords a reader's grammar does not cover all

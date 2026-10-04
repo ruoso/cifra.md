@@ -623,5 +623,6 @@
   ],
   "blocks": [],
   "sung": false,
+  "sungAt": null,
   "diagnostics": []
 }

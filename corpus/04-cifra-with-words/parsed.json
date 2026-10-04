@@ -79,7 +79,8 @@
                   ]
                 }
               ],
-              "closeBar": null
+              "closeBar": null,
+              "run": true
             }
           ]
         }
@@ -368,7 +369,8 @@
                   ]
                 }
               ],
-              "closeBar": null
+              "closeBar": null,
+              "run": true
             }
           ]
         }
@@ -378,5 +380,6 @@
   ],
   "blocks": [],
   "sung": true,
+  "sungAt": 8,
   "diagnostics": []
 }

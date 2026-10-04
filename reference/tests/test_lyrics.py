@@ -32,6 +32,30 @@ class TestSungDecision:
         assert doc["sung"] is False
         assert ls[0]["kind"] == "chart"
 
+    def test_sung_at_names_the_line(self):
+        doc = parse("## A\n```\nC | G\nG            D\nWhen I first saw you\n```\n")
+        assert doc["sungAt"] == 5
+        assert parse(chart("C | G"))["sungAt"] is None
+
+    def test_words_property_overrides(self):
+        text = "- words: no\n\n```\nG | C | D | G\nD DU UDU\n```\n"
+        doc = parse(text)
+        assert doc["sung"] is False and doc["sungAt"] is None
+        lines_ = doc["sections"][0]["body"][0]["lines"]
+        assert [m["number"] for m in lines_[0]["measures"]] == [1, 2, 3, 4]
+        assert lines_[1]["run"] is True and "number" not in lines_[1]["measures"][0]
+        doc = parse("- words: yes\n\n```\nC | G\n```\n")
+        assert doc["sung"] is True
+        doc = parse("- words: maybe\n\n```\nC | G\n```\n")
+        assert doc["diagnostics"][0]["code"] == "bad-property"
+
+    def test_beat_marks_take_words_and_are_not_words(self):
+        doc, ls = lines("C / / G\nla la la la")
+        assert doc["sung"] is True
+        its = ls[0]["measures"][0]["items"]
+        assert [it["type"] for it in its] == ["chord", "beat", "beat", "chord"]
+        assert "".join(it["words"] for it in its) == "la la la la"
+
     def test_a_forced_line_makes_the_song_sung(self):
         doc, ls = lines("C | G\n> A")
         assert doc["sung"] is True

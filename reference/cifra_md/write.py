@@ -17,6 +17,8 @@ def _item_text(it: dict) -> str:
         return "%"
     if t == "nochord":
         return "N.C."
+    if t == "beat":
+        return it["mark"]
     if t == "mark":
         if it["notation"] == "bracket":
             return "(" if it["open"] else ")"
@@ -113,13 +115,22 @@ def _music_lines(lines: list[dict]) -> list[str]:
             out.append(("> " + line["text"].lstrip()) if line["forced"] else line["text"])
         elif k == "break":
             out.append("")
+        elif k == "annotation":
+            out.append(("// " + line["text"]) if line["text"] else "//")
     return out
 
 
-def _inner_heading(section: dict):
+def _heading_name(section: dict) -> str:
     name = section["name"]
     if section["anchor"] is not None:
         name = f"{name} @{section['anchor']}".strip()
+    if section.get("times") is not None:
+        name = f"{name} x{section['times']}".strip()
+    return name
+
+
+def _inner_heading(section: dict):
+    name = _heading_name(section)
     if section["heading"] == "bracket":
         return f"[{name}]"
     if section["heading"] == "label":
@@ -141,9 +152,7 @@ def _sections_text(sections: list[dict]) -> list[str]:
             fence_open = False
 
     for section in sections:
-        name = section["name"]
-        if section["anchor"] is not None:
-            name = f"{name} @{section['anchor']}".strip()
+        name = _heading_name(section)
         inner = _inner_heading(section)
         if inner is None:
             close_fence()
@@ -153,6 +162,13 @@ def _sections_text(sections: list[dict]) -> list[str]:
             if part["type"] == "notes":
                 close_fence()
                 out.append(part["text"])
+                out.append("")
+                continue
+            if part["type"] == "verbatim":
+                close_fence()
+                out.append("```" + part["info"])
+                out.extend(part["text"].split("\n"))
+                out.append("```")
                 out.append("")
                 continue
             lines = _music_lines(part["lines"])

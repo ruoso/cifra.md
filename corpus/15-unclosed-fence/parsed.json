@@ -80,6 +80,7 @@
   ],
   "blocks": [],
   "sung": true,
+  "sungAt": 4,
   "diagnostics": [
     {
       "code": "unclosed-fence",

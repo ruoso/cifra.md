@@ -62,7 +62,23 @@ class TestChartLayout:
         assert roundtrip(chart("@9\nDm | G7")) == "## A\n```\n@9 Dm | G7\n```\n"
 
     def test_unknown_tokens_and_repeat_signs(self):
-        assert roundtrip(chart("C | % | fine | (2x)")) == "## A\n```\nC | % | fine | (2x)\n```\n"
+        assert roundtrip(chart("C | % | fine | (solo)")) == "## A\n```\nC | % | fine | (solo)\n```\n"
+
+    def test_cifra_counts_become_x_form(self):
+        assert roundtrip(chart("( C | G ) (2x)")) == "## A\n```\n( C | G ) x2\n```\n"
+        assert roundtrip(chart("C | G bis")) == "## A\n```\nC | G x2\n```\n"
+
+    def test_beats_runs_and_annotations(self):
+        text = "C / / / | G . . .\nG D Em C\n// repete\n"
+        assert roundtrip(chart(text)) == "## A\n```\n" + text + "```\n"
+
+    def test_heading_count_and_anchor(self):
+        assert roundtrip("## Refrão (2x)\n```\nC\n```\n") == "## Refrão x2\n```\nC\n```\n"
+        assert roundtrip("## A x2 @9\n```\nC | G\n```\n") == "## A @9 x2\n```\nC | G\n```\n"
+
+    def test_verbatim_fence(self):
+        text = "## A\n```tab\ne|--0--|\n```\n\n```\nC\n```\n"
+        assert roundtrip(text) == text
 
     def test_no_chord_is_written_canonically(self):
         assert roundtrip(chart("nc | NC | n.c. | C")) == "## A\n```\nN.C. | N.C. | N.C. | C\n```\n"

@@ -598,6 +598,7 @@
     }
   ],
   "sung": false,
+  "sungAt": null,
   "diagnostics": [
     {
       "code": "bad-notation",

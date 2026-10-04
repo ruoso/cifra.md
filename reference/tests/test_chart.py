@@ -58,9 +58,23 @@ class TestItems:
         assert its[1]["text"] == "[2]"
 
     def test_unknown_tokens_are_kept_in_place(self):
-        its = measures("C wobble (2x) fine G")[0]["items"]
+        its = measures("C wobble (solo) fine G")[0]["items"]
         assert [it["type"] for it in its] == ["chord", "unknown", "unknown", "unknown", "chord"]
-        assert [it["text"] for it in its if it["type"] == "unknown"] == ["wobble", "(2x)", "fine"]
+        assert [it["text"] for it in its if it["type"] == "unknown"] == ["wobble", "(solo)", "fine"]
+
+    def test_beat_marks(self):
+        its = measures("C / / / | G . . . | Am - - -")
+        assert [it["type"] for it in its[0]["items"]] == ["chord", "beat", "beat", "beat"]
+        assert its[1]["items"][1] == {"type": "beat", "mark": "."}
+        assert its[2]["items"][3] == {"type": "beat", "mark": "-"}
+
+    def test_runs_have_no_bars(self):
+        doc = parse(chart("G D Em C"))
+        ln = lines(doc)[0]
+        assert ln["run"] is True
+        assert len(ln["measures"]) == 1
+        assert "number" not in ln["measures"][0]
+        assert "run" not in lines(parse(chart("G | D")))[0]
 
     def test_no_chord_mark(self):
         for spelling in ("N.C.", "NC", "n.c.", "nc"):
@@ -109,7 +123,7 @@ class TestBarNumbers:
                 if p["type"] != "music":
                     continue
                 for ln in p["lines"]:
-                    if ln["kind"] == "chart":
+                    if ln["kind"] == "chart" and not ln.get("run"):
                         out.append(" ".join(str(m["number"]) + ("*" if m["stated"] else "") for m in ln["measures"]))
         return out
 
@@ -143,7 +157,10 @@ class TestBarNumbers:
         assert self.bars(chart("Dm | @9\nG7 | C7")) == ["1", "9* 10"]
 
     def test_carries_across_sections(self):
-        assert self.bars("## A\n```\nDm | @9\n```\n## B\n```\nG7\n```\n") == ["1", "9*"]
+        assert self.bars("## A\n```\nDm | @9\n```\n## B\n```\nG7 | C\n```\n") == ["1", "9* 10"]
+
+    def test_runs_neither_take_nor_advance_numbers(self):
+        assert self.bars(chart("C | G\nAm F\nDm | G7")) == ["1 2", "3 4"]
 
     def test_lone_number_line_is_dropped(self):
         doc = parse(chart("@9\nDm | G7"))

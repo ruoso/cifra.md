@@ -173,8 +173,9 @@ template or paste a cifra from the web.
    `## Voicings: E2 A2 D3 G3 B3 E4` for a guitar, `G4 C4 E4 A4` for a
    ukulele, `D4 G4 B4 D5` for a cavaquinho. `## Voicings: guitar` is not
    read. A capo is a tuning three (or however many) frets up.
-5. **Repeats are `|: :|` or `( )`, with `x2` for a count.** `(2x)` on its
-   own is not a repeat yet; it is kept as written and shown, nothing more.
+5. **Repeats are `|: :|` or `( )`, with a count after them**: `x2`, `2x`,
+   `(2x)` or `bis` all work. A count at the end of a heading, `## Refrão
+   x2`, repeats the whole section.
 
 And three smaller ones. A line of words that happens to be chords, `A` or
 `Em`, is forced to read as words by starting it with `>`. The first line

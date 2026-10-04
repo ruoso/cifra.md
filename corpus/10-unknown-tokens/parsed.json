@@ -52,6 +52,10 @@
                     {
                       "type": "unknown",
                       "text": "fine"
+                    },
+                    {
+                      "type": "count",
+                      "times": 2
                     }
                   ],
                   "number": 3,
@@ -62,21 +66,10 @@
                   "items": [
                     {
                       "type": "unknown",
-                      "text": "(2x)"
-                    }
-                  ],
-                  "number": 4,
-                  "stated": false
-                },
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "unknown",
                       "text": "C(7"
                     }
                   ],
-                  "number": 5,
+                  "number": 4,
                   "stated": false
                 },
                 {
@@ -103,7 +96,7 @@
                       }
                     }
                   ],
-                  "number": 6,
+                  "number": 5,
                   "stated": false
                 },
                 {
@@ -125,7 +118,7 @@
                       }
                     }
                   ],
-                  "number": 7,
+                  "number": 6,
                   "stated": false
                 }
               ],
@@ -161,7 +154,7 @@
                       "times": 2
                     }
                   ],
-                  "number": 8,
+                  "number": 7,
                   "stated": false
                 },
                 {
@@ -176,7 +169,7 @@
                       "text": "@"
                     }
                   ],
-                  "number": 9,
+                  "number": 8,
                   "stated": false
                 }
               ],
@@ -213,7 +206,7 @@
                       "text": "F)x2"
                     }
                   ],
-                  "number": 10,
+                  "number": 9,
                   "stated": false
                 },
                 {
@@ -235,7 +228,7 @@
                       }
                     }
                   ],
-                  "number": 11,
+                  "number": 10,
                   "stated": false
                 }
               ],
@@ -321,7 +314,7 @@
                       }
                     }
                   ],
-                  "number": 12,
+                  "number": 11,
                   "stated": false
                 }
               ],
@@ -335,7 +328,13 @@
   ],
   "blocks": [],
   "sung": false,
+  "sungAt": null,
   "diagnostics": [
+    {
+      "code": "count-out-of-place",
+      "message": "a count that follows neither a repeat group nor ends a line",
+      "line": 3
+    },
     {
       "code": "count-out-of-place",
       "message": "a count that follows neither a repeat group nor ends a line",

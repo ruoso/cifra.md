@@ -21,7 +21,10 @@ BRACKET_HEADING = re.compile(r"^(\s*\[\s*([^\]]*?)\s*\]\s*)(.*)$")
 LABEL_HEADING = re.compile(r"^(\s*([^\s:|]+):(?:[ \t]+|$))(.*)$")
 HEADING_ANCHOR = re.compile(r"\s*@(\d+)\s*$")
 BAR_ANCHOR = re.compile(r"^@(\d+)$")
-COUNT = re.compile(r"^(?:[x×](\d+)|(\d+)[x×])$")
+COUNT = re.compile(r"^\(?(?:[x×](\d+)|(\d+)[x×]|(bis))\)?$")
+BEAT = {"/", ".", "-"}
+ANNOTATION = re.compile(r"^\s*//\s?(.*)$")
+HEADING_COUNT = re.compile(r"\s*(\(?(?:[x×]\d+|\d+[x×]|bis)\)?)\s*$")
 ENDING = re.compile(r"^(\d+)\.$")
 CHORD_TOKEN = re.compile(r"^(.*?)(?:\[(\d+)\])?$")
 LYRIC_MARKER = re.compile(r"^(\s*)>( ?)")
@@ -37,6 +40,12 @@ def key_for(symbol: str, index: int) -> str:
 
 
 # --- tokens ------------------------------------------------------------------
+
+
+def _count_times(m) -> int:
+    if m.group(3):
+        return 2
+    return int(m.group(1) or m.group(2))
 
 
 def _balanced(text: str) -> bool:
@@ -72,9 +81,11 @@ def _classify_core(core: str, dialect: str):
         return {"type": "repeat"}
     if core.upper() in ("N.C.", "NC"):
         return {"type": "nochord"}
+    if core in BEAT:
+        return {"type": "beat", "mark": core}
     m = COUNT.match(core)
     if m:
-        return {"type": "count", "times": int(m.group(1) or m.group(2))}
+        return {"type": "count", "times": _count_times(m)}
     m = ENDING.match(core)
     if m:
         return {"type": "ending", "number": int(m.group(1))}
@@ -129,6 +140,9 @@ def scan_line(body: str, dialect: str) -> dict:
             if a:
                 anchor = int(a.group(1))
                 continue
+            if COUNT.match(word):
+                items.append({"type": "count", "times": _count_times(COUNT.match(word)), "column": col})
+                continue
             before, core, after = _split_marks(word)
             for k in range(len(before)):
                 items.append({"type": "mark", "open": True, "notation": "bracket", "column": col + k})
@@ -142,7 +156,7 @@ def scan_line(body: str, dialect: str) -> dict:
         if bar is not None and bar.group(1):
             close_mark = {"type": "mark", "open": False, "notation": "barline", "column": bar.start(1)}
 
-        substantive = any(it["type"] in ("chord", "nochord", "repeat", "unknown") for it in items)
+        substantive = any(it["type"] in ("chord", "nochord", "beat", "repeat", "unknown") for it in items)
         if substantive:
             measure = {"bar": bar_before, "items": pending + items}
             pending = []
@@ -196,6 +210,9 @@ def _strip_marker(raw: str) -> str:
 
 def line_shape(raw: str, dialect: str) -> dict:
     raw = raw.rstrip()
+    am = ANNOTATION.match(raw)
+    if am:
+        return {"kind": "annotation", "body": am.group(1), "words": 0, "scan": None, "forced": False}
     forced = bool(LYRIC_MARKER.match(raw))
     body = _strip_marker(raw) if forced else raw
     scan = scan_line(body, dialect)
@@ -266,8 +283,10 @@ class _Parser:
 
     # sections ------------------------------------------------------------
     def new_section(self, name, heading):
-        name, anchor = _take_anchor(name)
+        name, anchor, times = _take_anchor(name)
         section = {"name": name, "heading": heading, "anchor": anchor, "body": [], "groups": []}
+        if times is not None:
+            section["times"] = times
         self.sections.append(section)
         return section
 
@@ -300,13 +319,18 @@ class _Parser:
                     fence = None
                     part = None
                     continue
+                if part["type"] == "verbatim":
+                    part["raw"].append(raw)
+                    continue
                 # inside a fence: cifra-style headings open sections
                 bm = BRACKET_HEADING.match(raw)
                 if bm and bm.group(2) and not bm.group(2).isdigit():
-                    section = self.new_section(bm.group(2), "bracket")
+                    rest = bm.group(3).strip()
+                    cm = COUNT.match(rest) if rest else None
+                    section = self.new_section(bm.group(2) + (f" {rest}" if cm else ""), "bracket")
                     part = {"type": "music", "raw": []}
                     section["body"].append(part)
-                    if bm.group(3).strip():
+                    if rest and not cm:
                         part["raw"].append((lineno, bm.group(3)))
                     continue
                 lm = LABEL_HEADING.match(raw)
@@ -314,8 +338,17 @@ class _Parser:
                     section = self.new_section(lm.group(2), "label")
                     part = {"type": "music", "raw": []}
                     section["body"].append(part)
-                    if lm.group(3).strip():
+                    rest = lm.group(3).strip()
+                    if rest:
                         part["raw"].append((lineno, lm.group(3)))
+                        if "|" not in rest and len(rest.split()) == 1 and _classify_core(rest.rstrip(",;"), dialect)["type"] == "chord":
+                            self.diag(
+                                "heading-looks-like-key",
+                                lineno,
+                                f"`{raw.strip()}` reads as a section called {lm.group(2)!r} holding one chord; "
+                                f"if it is the song's key, write `- key: {rest}` in the properties",
+                                raw,
+                            )
                     continue
                 part["raw"].append((lineno, raw))
                 continue
@@ -323,7 +356,11 @@ class _Parser:
             fm = FENCE.match(raw)
             if fm:
                 fence = (fm.group(1)[0], len(fm.group(1)), lineno)
-                part = {"type": "music", "raw": []}
+                info = fm.group(2).strip()
+                if info and info.lower() != "cifra":
+                    part = {"type": "verbatim", "info": info, "raw": []}
+                else:
+                    part = {"type": "music", "raw": []}
                 section["body"].append(part)
                 continue
             if RULE.match(raw):
@@ -447,14 +484,23 @@ class _Parser:
                     part["shapes"] = [line_shape(raw, dialect) for _, raw in part["raw"]]
                     shaped.append(part)
         sung = False
+        sung_at = None
         for part in shaped:
             shapes = part["shapes"]
             for i, sh in enumerate(shapes):
+                if sung:
+                    break
                 if sh["kind"] == "forced":
-                    sung = True
-                if sh["kind"] == "chords" and i + 1 < len(shapes) and shapes[i + 1]["kind"] == "prose" and shapes[i + 1]["words"] >= 2:
-                    sung = True
+                    sung, sung_at = True, part["raw"][i][0]
+                elif sh["kind"] == "chords" and i + 1 < len(shapes) and shapes[i + 1]["kind"] == "prose" and shapes[i + 1]["words"] >= 2:
+                    sung, sung_at = True, part["raw"][i + 1][0]
+        words = self.properties.get("words", "").strip().lower()
+        if words in ("yes", "no"):
+            sung, sung_at = words == "yes", None
+        elif words:
+            self.diag("bad-property", 1, f"`words` is yes or no, not {words!r}")
         self.sung = sung
+        self.sung_at = sung_at
 
         kept_sections = []
         for section in self.sections:
@@ -470,6 +516,8 @@ class _Parser:
                         body.append({"type": "notes", "text": "\n".join(t for _, t in lines)})
                         if not shaped:
                             self.unfenced_check(lines)
+                elif part["type"] == "verbatim":
+                    body.append({"type": "verbatim", "info": part["info"], "text": "\n".join(part["raw"])})
                 else:
                     lines = self.assemble(part, sung)
                     if lines:
@@ -529,6 +577,10 @@ class _Parser:
                 blanks += 1
                 i += 1
                 continue
+            if sh["kind"] == "annotation":
+                out.append({"kind": "annotation", "text": sh["body"]})
+                i += 1
+                continue
             if not sung:
                 line = self.chart_line(sh)
                 if line is not None:
@@ -569,6 +621,8 @@ class _Parser:
             for it in m["items"]:
                 it.pop("column", None)
         line = {"kind": "chart", "measures": scan["measures"], "closeBar": scan["closeBar"]}
+        if not scan["has_bar"]:
+            line["run"] = True
         if scan["trailing"] is not None:
             line["measures"][-1]["_trailing"] = scan["trailing"]
         return line
@@ -622,7 +676,7 @@ class _Parser:
                 if part["type"] != "music":
                     continue
                 for line in part["lines"]:
-                    if line["kind"] != "chart":
+                    if line["kind"] != "chart" or line.get("run"):
                         continue
                     for m in line["measures"]:
                         if "anchor" in m:
@@ -760,27 +814,40 @@ class _Parser:
             "sections": self.sections,
             "blocks": self.blocks,
             "sung": self.sung,
+            "sungAt": self.sung_at,
             "diagnostics": self.diagnostics,
         }
 
 
 def _take_anchor(name: str):
-    m = HEADING_ANCHOR.search(name)
-    if not m:
-        return name, None
-    return name[: m.start()].strip(), int(m.group(1))
+    """Strip a trailing bar anchor and/or count from a heading, in either order (§1.7.4)."""
+    anchor = None
+    times = None
+    while True:
+        m = HEADING_ANCHOR.search(name)
+        if m and anchor is None:
+            anchor = int(m.group(1))
+            name = name[: m.start()].strip()
+            continue
+        m = HEADING_COUNT.search(name)
+        if m and times is None and m.start() > 0:
+            times = _count_times(COUNT.match(m.group(1)))
+            name = name[: m.start()].strip()
+            continue
+        break
+    return name, anchor, times
 
 
 def _is_chord_run(text: str, dialect: str) -> bool:
+    """Every word is a chart item that is not an unknown token (§1.7.3)."""
     words = [w.rstrip(",;") for w in text.replace("|", " ").split()]
     for w in words:
-        if not w:
+        if not w or BAR_ANCHOR.match(w) or COUNT.match(w):
             continue
         _, core, _ = _split_marks(w)
         if not core:
             continue
-        m = CHORD_TOKEN.match(core)
-        if parse_chord(m.group(1) or core, dialect)["chord"] is None:
+        if _classify_core(core, dialect)["type"] == "unknown":
             return False
     return True
 

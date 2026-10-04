@@ -127,10 +127,12 @@ degree. `°` after a degree lowers it (`5°` is ♭5).
 
 ### 5.3.2 Major-seventh words
 
-`maj`, `Maj`, `MAJ`, `M`, `∆`, `Δ` state that the seventh is major.
-Followed by a degree (`maj7`, `maj9`, `M13`) they apply to that stack;
-alone (`CM`, `C∆`) they mean a major seventh chord. Brazilian writes the same
-thing after the degree: `7M` (§5.3.4).
+`maj`, `Maj`, `MAJ`, `M`, `∆`, `Δ` followed by a degree (`maj7`, `maj9`,
+`M13`) state that the seventh of that stack is major. Alone, the word and
+the letter name the major triad: `Cmaj` and `CM` are `C`, because that is
+what most people mean by them. The triangle alone is the jazz shorthand for
+the major seventh: `C∆` is `Cmaj7`. Brazilian writes the major seventh
+after the degree: `7M` (§5.3.4).
 
 `m` followed by one of these is the minor-major seventh: `Cm(maj7)`,
 `CmM7`, `Cm7M`, `C−∆7`.
@@ -189,7 +191,8 @@ raised ninth, `C7(5+)` a seventh with a raised fifth.
 | `C` | C E G |
 | `Cm` | C E♭ G |
 | `C7` | C E G B♭ |
-| `C7M`, `Cmaj7`, `CM7`, `C∆7` | C E G B |
+| `C7M`, `Cmaj7`, `CM7`, `C∆7`, `C∆` | C E G B |
+| `Cmaj`, `CM` | C E G |
 | `C6` | C E G A |
 | `Cm6` | C E♭ G A |
 | `C5` | C G |

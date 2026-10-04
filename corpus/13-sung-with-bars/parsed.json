@@ -254,6 +254,7 @@
   ],
   "blocks": [],
   "sung": true,
+  "sungAt": 4,
   "diagnostics": [
     {
       "code": "repeat-beside-items",

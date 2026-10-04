@@ -133,6 +133,9 @@ def parse_chord(text: str, dialect: str = DEFAULT_DIALECT) -> dict:
 
     quality = "major"
     major_seventh = False
+    # `maj`/`M` alone is the triad; `∆` alone, or any of them before a
+    # degree, is the major seventh (§5.3.2).
+    maj_word_alone = False
     saw_seventh = False
     bare_degree_sign = False
     primary_top = None
@@ -161,6 +164,7 @@ def parse_chord(text: str, dialect: str = DEFAULT_DIALECT) -> dict:
         elif kind == "MAJ":
             major_seventh = True
             saw_quality_word = True
+            maj_word_alone = tx not in ("∆", "Δ") and at(i + 1) != "NUM"
             i += 1
         elif kind in ("DIMWORD", "DEG"):
             if primary_top is None and not exts:
@@ -313,7 +317,7 @@ def parse_chord(text: str, dialect: str = DEFAULT_DIALECT) -> dict:
             errors.append(f"unexpected {tx!r}")
             i += 1
 
-    if major_seventh and 7 not in exts:
+    if major_seventh and 7 not in exts and not maj_word_alone:
         exts[7] = 0
 
     if bare_degree_sign and quality == "dim" and 7 not in exts:

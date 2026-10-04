@@ -38,12 +38,11 @@
                         "bass": null
                       }
                     }
-                  ],
-                  "number": 1,
-                  "stated": false
+                  ]
                 }
               ],
-              "closeBar": null
+              "closeBar": null,
+              "run": true
             }
           ]
         }
@@ -79,12 +78,11 @@
                         "bass": null
                       }
                     }
-                  ],
-                  "number": 2,
-                  "stated": false
+                  ]
                 }
               ],
-              "closeBar": null
+              "closeBar": null,
+              "run": true
             }
           ]
         }
@@ -127,12 +125,11 @@
                         "bass": null
                       }
                     }
-                  ],
-                  "number": 3,
-                  "stated": false
+                  ]
                 }
               ],
-              "closeBar": null
+              "closeBar": null,
+              "run": true
             }
           ]
         }
@@ -142,5 +139,6 @@
   ],
   "blocks": [],
   "sung": false,
+  "sungAt": null,
   "diagnostics": []
 }

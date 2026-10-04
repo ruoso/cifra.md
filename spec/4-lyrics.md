@@ -24,7 +24,9 @@ Before the document as a whole is considered, each non-heading line inside
 a fence in the chart has a **shape**, decided by its own content.
 
 Take the line's whitespace-separated words, leaving out bar lines, bare
-marks, repeat signs, counts, ending markers and bar anchors (§2.3). A word
+marks, repeat signs, beat marks, counts, ending markers and bar anchors
+(§2.3). Annotation lines (§1.9) have no shape and take no part in any of
+this. A word
 is a **chord word** if it is a chord token under §2.4 (after splitting off
 marks) or a no-chord mark (§2.6), otherwise a **plain word**. Then:
 
@@ -50,6 +52,13 @@ either:
 - some line of shape `chords` is immediately followed (with no blank line
   between) by a line of shape `prose` that has at least two words; or
 - any line is `forced`.
+
+The `words` property (§1.4.3) overrides this: `words: no` makes the
+document a chart whatever its lines look like, which is the answer when a
+strumming pattern written under a chord line, `D DU UDU`, would otherwise
+read as words and take the bar numbers with it; `words: yes` makes it
+sung. A reader MUST expose which line made a document sung, so that an
+application can show why a chart lost its bar numbers.
 
 Two words are required, because a chart line with one typo looks exactly
 like a chord line with one word under it. Once a song is known to be sung,

@@ -21,8 +21,10 @@ def tones(text, dialect="brazilian"):
         ("Cmaj7", "C E G B"),
         ("CM7", "C E G B"),
         ("C∆7", "C E G B"),
-        ("CM", "C E G B"),
+        ("CM", "C E G"),
+        ("Cmaj", "C E G"),
         ("C∆", "C E G B"),
+        ("CΔ", "C E G B"),
         ("C6", "C E G A"),
         ("Cm6", "C Eb G A"),
         ("C5", "C G"),
@@ -125,7 +127,7 @@ def test_lowercase_roots_are_not_chords():
 
 
 def test_same_chord_from_different_spellings():
-    forms = ["C7M", "Cmaj7", "CM7", "C∆7", "CΔ7", "CMaj7"]
+    forms = ["C7M", "Cmaj7", "CM7", "C∆7", "CΔ7", "CMaj7", "C∆"]
     parsed = [parse_chord(f)["chord"] for f in forms]
     assert all(p == parsed[0] for p in parsed)
 

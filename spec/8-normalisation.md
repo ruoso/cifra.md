@@ -171,7 +171,18 @@ tuning and name is created, empty or with the copied entries. If one
 already exists the document is unchanged; a writer SHOULD refuse rather
 than silently land the user in the existing one.
 
-## 8.6 Keeping columns on a sung line
+## 8.6 Transposition
+
+Not defined in this version. Transposing a chart is a rewrite of every
+symbol's root and bass, which a writer could do while keeping the author's
+spelling, but it also invalidates every voicing block except those for a
+tuning shifted by the same interval, and what a teacher wants done about
+that (re-voice, shift the shapes, or suggest a capo and keep them) is a
+workflow question this draft does not settle. A writer that transposes
+MUST say what it did to the blocks. The `key` property (§1.4.3) is
+informative and is not changed by a reader.
+
+## 8.7 Keeping columns on a sung line
 
 On a sung line a chord's column is the syllable it belongs over (§4.4).
 Rewriting `Cm` as `Cm[2]` would slide every later item three columns along

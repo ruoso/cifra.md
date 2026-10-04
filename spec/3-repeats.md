@@ -86,8 +86,10 @@ changes. A writer SHOULD put marks at measure boundaries.
 ## 3.3 Counts
 
 A **count** is a token of the form `x2`, `2x`, `×2` or `2×`: the letter `x`
-or the sign `×` and a positive integer, in either order. It says how many
-times something is played in total, so `x2` is twice.
+or the sign `×` and a positive integer, in either order; the same in round
+brackets, `(2x)`, `(x3)`, which is how a cifra writes it; or `bis` or
+`(bis)`, which is twice. It says how many times something is played in
+total, so `x2` is twice. A writer emits `x2`.
 
 - A count immediately after a group's closing mark, as the next item on the
   same line, is the group's count: `( C | G ) x3`, `|: C | G :| 3x`.
@@ -98,6 +100,8 @@ times something is played in total, so `x2` is twice.
 - A count at the end of a chord line that has no group on it is the
   **line's** count: the line's measures are played that many times.
   `C | G | Am | F  2x` is eight bars as played.
+- A count at the end of a heading is the section's count (§1.7.4): the
+  whole section is played that many times.
 - A count anywhere else is an unknown token (§2.9).
 
 As written, a count is an item of the measure it is in. It is not a bar
@@ -169,8 +173,6 @@ Deferred to a later version; each reads as an unknown token or as name
 text today:
 
 - Whether to define `%%`, the two-bar repeat, which some charts use.
-- Whether a heading may carry a count (`## Chorus x2`), meaning the whole
-  section is played twice. This draft treats it as part of the name.
 - Navigation marks (D.C., D.S., Coda, Fine, `§`) are also repeats, in the
   structural sense. They need anchors and a notion of the end of the song,
   and are left for a later version.

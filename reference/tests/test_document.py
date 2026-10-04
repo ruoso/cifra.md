@@ -50,6 +50,11 @@ class TestMetadata:
         doc = parse("# T\n- a: 1\n- a: 2\n")
         assert doc["properties"] == {"a": "2"}
 
+    def test_reserved_informative_properties_are_just_kept(self):
+        doc = parse("# T\n- key: Em\n- capo: 2\n- tempo: 96\n- time: 3/4\n")
+        assert doc["properties"] == {"key": "Em", "capo": "2", "tempo": "96", "time": "3/4"}
+        assert doc["diagnostics"] == []
+
     def test_bad_property_is_reported(self):
         doc = parse("# T\n- not a property\n- a: 1\n")
         assert doc["properties"] == {"a": "1"}
@@ -100,9 +105,26 @@ class TestFencesAndNotes:
         doc = parse("~~~\nC\n~~~\n````\nG\n```\n````\n")
         assert symbols(doc) == ["C", "G"]
 
-    def test_info_string_is_ignored(self):
-        doc = parse("```chords\nC\n```\n")
+    def test_cifra_info_string_is_music(self):
+        doc = parse("```cifra\nC\n```\n")
         assert symbols(doc) == ["C"]
+
+    def test_other_info_strings_are_verbatim(self):
+        doc = parse("## A\n```tab\ne|--0--|\nB|--1--|\n```\n```\nC\n```\n")
+        body = doc["sections"][0]["body"]
+        assert body[0] == {"type": "verbatim", "info": "tab", "text": "e|--0--|\nB|--1--|"}
+        assert symbols(doc) == ["C"]
+
+    def test_annotation_lines(self):
+        doc = parse("```\nC | G\n// repete o refrão\nAm | F\n```\n")
+        lines = doc["sections"][0]["body"][0]["lines"]
+        assert [ln["kind"] for ln in lines] == ["chart", "annotation", "chart"]
+        assert lines[1]["text"] == "repete o refrão"
+        assert doc["sung"] is False
+
+    def test_annotation_does_not_make_a_document_sung(self):
+        doc = parse("```\nC | G\n// two words here\n```\n")
+        assert doc["sung"] is False
 
     def test_unclosed_fence_is_reported(self):
         doc = parse("## A\n```\nC\n")
@@ -170,6 +192,29 @@ class TestHeadings:
         doc = parse("## A second time @1\n```\nDm\n```\n")
         assert doc["sections"][0]["name"] == "A second time"
         assert doc["sections"][0]["anchor"] == 1
+
+    def test_heading_count(self):
+        for text, name in (("## Refrão x2", "Refrão"), ("## Refrão 2x", "Refrão"), ("## Chorus bis", "Chorus"), ("## A @9 x3", "A"), ("## A x3 @9", "A")):
+            doc = parse(text + "\n```\nC\n```\n")
+            s = doc["sections"][0]
+            assert s["name"] == name, text
+            assert s["times"] == (3 if "x3" in text else 2), text
+        doc = parse("```\n[Refrão] (2x)\nC | G\n```\n")
+        assert doc["sections"][0]["name"] == "Refrão"
+        assert doc["sections"][0]["times"] == 2
+        assert parse("## x2\n```\nC\n```\n")["sections"][0]["name"] == "x2"
+
+    def test_label_heading_with_a_count(self):
+        doc = parse("```\nIntro: C G Am F (2x)\n```\n")
+        assert names(doc) == ["Intro"]
+        its = doc["sections"][0]["body"][0]["lines"][0]["measures"][0]["items"]
+        assert its[-1] == {"type": "count", "times": 2}
+
+    def test_key_looking_label_heading_is_reported(self):
+        doc = parse("```\nTom: G\n\nIntro: C G\n```\n")
+        assert names(doc) == ["Tom", "Intro"]
+        assert [d["code"] for d in doc["diagnostics"]] == ["heading-looks-like-key"]
+        assert "- key: G" in doc["diagnostics"][0]["message"]
 
     def test_section_called_voicings_in_the_chart_is_just_a_section(self):
         doc = parse("## Voicings: E2 A2\n```\nC\n```\n")

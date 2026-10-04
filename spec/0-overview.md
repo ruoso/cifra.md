@@ -116,12 +116,12 @@ Document
 Section
   name            text of the heading, "" for music before any heading
   anchor?         bar number stated on the heading
-  lines[]         chord lines, sung lines and lyric lines, in order,
-                  from every fence in the section
-  notes           the text outside fences, verbatim
+  times?          count on the heading: the section is played n times
+  body[]          notes, music fences and verbatim fences, in order (§1.9)
 
 Line
-  kind            "chart" | "sung" | "lyric" | "break"
+  kind            "chart" | "sung" | "lyric" | "break" | "annotation"
+  run?            (chart) the line has no bar lines: a run of chords (§2.1)
   measures[]      (chart, sung) one or more measures
   closeBar        (chart, sung) the bar line after the last measure, if any
   times?          (chart, sung) the line's repeat count (§3.3)
@@ -141,6 +141,7 @@ Item
     Chord         symbol, index, key, chord (the §5.2 model), ambiguities?
     Repeat        the % sign
     NoChord       the N.C. mark (§2.6)
+    Beat          a beat mark, / . or - (§2.3)
     Mark          open or close of a repeat group (§3.2), and its notation
     Count         a repeat count, x2 (§3.3)
     Ending        an ending marker, 1. (§3.4)
@@ -154,7 +155,8 @@ Block
   voicings[]      key, symbol, index, frets, fingers?; in canonical order (§8.3)
   notes[]         the lines that are not list items, verbatim
 
-Document also carries `sung` (§4.2) and `diagnostics`: everything the
+Document also carries `sung` and `sungAt`, the line that made it sung
+(§4.2), and `diagnostics`: everything the
 reader had to report, each with a code and a line number.
 ```
 

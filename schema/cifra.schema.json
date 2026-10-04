@@ -4,7 +4,7 @@
   "title": "cifra.md parsed document",
   "description": "The result of reading a cifra.md document (spec §0.4). Everything a conforming reader produces, and everything a canonical writer needs.",
   "type": "object",
-  "required": ["title", "properties", "sections", "blocks", "sung", "diagnostics"],
+  "required": ["title", "properties", "sections", "blocks", "sung", "sungAt", "diagnostics"],
   "additionalProperties": false,
   "properties": {
     "title": { "type": ["string", "null"], "description": "The level-1 heading on the first line, or null (§1.4.1)." },
@@ -16,6 +16,7 @@
     "sections": { "type": "array", "items": { "$ref": "#/$defs/Section" } },
     "blocks": { "type": "array", "items": { "$ref": "#/$defs/Block" } },
     "sung": { "type": "boolean", "description": "Whether the document reads words (§4.2). Bars are numbered only when false." },
+    "sungAt": { "type": ["integer", "null"], "minimum": 1, "description": "The 1-based line that made the document sung, or null (not sung, or forced by the `words` property)." },
     "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/Diagnostic" } }
   },
   "$defs": {
@@ -30,10 +31,11 @@
           "description": "How the section was headed: `## Name`, `[Name]`, `Name:`, or no heading (§1.7)."
         },
         "anchor": { "type": ["integer", "null"], "minimum": 1, "description": "Bar number stated on the heading (§1.7.4)." },
+        "times": { "type": "integer", "minimum": 1, "description": "Count on the heading: the section is played this many times (§1.7.4)." },
         "body": {
           "type": "array",
           "description": "Notes and music in document order (§1.9).",
-          "items": { "oneOf": [{ "$ref": "#/$defs/NotesPart" }, { "$ref": "#/$defs/MusicPart" }] }
+          "items": { "oneOf": [{ "$ref": "#/$defs/NotesPart" }, { "$ref": "#/$defs/MusicPart" }, { "$ref": "#/$defs/VerbatimPart" }] }
         },
         "groups": { "type": "array", "items": { "$ref": "#/$defs/RepeatGroup" }, "description": "Repeat groups paired within this section (§3.2)." }
       }
@@ -45,6 +47,17 @@
       "properties": {
         "type": { "const": "notes" },
         "text": { "type": "string", "description": "Verbatim lines outside any fence, joined by newlines." }
+      }
+    },
+    "VerbatimPart": {
+      "type": "object",
+      "description": "A fence with an info string other than empty or `cifra`: kept as text (§1.9).",
+      "required": ["type", "info", "text"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "verbatim" },
+        "info": { "type": "string" },
+        "text": { "type": "string" }
       }
     },
     "MusicPart": {
@@ -61,7 +74,8 @@
         { "$ref": "#/$defs/ChartLine" },
         { "$ref": "#/$defs/SungLine" },
         { "$ref": "#/$defs/LyricLine" },
-        { "$ref": "#/$defs/BreakLine" }
+        { "$ref": "#/$defs/BreakLine" },
+        { "$ref": "#/$defs/AnnotationLine" }
       ]
     },
     "ChartLine": {
@@ -72,6 +86,7 @@
         "kind": { "const": "chart" },
         "measures": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Measure" } },
         "closeBar": { "$ref": "#/$defs/BarLine" },
+        "run": { "const": true, "description": "The line has no bar lines: a run of chords, not a bar (§2.1)." },
         "times": { "type": "integer", "minimum": 1, "description": "The line's count, from a count token ending a line with no repeat group (§3.3)." }
       }
     },
@@ -96,6 +111,13 @@
         "text": { "type": "string" },
         "forced": { "type": "boolean" }
       }
+    },
+    "AnnotationLine": {
+      "type": "object",
+      "description": "A `//` line inside a music fence (§1.9).",
+      "required": ["kind", "text"],
+      "additionalProperties": false,
+      "properties": { "kind": { "const": "annotation" }, "text": { "type": "string" } }
     },
     "BreakLine": {
       "type": "object",
@@ -125,6 +147,7 @@
         { "$ref": "#/$defs/ChordItem" },
         { "$ref": "#/$defs/RepeatItem" },
         { "$ref": "#/$defs/NoChordItem" },
+        { "$ref": "#/$defs/BeatItem" },
         { "$ref": "#/$defs/MarkItem" },
         { "$ref": "#/$defs/CountItem" },
         { "$ref": "#/$defs/EndingItem" },
@@ -161,6 +184,18 @@
       "additionalProperties": false,
       "properties": {
         "type": { "const": "nochord" },
+        "column": { "type": "integer", "minimum": 0 },
+        "words": { "type": "string" }
+      }
+    },
+    "BeatItem": {
+      "type": "object",
+      "description": "A beat mark, `/`, `.` or `-` (§2.3).",
+      "required": ["type", "mark"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "beat" },
+        "mark": { "enum": ["/", ".", "-"] },
         "column": { "type": "integer", "minimum": 0 },
         "words": { "type": "string" }
       }

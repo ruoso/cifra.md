@@ -201,5 +201,6 @@
   ],
   "blocks": [],
   "sung": true,
+  "sungAt": 10,
   "diagnostics": []
 }

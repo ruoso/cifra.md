@@ -17,6 +17,7 @@
   ],
   "blocks": [],
   "sung": false,
+  "sungAt": null,
   "diagnostics": [
     {
       "code": "unfenced-music",

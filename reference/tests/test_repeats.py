@@ -96,6 +96,12 @@ class TestGroups:
 
 
 class TestCounts:
+    def test_cifra_count_spellings(self):
+        for text, n in (("( C | G ) (2x)", 2), ("( C | G ) (x3)", 3), ("( C | G ) bis", 2), ("( C | G ) (bis)", 2), ("|: C | G :| (×4)", 4)):
+            assert section(text)["groups"][0]["count"] == n, text
+        ln = section("C | G (2x)")["body"][0]["lines"][0]
+        assert ln["times"] == 2
+
     def test_count_after_a_group(self):
         for text in ("( C | G ) x3", "|: C | G :| 3x", "(C | G) x3", "( C | G ) ×3"):
             g = section(text)["groups"][0]
