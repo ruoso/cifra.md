@@ -214,7 +214,7 @@ raised ninth, `C7(5+)` a seventh with a raised fifth.
 
 A symbol that does not fit the grammar is not a chord. A reader MUST report
 the failure rather than guess, and MUST NOT throw away the text: in a chart
-the token becomes an unknown token (§2.8).
+the token becomes an unknown token (§2.9).
 
 These are not chords: an empty string; `H7` (no such letter); `7` (no
 root); `C##bb7` (two accidentals); `Cmaj/` (a bass with no note); `xyz`.

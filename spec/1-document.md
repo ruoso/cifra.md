@@ -114,7 +114,7 @@ else, with optional surrounding whitespace.
 
 The first rule in the document, outside any fence (§1.8), ends the chart.
 A reader MUST ignore any later rule. A line of hyphens inside a fence is
-not a rule; it is an unknown token (§2.8). A writer MUST emit exactly
+not a rule; it is an unknown token (§2.9). A writer MUST emit exactly
 one, and MUST put a blank line before it (§0.5).
 
 A rule is never a chord. `---` does not occur in the chord grammar, so there
@@ -189,7 +189,7 @@ on a line that is not a bracket heading.
 
 A heading's text MAY end with `@` and a number: `## A second time @1`. The
 number is removed from the section's name and becomes the section's
-*anchor*, the bar number of its first bar (§2.7). This applies to all three
+*anchor*, the bar number of its first bar (§2.8). This applies to all three
 forms.
 
 ## 1.7 Sections

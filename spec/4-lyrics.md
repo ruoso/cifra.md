@@ -24,9 +24,9 @@ Before the document as a whole is considered, each non-heading line inside
 a fence in the chart has a **shape**, decided by its own content.
 
 Take the line's whitespace-separated words, leaving out bar lines, bare
-marks, repeat signs, counts, ending markers and bar anchors (§2.3). A word is a **chord word** if it
-is a chord token under §2.4 (after splitting off marks), otherwise a
-**plain word**. Then:
+marks, repeat signs, counts, ending markers and bar anchors (§2.3). A word
+is a **chord word** if it is a chord token under §2.4 (after splitting off
+marks) or a no-chord mark (§2.6), otherwise a **plain word**. Then:
 
 | Shape | Condition |
 |---|---|
@@ -132,7 +132,7 @@ Several blank lines together are one break.
 
 ## 4.6 What a sung document does not have
 
-A sung document has no bar numbers (§2.7). It may still contain chord lines
+A sung document has no bar numbers (§2.8). It may still contain chord lines
 with bar lines in them, such as an intro, and those are measures as in §2;
 they are simply not numbered.
 

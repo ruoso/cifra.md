@@ -40,7 +40,7 @@ C | G
 C || G
 ```
 
-A measure holding only a bar anchor (§2.7), or only an ending marker
+A measure holding only a bar anchor (§2.8), or only an ending marker
 (§3.4), is also not a measure; what it holds belongs to the measure that
 follows.
 
@@ -53,17 +53,18 @@ anchors) contributes nothing to the chart except any anchor it carries.
 Within a measure, items are separated by whitespace. Each whitespace-free
 word is classified, in this order:
 
-1. **Bar anchor**: `@` followed by one or more digits (§2.7).
+1. **Bar anchor**: `@` followed by one or more digits (§2.8).
 2. **Repeat sign**: exactly `%` (§3.1).
-3. **Count**: `x` or `×` with a positive integer, either order (§3.3).
-4. **Ending marker**: a positive integer followed by `.` (§3.4).
-5. **Group marks**: a leading `(` or `:` or a trailing `)` or `:` that is
+3. **No-chord mark**: `N.C.` or `NC`, in any letter case (§2.6).
+4. **Count**: `x` or `×` with a positive integer, either order (§3.3).
+5. **Ending marker**: a positive integer followed by `.` (§3.4).
+6. **Group marks**: a leading `(` or `:` or a trailing `)` or `:` that is
    not balanced within the word is split off as a mark of its own (§3.2).
    A `:` is a mark only when written against a bar line. What is left, if
    anything, is classified again from step 2.
-6. **Chord token**: a chord symbol, optionally followed by a footnote marker
+7. **Chord token**: a chord symbol, optionally followed by a footnote marker
    (§2.4). If the symbol parses under §5, the item is a chord. If it does
-   not, the item is an **unknown token** (§2.8).
+   not, the item is an **unknown token** (§2.9).
 
 So `(Cm` is a mark followed by the chord `Cm`; `Dm)` is the chord `Dm`
 followed by a mark; `(` alone is a mark; `Em7(b5)` is one chord, because its
@@ -115,7 +116,26 @@ is to divide the bar equally, and a reader MAY present it so, but the
 format carries no durations and a reader MUST NOT infer any for another
 purpose.
 
-## 2.6 Repeat items
+## 2.6 The no-chord mark
+
+`N.C.` means *no chord*: the harmony instruments stop, for a melody
+pickup, a drum break, a stop-time hit or an a cappella bar.
+
+```
+N.C. | N.C. | C | G7
+C  N.C.  G
+```
+
+It fills a slot the way a chord does: it takes its share of the bar, it
+counts as a bar when alone in one, and it takes words on a sung line. It
+is not a chord: it has no symbol, no voicing key, no shape to choose, and
+it never appears among a document's unvoiced chords (§7.7). A reader MUST
+keep it as a no-chord item and MUST NOT treat it as an unknown token.
+
+The spellings `N.C.`, `NC`, `n.c.` and `nc` are accepted. A writer MUST
+emit `N.C.`.
+
+## 2.7 Repeat items
 
 Repeat signs, group marks, counts and ending markers are items like any
 other: kept in order, in their measure, as written. Their meaning as
@@ -128,7 +148,7 @@ A word whose brackets are unbalanced somewhere other than its ends, such as
 unknown token. Round brackets only are marks; square brackets are the
 footnote marker.
 
-## 2.7 Bar anchors and bar numbers
+## 2.8 Bar anchors and bar numbers
 
 Bars are numbered continuously from 1 through the chart, the way a score
 numbers them, counting every measure of every chord line in order. Section
@@ -185,14 +205,14 @@ effect.
 A reader SHOULD record, for each numbered measure, whether its number was
 stated or counted, so that a display can show the stated ones.
 
-## 2.8 Unknown tokens
+## 2.9 Unknown tokens
 
 A word that reaches step 4 of §2.3 and does not parse as a chord symbol is
 an unknown token. It is kept as written, in its place among the items, and
 reported.
 
 Unknown tokens are how typos, annotations the format does not define
-(`(2x)`, `N.C.`, `fine`) and chords a reader's grammar does not cover all
+(`(2x)`, `fine`, `rit.`) and chords a reader's grammar does not cover all
 survive a round trip. A reader MUST NOT drop them, and a writer MUST write
 them back unchanged.
 
@@ -201,7 +221,5 @@ in first-seen order, so an application can show them.
 
 ## Open questions
 
-- Whether a reader must preserve which bar-line form (`|`, `||`, `|:`,
-  `:|`) was written, or may reduce them all to a plain bar.
-- Whether to define a no-chord marker (`N.C.`) rather than leave it an
-  unknown token.
+- Nothing at present. Bar-line forms are preserved by the model (`|` and
+  `||` on measures, repeat marks as items), and `N.C.` is defined above.

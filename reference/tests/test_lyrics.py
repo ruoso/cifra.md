@@ -51,6 +51,13 @@ class TestSungDecision:
         doc, ls = lines("G            D\nWhen I first saw you\n\nsecond verse same chords")
         assert [ln["kind"] for ln in ls] == ["sung", "break", "lyric"]
 
+    def test_no_chord_is_a_chord_word(self):
+        doc, ls = lines("N.C.      C\nWhen I first saw you")
+        assert doc["sung"] is True
+        its = ls[0]["measures"][0]["items"]
+        assert its[0]["type"] == "nochord"
+        assert its[0]["words"] == "When I fir"
+
     def test_a_line_with_a_bar_is_always_chords(self):
         doc, ls = lines("G            D\nWhen I first saw you\nC | wobble foo bar")
         assert ls[-1]["kind"] == "chart"

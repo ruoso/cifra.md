@@ -58,9 +58,16 @@ class TestItems:
         assert its[1]["text"] == "[2]"
 
     def test_unknown_tokens_are_kept_in_place(self):
-        its = measures("C wobble (2x) N.C. G")[0]["items"]
+        its = measures("C wobble (2x) fine G")[0]["items"]
         assert [it["type"] for it in its] == ["chord", "unknown", "unknown", "unknown", "chord"]
-        assert [it["text"] for it in its if it["type"] == "unknown"] == ["wobble", "(2x)", "N.C."]
+        assert [it["text"] for it in its if it["type"] == "unknown"] == ["wobble", "(2x)", "fine"]
+
+    def test_no_chord_mark(self):
+        for spelling in ("N.C.", "NC", "n.c.", "nc"):
+            ms = measures(f"{spelling} | C")
+            assert ms[0]["items"] == [{"type": "nochord"}], spelling
+        ms = measures("C N.C. G")
+        assert [it["type"] for it in ms[0]["items"]] == ["chord", "nochord", "chord"]
 
     def test_chord_carries_its_model(self):
         it = measures("Am7/G")[0]["items"][0]
@@ -111,6 +118,9 @@ class TestBarNumbers:
 
     def test_repeat_sign_counts(self):
         assert self.bars(chart("Dm | % | G7")) == ["1 2 3"]
+
+    def test_no_chord_counts(self):
+        assert self.bars(chart("N.C. | N.C. | C")) == ["1 2 3"]
 
     def test_several_chords_count_once(self):
         assert self.bars(chart("Dm G7 | C7")) == ["1 2"]

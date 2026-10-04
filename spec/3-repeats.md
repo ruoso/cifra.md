@@ -9,7 +9,7 @@ first and second endings. For each, it defines both what a reader sees
 **as written** and what the chart means **as played**.
 
 A reader is never required to expand a repeat. The chart's structure, its
-bar numbers (§2.7) and its voicings all refer to the chart as written. But a
+bar numbers (§2.8) and its voicings all refer to the chart as written. But a
 reader that does expand MUST do so as defined here, so that two readers
 agree on what the song plays.
 
@@ -28,7 +28,7 @@ As written, it is a measure of its own containing one repeat item (§2.3).
 It is not a chord. There is nothing to look up and no shape to choose,
 because the chord it stands for has both where it was written. A reader
 MUST keep it as written, MUST NOT replace it with the chord it repeats, and
-MUST count it as a bar (§2.7).
+MUST count it as a bar (§2.8).
 
 As played, it is the previous measure *as played*: if that measure is itself
 `%`, the one before, and so on. The previous measure is the previous
@@ -98,7 +98,7 @@ times something is played in total, so `x2` is twice.
 - A count at the end of a chord line that has no group on it is the
   **line's** count: the line's measures are played that many times.
   `C | G | Am | F  2x` is eight bars as played.
-- A count anywhere else is an unknown token (§2.8).
+- A count anywhere else is an unknown token (§2.9).
 
 As written, a count is an item of the measure it is in. It is not a bar
 and takes no words.

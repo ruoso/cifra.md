@@ -114,7 +114,7 @@
       "properties": {
         "bar": { "$ref": "#/$defs/BarLine", "description": "The bar line before this measure." },
         "column": { "type": "integer", "minimum": 0, "description": "Column of the bar line, on a sung line." },
-        "anchor": { "type": "integer", "minimum": 1, "description": "Bar number stated in this measure (§2.7)." },
+        "anchor": { "type": "integer", "minimum": 1, "description": "Bar number stated in this measure (§2.8)." },
         "number": { "type": "integer", "minimum": 1, "description": "Bar number, counted or stated; only in an unsung document." },
         "stated": { "type": "boolean", "description": "Whether `number` was stated rather than counted." },
         "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Item" } }
@@ -124,6 +124,7 @@
       "oneOf": [
         { "$ref": "#/$defs/ChordItem" },
         { "$ref": "#/$defs/RepeatItem" },
+        { "$ref": "#/$defs/NoChordItem" },
         { "$ref": "#/$defs/MarkItem" },
         { "$ref": "#/$defs/CountItem" },
         { "$ref": "#/$defs/EndingItem" },
@@ -149,6 +150,17 @@
         "key": { "type": "string", "description": "The voicing key: symbol, or symbol[index]." },
         "chord": { "oneOf": [{ "$ref": "#/$defs/Chord" }, { "type": "null" }], "description": "The canonical chord, or null when the symbol does not parse (then the item would be unknown; kept nullable for readers that skip §5)." },
         "ambiguities": { "type": "array", "items": { "$ref": "#/$defs/Ambiguity" } },
+        "column": { "type": "integer", "minimum": 0 },
+        "words": { "type": "string" }
+      }
+    },
+    "NoChordItem": {
+      "type": "object",
+      "description": "The N.C. mark: no chord here (§2.6).",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "nochord" },
         "column": { "type": "integer", "minimum": 0 },
         "words": { "type": "string" }
       }

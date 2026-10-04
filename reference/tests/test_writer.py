@@ -62,7 +62,10 @@ class TestChartLayout:
         assert roundtrip(chart("@9\nDm | G7")) == "## A\n```\n@9 Dm | G7\n```\n"
 
     def test_unknown_tokens_and_repeat_signs(self):
-        assert roundtrip(chart("C | % | N.C. | (2x)")) == "## A\n```\nC | % | N.C. | (2x)\n```\n"
+        assert roundtrip(chart("C | % | fine | (2x)")) == "## A\n```\nC | % | fine | (2x)\n```\n"
+
+    def test_no_chord_is_written_canonically(self):
+        assert roundtrip(chart("nc | NC | n.c. | C")) == "## A\n```\nN.C. | N.C. | N.C. | C\n```\n"
 
     def test_line_count(self):
         assert roundtrip(chart("C | G 2x")) == "## A\n```\nC | G x2\n```\n"

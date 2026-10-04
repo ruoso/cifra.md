@@ -98,7 +98,7 @@ The voicings of a block are a Markdown list, one item per key:
 The symbol in a key is text, matched character for character against the
 chart's tokens (§2.4). It is not required to parse as a chord, and a reader
 MUST NOT validate it against §5; a block may name a chord the chart does not
-use, and a key for an unknown token (§2.8) is as good as any other.
+use, and a key for an unknown token (§2.9) is as good as any other.
 
 A list item that is not of this form, or whose fret string does not parse
 or has the wrong number of strings (§7.5), is a **problem**. A reader MUST
@@ -167,7 +167,8 @@ chose; writing defaults in would hide the choices among the guesses.
 
 The **legend** of a document on an instrument is every voicing key the chart
 uses that has a shape in that instrument's block, with its shape. The
-**unvoiced** keys are those the chart uses that have none. Both are ordered
+**unvoiced** keys are those the chart uses that have none. No-chord marks
+(§2.6) have no key and belong to neither. Both are ordered
 by symbol, then index (§8.3). A reader SHOULD expose both; they are what a
 printed sheet and an editor need.
 

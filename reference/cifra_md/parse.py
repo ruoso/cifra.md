@@ -69,6 +69,8 @@ def _classify_core(core: str, dialect: str):
     """Steps 2, 3, 4 and 6 of §2.3 for a word with its marks removed."""
     if core == REPEAT:
         return {"type": "repeat"}
+    if core.upper() in ("N.C.", "NC"):
+        return {"type": "nochord"}
     m = COUNT.match(core)
     if m:
         return {"type": "count", "times": int(m.group(1) or m.group(2))}
@@ -137,7 +139,7 @@ def scan_line(body: str, dialect: str) -> dict:
         if bar is not None and bar.group(1):
             close_mark = {"type": "mark", "open": False, "notation": "barline", "column": bar.start(1)}
 
-        substantive = any(it["type"] in ("chord", "repeat", "unknown") for it in items)
+        substantive = any(it["type"] in ("chord", "nochord", "repeat", "unknown") for it in items)
         if substantive:
             measure = {"bar": bar_before, "items": pending + items}
             pending = []
@@ -195,8 +197,8 @@ def line_shape(raw: str, dialect: str) -> dict:
     body = _strip_marker(raw) if forced else raw
     scan = scan_line(body, dialect)
     items = [it for m in scan["measures"] for it in m["items"]]
-    words = [it for it in items if it["type"] in ("chord", "unknown")]
-    chords = [it for it in words if it["type"] == "chord"]
+    words = [it for it in items if it["type"] in ("chord", "nochord", "unknown")]
+    chords = [it for it in words if it["type"] in ("chord", "nochord")]
     if not items and scan["trailing"] is None and not body.strip():
         kind = "blank"
     elif forced:
@@ -537,7 +539,7 @@ class _Parser:
         return {"kind": "sung", "measures": measures, "closeBar": scan["closeBar"], "forced": nxt["forced"]}
 
     def carry_anchors(self):
-        """A stated number with no bar of its own belongs to the next bar (§2.7)."""
+        """A stated number with no bar of its own belongs to the next bar (§2.8)."""
         pending = None
         for section in self.sections:
             for part in section["body"]:
@@ -681,7 +683,7 @@ class _Parser:
                     if line["kind"] not in ("chart", "sung"):
                         continue
                     for m in line["measures"]:
-                        kinds = [it["type"] for it in m["items"] if it["type"] in ("chord", "repeat", "unknown")]
+                        kinds = [it["type"] for it in m["items"] if it["type"] in ("chord", "nochord", "repeat", "unknown")]
                         if "repeat" in kinds:
                             if previous is None:
                                 self.diag("repeat-without-previous", line.get("_line", 1), "a % with no measure before it")

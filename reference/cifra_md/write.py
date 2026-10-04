@@ -15,6 +15,8 @@ def _item_text(it: dict) -> str:
         return it["key"]
     if t == "repeat":
         return "%"
+    if t == "nochord":
+        return "N.C."
     if t == "mark":
         if it["notation"] == "bracket":
             return "(" if it["open"] else ")"

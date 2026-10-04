@@ -140,6 +140,7 @@ Item
   one of:
     Chord         symbol, index, key, chord (the §5.2 model), ambiguities?
     Repeat        the % sign
+    NoChord       the N.C. mark (§2.6)
     Mark          open or close of a repeat group (§3.2), and its notation
     Count         a repeat count, x2 (§3.3)
     Ending        an ending marker, 1. (§3.4)
