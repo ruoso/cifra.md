@@ -9,14 +9,14 @@ here.
 
 | # | Topic | This draft | explore-chords today |
 |---|---|---|---|
-| 1 | Notation dialect | Declared by the `notation` property; default `brazilian` (§1.3.3) | An application preference, not in the text |
-| 2 | Title and properties | Level-1 heading as the first line, then a `- key: value` list (§1.3) | Title kept outside the text; a leading `# Title` would be read as a section |
-| 2b | Fences | Music is inside fenced blocks; everything else in the chart is notes (§1.8) | No fences; every non-heading line is music |
+| 1 | Notation dialect | Declared by the `notation` property; default `brazilian` (§1.4.3) | An application preference, not in the text |
+| 2 | Title and properties | Level-1 heading as the first line, then a `- key: value` list (§1.4) | Title kept outside the text; a leading `# Title` would be read as a section |
+| 2b | Fences | Music is inside fenced blocks; everything else in the chart is notes (§1.9) | No fences; every non-heading line is music |
 | 2c | Voicing syntax | List items `- key: frets` (§7.4) | Bare lines `key = frets` |
-| 2a | Heading levels | `#` is the title; sections and blocks are `##` (§1.6.1) | Level ignored; sections are written `#` |
+| 2a | Heading levels | `#` is the title; sections and blocks are `##` (§1.7.1) | Level ignored; sections are written `#` |
 | 3 | Block heading recognition | By position: every `#` heading after the rule is a block; label, colon, tuning (§7.2) | Anywhere in the document, by whether the heading text names a tuning; `for`, `(`, `-`, `–` accepted as separators |
 | 4 | Heading after the rule that is not a block | Error; its lines are skipped | Opens a chart section, whose lines are read as chart |
-| 5 | The rule | The first rule ends the chart; later rules ignored (§1.5) | Every rule closes the current section or block; chart can continue after one |
+| 5 | The rule | The first rule ends the chart; later rules ignored (§1.6) | Every rule closes the current section or block; chart can continue after one |
 | 6 | Tuning identity | By sounding pitch; `Eb2` = `D#2` (§6.3) | By uppercased text; `Eb2` ≠ `D#2` |
 | 7 | Fret string length | Must equal the string count; else a problem (§7.5) | Not checked at parse time |
 | 8 | Bar-line forms | `\|\|`, `\|:`, `:\|`, `:\|\|` are bar lines (§2.2) | `\|\|` works by accident (empty measures dropped); a `:` becomes an unknown token |
@@ -31,11 +31,11 @@ here.
 | 13 | Voicing line spacing | Canonical `key = frets` with single spaces; any whitespace accepted | Same |
 | 14 | Lowercase root letters | Not chords (§5.1.1) | Accepted |
 | 15 | Legacy `# Tuning` and unlabelled `# Voicings` | Appendix A: MAY accept, convert on save | Accepted and migrated on load |
-| 16 | Bracket heading with digits only | Never a heading (§1.6.2) | Same |
+| 16 | Bracket heading with digits only | Never a heading (§1.7.2) | Same |
 | 17 | `[1]` | Equals the bare key; never written (§2.4) | Same |
 | 18 | Bar anchors | Same rules (§2.8) | Same |
 | 19 | Unknown tokens | Kept, reported (§2.9) | Same |
-| 20 | Section with no lines | Kept (§1.7) | Kept when named |
+| 20 | Section with no lines | Kept (§1.8) | Kept when named |
 
 Items 1 to 10, 2a to 2c, 8a to 8d, 12 and 14 are behavioural changes the reference parser would
 need to make to conform. Items 11, 13 and 15 to 20 are confirmations.

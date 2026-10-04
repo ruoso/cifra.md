@@ -37,28 +37,28 @@ reader would accept more.
 **Document.** One file, one song.
 
 **Metadata.** The optional title and property list at the top of the
-document (§1.3).
+document (§1.4).
 
 **Chart.** The first part of the document: everything from the start (after
 any metadata) to the rule. The chart is the song as music, independent
 of any instrument.
 
-**Rule.** A line of three or more hyphens that ends the chart (§1.5).
+**Rule.** A line of three or more hyphens that ends the chart (§1.6).
 
 **Voicings part.** Everything after the rule: the voicing blocks (§7).
 
 **Section.** A named division of the chart, opened by a heading: *Intro*,
-*Verse*, *Chorus* (§1.6).
+*Verse*, *Chorus* (§1.7).
 
 **Fence.** A Markdown fenced code block. In the chart, the music of a
-section is written inside fences (§1.8).
+section is written inside fences (§1.9).
 
 **Notes.** Text in the chart outside any fence. Kept, never interpreted
-(§1.8).
+(§1.9).
 
 **Line.** One line of text. Every line inside a fence is a cifra-style
 heading, a chord line, a lyric line, or blank; every line outside one is a
-heading, a fence, the rule, or notes (§1.4).
+heading, a fence, the rule, or notes (§1.5).
 
 **Chord line.** A line whose content is chords and chart punctuation (§2).
 
@@ -195,7 +195,7 @@ Two consequences for writers:
 
 - The rule MUST be preceded by a blank line. In Markdown, `---` directly
   under a line of text turns that text into a heading.
-- Music outside a fence is not music (§1.8). A writer MUST fence every
+- Music outside a fence is not music (§1.9). A writer MUST fence every
   chord line and lyric line it emits.
 
 ## 0.6 Processing order
@@ -203,15 +203,15 @@ Two consequences for writers:
 A reader classifies lines in a fixed order, because several constructs could
 otherwise claim the same line. The order is:
 
-1. The title and properties (§1.3), only at the very start of the
+1. The title and properties (§1.4), only at the very start of the
    document.
-2. Fences (§1.8). A fence opens a run of music that ends at the next
+2. Fences (§1.9). A fence opens a run of music that ends at the next
    fence; nothing inside it is a Markdown heading, the rule or notes.
-3. Outside a fence: the rule (§1.5), and the first rule ends the chart.
-4. Outside a fence, in the chart: a Markdown heading (§1.6.1) opens a
-   section. Any other line is notes (§1.8).
-5. Inside a fence, in the chart: a bracket or label heading (§1.6.2,
-   §1.6.3) opens a section. Otherwise the line is a chord line, a lyric
+3. Outside a fence: the rule (§1.6), and the first rule ends the chart.
+4. Outside a fence, in the chart: a Markdown heading (§1.7.1) opens a
+   section. Any other line is notes (§1.9).
+5. Inside a fence, in the chart: a bracket or label heading (§1.7.2,
+   §1.7.3) opens a section. Otherwise the line is a chord line, a lyric
    line or blank (§2, §4), decided after the whole chart has been read
    (§4.2).
 6. In the voicings part: a Markdown heading opens a voicing block (§7.2).

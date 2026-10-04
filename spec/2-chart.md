@@ -6,7 +6,7 @@ repeat constructs it mentions are defined in §3.
 
 ## 2.1 Chord lines
 
-Every line inside a fence (§1.8) in the chart that is not a cifra-style
+Every line inside a fence (§1.9) in the chart that is not a cifra-style
 heading, not blank and not a lyric line (§4) is a chord line. In a document
 that has no words, that is every such line, and a reader that does not
 implement §4 treats every such line as a chord line. Lines outside a fence
@@ -164,7 +164,7 @@ from there on.
 in. It SHOULD be the first item of the measure. A reader MUST accept it
 anywhere in the measure; if a measure states more than one, the last wins.
 
-A heading may state the number of its section's first bar instead (§1.6.4).
+A heading may state the number of its section's first bar instead (§1.7.4).
 
 A stated number with no bar of its own belongs to the next bar: `@9 | Dm`,
 `@9` alone on a line, and `## A @9` followed by `Dm` all number the `Dm` bar

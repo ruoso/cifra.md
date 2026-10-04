@@ -32,7 +32,7 @@ to an instrument.
 
 ## 7.2 Voicing block headings
 
-In the voicings part, every Markdown heading (§1.6.1) opens a voicing
+In the voicings part, every Markdown heading (§1.7.1) opens a voicing
 block. A writer emits it at level 2. Its text is:
 
 ```
@@ -89,7 +89,7 @@ The voicings of a block are a Markdown list, one item per key:
 - <key>: <fret string> (<fingering>)
 ```
 
-- The list marker is `-`, a space, as for properties (§1.3.2). `*` and `+`
+- The list marker is `-`, a space, as for properties (§1.4.2). `*` and `+`
   are accepted; a writer MUST emit `-`.
 - `key` is a voicing key (§2.4): a chord symbol, optionally followed by a
   footnote marker. It MUST NOT contain whitespace, `:`, `[` or `]` except
@@ -108,7 +108,7 @@ skip it, MUST report it with the text of the item, and MUST continue with
 the rest of the block. A writer MUST NOT write problems back; see §8.
 
 A line in a block that is not a list item and not blank is **notes**, as in
-the chart (§1.8): kept verbatim, not interpreted. Blank lines are not
+the chart (§1.9): kept verbatim, not interpreted. Blank lines are not
 significant.
 
 Keys within a block are unique. If a key repeats, the last item wins. The

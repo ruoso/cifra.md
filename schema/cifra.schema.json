@@ -7,10 +7,10 @@
   "required": ["title", "properties", "sections", "blocks", "sung", "diagnostics"],
   "additionalProperties": false,
   "properties": {
-    "title": { "type": ["string", "null"], "description": "The level-1 heading on the first line, or null (§1.3.1)." },
+    "title": { "type": ["string", "null"], "description": "The level-1 heading on the first line, or null (§1.4.1)." },
     "properties": {
       "type": "object",
-      "description": "The property list under the title, keys lower-cased (§1.3.2).",
+      "description": "The property list under the title, keys lower-cased (§1.4.2).",
       "additionalProperties": { "type": "string" }
     },
     "sections": { "type": "array", "items": { "$ref": "#/$defs/Section" } },
@@ -27,12 +27,12 @@
         "name": { "type": "string", "description": "Heading text with any anchor removed; empty for content before the first heading." },
         "heading": {
           "enum": ["markdown", "bracket", "label", null],
-          "description": "How the section was headed: `## Name`, `[Name]`, `Name:`, or no heading (§1.6)."
+          "description": "How the section was headed: `## Name`, `[Name]`, `Name:`, or no heading (§1.7)."
         },
-        "anchor": { "type": ["integer", "null"], "minimum": 1, "description": "Bar number stated on the heading (§1.6.4)." },
+        "anchor": { "type": ["integer", "null"], "minimum": 1, "description": "Bar number stated on the heading (§1.7.4)." },
         "body": {
           "type": "array",
-          "description": "Notes and music in document order (§1.8).",
+          "description": "Notes and music in document order (§1.9).",
           "items": { "oneOf": [{ "$ref": "#/$defs/NotesPart" }, { "$ref": "#/$defs/MusicPart" }] }
         },
         "groups": { "type": "array", "items": { "$ref": "#/$defs/RepeatGroup" }, "description": "Repeat groups paired within this section (§3.2)." }

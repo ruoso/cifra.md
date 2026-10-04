@@ -2,7 +2,9 @@
 
 A Markdown profile for chord charts.
 
-A song is one plain-text file. The smallest valid document is a chart: the
+A song is one plain-text file, named `something.cifra.md` so that it is both
+recognisable as a song and handled as Markdown. The smallest valid document
+is a chart: the
 sections of the song, each with the chords of its bars in a fenced block.
 
 ````
@@ -135,7 +137,7 @@ time. Each document says what it depends on.
 | Document | Covers | Needed for |
 |---|---|---|
 | [0. Overview](spec/0-overview.md) | Scope, terms, the document model, Markdown compatibility, conformance language | Everything |
-| [1. Document structure](spec/1-document.md) | Encoding, lines, title and properties, the two parts, the rule, headings, sections, fences and notes | Everything |
+| [1. Document structure](spec/1-document.md) | Encoding, file names, lines, title and properties, the two parts, the rule, headings, sections, fences and notes | Everything |
 | [2. The chart](spec/2-chart.md) | Chord lines, measures, bar lines, chord tokens, footnote markers, bar numbers | Reading a chart |
 | [3. Repeats](spec/3-repeats.md) | The measure repeat sign, repeat groups and counts, first and second endings, expansion | Reading a chart |
 | [4. Words](spec/4-lyrics.md) | Lyric lines, how chords are placed over syllables, stanza breaks | Reading a cifra with its words |

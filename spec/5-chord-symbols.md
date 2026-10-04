@@ -259,7 +259,7 @@ spelled out are never ambiguous.
 
 Rules:
 
-- The document's dialect is the `notation` property (§1.3.3), or
+- The document's dialect is the `notation` property (§1.4.3), or
   `brazilian` if absent.
 - A reader MUST apply the document's dialect to these four spellings and
   MUST report that it did, so that an application can show which reading

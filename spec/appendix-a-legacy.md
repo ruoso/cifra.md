@@ -47,7 +47,7 @@ insert the rule before the first block heading.
 ## A.5 Level-1 section headings
 
 Earlier documents had no title and wrote every section as a level-1
-heading, `# Verse`. Under §1.3.1 the first of those would now be read as
+heading, `# Verse`. Under §1.4.1 the first of those would now be read as
 the title.
 
 Conversion: demote every heading to level 2. An application that stores

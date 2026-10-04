@@ -22,11 +22,11 @@ A writer MUST write the chart back exactly as read, except for:
 
 - chord tokens whose footnote marker it changed (§8.4);
 - the column adjustment that follows such a change on a sung line (§8.5);
-- replacing tabs (§1.2), if it chooses to.
+- replacing tabs (§1.3), if it chooses to.
 
 In particular a writer MUST NOT reflow lines, change spacing between items,
 rewrite a chord symbol into another spelling, change a heading's form
-(§1.6), move music between fences, remove unknown tokens, alter notes, or
+(§1.7), move music between fences, remove unknown tokens, alter notes, or
 touch the title or properties it does not know.
 
 A writer that creates a section emits its heading and one fence holding

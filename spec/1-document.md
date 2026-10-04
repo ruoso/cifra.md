@@ -11,7 +11,19 @@ Chord symbols use a few non-ASCII characters by convention (`°`, `∆`, `ø`,
 `♭`, `♯`, `−`); every one has an ASCII spelling that means the same (§5.3).
 A writer MAY use either. A document that uses only ASCII is complete.
 
-## 1.2 Lines
+## 1.2 File names
+
+A document is a file named `<name>.cifra.md`. The final `.md` is what makes
+every Markdown tool treat it as Markdown; the `.cifra` before it is what
+lets a person or a program tell a song from the other Markdown in a
+repository without opening it.
+
+A reader MUST accept a document whatever its name, since text arrives by
+paste and by link as often as by file. A writer that chooses a file name
+MUST use the convention. A tool that looks for songs in a directory SHOULD
+look for `*.cifra.md` and MAY also look inside other `.md` files.
+
+## 1.3 Lines
 
 A document is a sequence of lines separated by LF. A reader MUST also accept
 CRLF, treating the CR as trailing whitespace on the line. A final line
@@ -27,7 +39,7 @@ writer MUST NOT emit tabs and SHOULD replace them when editing a line.
 
 A **blank line** is a line that is empty or contains only whitespace.
 
-## 1.3 Title and properties
+## 1.4 Title and properties
 
 A document MAY begin with its title, and the title MAY be followed by a
 list of properties. Together they are the document's **metadata**.
@@ -40,16 +52,16 @@ list of properties. Together they are the document's **metadata**.
 ## Intro
 ```
 
-### 1.3.1 Title
+### 1.4.1 Title
 
 The title is a level-1 heading, `#` followed by the title text, and it is
 the first non-blank line of the document. A level-1 heading anywhere else
-is a section heading (§1.6.1), so the title is the only construct that is
+is a section heading (§1.7.1), so the title is the only construct that is
 recognised by its position.
 
 A document need not have a title. A reader MUST NOT require one.
 
-### 1.3.2 Properties
+### 1.4.2 Properties
 
 The properties are a Markdown list immediately following the title: each
 line is `-`, a space, and `key: value`. The list ends at the first line that
@@ -69,7 +81,7 @@ between items, are permitted.
 Values are strings. There are no lists, nesting or quoting rules; a value
 that needs structure belongs in an application's own key.
 
-### 1.3.3 Reserved properties
+### 1.4.3 Reserved properties
 
 | Key | Meaning |
 |---|---|
@@ -84,7 +96,7 @@ MUST write them back unchanged.
 A document that uses one of the three ambiguous spellings (§5.6) SHOULD
 declare `notation`.
 
-## 1.4 The two parts
+## 1.5 The two parts
 
 After the metadata, the document is two parts:
 
@@ -100,10 +112,10 @@ names a section; a heading in the voicings part names a voicing block. This
 is the only thing the rule does, and it is why the voicings heading does not
 need to be recognised by its words.
 
-In the chart, the music itself is written inside fences (§1.8). A section is
+In the chart, the music itself is written inside fences (§1.9). A section is
 a heading, then notes and fences in any order.
 
-## 1.5 The rule
+## 1.6 The rule
 
 The rule is a line consisting of three or more `-` characters and nothing
 else, with optional surrounding whitespace.
@@ -112,7 +124,7 @@ else, with optional surrounding whitespace.
 ---
 ```
 
-The first rule in the document, outside any fence (§1.8), ends the chart.
+The first rule in the document, outside any fence (§1.9), ends the chart.
 A reader MUST ignore any later rule. A line of hyphens inside a fence is
 not a rule; it is an unknown token (§2.9). A writer MUST emit exactly
 one, and MUST put a blank line before it (§0.5).
@@ -120,13 +132,13 @@ one, and MUST put a blank line before it (§0.5).
 A rule is never a chord. `---` does not occur in the chord grammar, so there
 is no conflict; this sentence exists so that a reader need not consider it.
 
-## 1.6 Headings
+## 1.7 Headings
 
 A heading is a line in one of three forms. In the chart it names a section
-(§1.7). In the voicings part only the first form is used, and it names a
+(§1.8). In the voicings part only the first form is used, and it names a
 voicing block (§7.2).
 
-### 1.6.1 Markdown heading
+### 1.7.1 Markdown heading
 
 One or more `#`, then optional whitespace, then the heading text, to the end
 of the line.
@@ -136,9 +148,9 @@ of the line.
 ## Chorus
 ```
 
-A Markdown heading is recognised only outside a fence (§1.8). Heading
+A Markdown heading is recognised only outside a fence (§1.9). Heading
 level is significant in one place only: a level-1 heading that is
-the first non-blank line of the document is the title (§1.3.1). Every other
+the first non-blank line of the document is the title (§1.4.1). Every other
 Markdown heading, of any level, is a section heading in the chart or a
 block heading in the voicings part. A writer MUST emit `##` for those, so
 that the document's outline reads as title, then sections, in any Markdown
@@ -148,7 +160,7 @@ tool. Levels deeper than two are accepted and reserved: a reader MUST treat
 Trailing `#`s, which CommonMark permits as a closing sequence, are part of
 the text in cifra.md. A writer MUST NOT emit them.
 
-### 1.6.2 Bracket heading
+### 1.7.2 Bracket heading
 
 A line beginning with `[`, a name, `]`. This is how a cifra names its
 sections, and it is accepted so a pasted cifra reads without editing.
@@ -163,11 +175,11 @@ footnote marker standing at the start of a line is never mistaken for a
 heading. Anything after the `]` on the same line is a chord line belonging
 to the new section.
 
-A bracket heading is recognised only inside a fence in the chart (§1.8):
+A bracket heading is recognised only inside a fence in the chart (§1.9):
 it is how a cifra pasted whole names its sections. Outside a fence, a line
 in brackets is notes.
 
-### 1.6.3 Label heading
+### 1.7.3 Label heading
 
 A line whose first word ends in `:`, where everything after the colon is
 chord tokens (§2.3) or nothing.
@@ -188,18 +200,18 @@ fit the pattern, `Amor: A`, is forced to read as words with a leading `>`
 (§4.3), which is the same marker that settles every other line no rule can
 call.
 
-### 1.6.4 Bar number on a heading
+### 1.7.4 Bar number on a heading
 
 A heading's text MAY end with `@` and a number: `## A second time @1`. The
 number is removed from the section's name and becomes the section's
 *anchor*, the bar number of its first bar (§2.8). This applies to all three
 forms.
 
-## 1.7 Sections
+## 1.8 Sections
 
 A heading in the chart opens a new section whose name is the heading's text
-(after removing an anchor, §1.6.4). Everything until the next heading or
-the rule belongs to it: its fences hold its music (§1.8), and its other
+(after removing an anchor, §1.7.4). Everything until the next heading or
+the rule belongs to it: its fences hold its music (§1.9), and its other
 lines are its notes.
 
 Music and notes before the first heading belong to a section with the empty
@@ -213,7 +225,7 @@ writer can round-trip it.
 Section names are free text. They have no reserved values; `Voicings` as a
 section name in the chart is just a section called Voicings.
 
-## 1.8 Fences and notes
+## 1.9 Fences and notes
 
 The music of the chart, its chord lines and lyric lines, is written inside
 Markdown fenced code blocks. A fence is a line of three or more backticks
@@ -234,7 +246,7 @@ walking down the road
 Inside a fence:
 
 - every line is music: a chord line, a lyric line, a cifra-style heading
-  (§1.6.2, §1.6.3) or blank (§2, §4);
+  (§1.7.2, §1.7.3) or blank (§2, §4);
 - nothing is a Markdown heading, the rule, a list item or notes, whatever
   it looks like.
 
