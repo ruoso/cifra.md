@@ -50,8 +50,12 @@ anchors) contributes nothing to the chart except any anchor it carries.
 
 ## 2.3 Items
 
-Within a measure, items are separated by whitespace. Each whitespace-free
-word is classified, in this order:
+Within a measure, items are separated by whitespace. A trailing `,` or `;`
+on a word is punctuation: it is removed before the word is classified, it
+is never part of a chord symbol or key, and a writer does not write it
+back. `Intro: C, G, Am, F` is the chords `C`, `G`, `Am` and `F`. A word
+that is only punctuation is nothing. Each remaining word is classified, in
+this order:
 
 1. **Bar anchor**: `@` followed by one or more digits (§2.8).
 2. **Repeat sign**: exactly `%` (§3.1).

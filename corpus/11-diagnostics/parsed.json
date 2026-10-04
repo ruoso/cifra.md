@@ -669,7 +669,7 @@
     },
     {
       "code": "bad-block-heading",
-      "message": "a block heading is `## Label: tuning`",
+      "message": "`## Voicings E2 A2 D3 G3 B3 E4` comes after the rule, where a heading is a voicings block and needs a tuning (`## Voicings: E2 A2 D3 G3 B3 E4`). If it is a section of the song, move the rule below it; the lines under it are not read",
       "line": 23,
       "text": "## Voicings E2 A2 D3 G3 B3 E4"
     },

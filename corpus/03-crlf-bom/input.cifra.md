@@ -1,5 +1,5 @@
 ﻿# CRLF and a BOM
-- notation: american
+- notation: American
 
 ## A
 ```

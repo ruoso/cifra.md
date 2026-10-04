@@ -122,7 +122,9 @@ def scan_line(body: str, dialect: str) -> dict:
         anchor = None
         for w in WORD.finditer(text):
             col = start + w.start()
-            word = w.group(0)
+            word = w.group(0).rstrip(",;")
+            if not word:
+                continue
             a = BAR_ANCHOR.match(word)
             if a:
                 anchor = int(a.group(1))
@@ -271,7 +273,7 @@ class _Parser:
 
     def run(self):
         start = self.read_metadata()
-        dialect = self.dialect_override or self.properties.get("notation", DEFAULT_DIALECT)
+        dialect = (self.dialect_override or self.properties.get("notation", DEFAULT_DIALECT)).strip().lower()
         if dialect not in DIALECTS:
             self.diag("bad-notation", 1, f"unknown notation {dialect!r}; using {DEFAULT_DIALECT}")
             dialect = DEFAULT_DIALECT
@@ -337,7 +339,7 @@ class _Parser:
             if part is None or part["type"] != "notes":
                 part = {"type": "notes", "raw": []}
                 section["body"].append(part)
-            part["raw"].append(raw)
+            part["raw"].append((lineno, raw))
 
         if fence is not None:
             self.diag("unclosed-fence", fence[2], "a fence was opened and never closed")
@@ -356,7 +358,14 @@ class _Parser:
             label = label.strip()
             tuning_text = tuning_text.strip()
             if not sep or not label or not tuning_text:
-                self.diag("bad-block-heading", lineno, "a block heading is `## Label: tuning`", raw)
+                self.diag(
+                    "bad-block-heading",
+                    lineno,
+                    f"`{raw.strip()}` comes after the rule, where a heading is a voicings block and needs a tuning "
+                    "(`## Voicings: E2 A2 D3 G3 B3 E4`). If it is a section of the song, move the rule below it; "
+                    "the lines under it are not read",
+                    raw,
+                )
                 return None, True
             try:
                 tuning = parse_tuning(tuning_text)
@@ -453,12 +462,14 @@ class _Parser:
             for part in section["body"]:
                 if part["type"] == "notes":
                     lines = part["raw"]
-                    while lines and not lines[0].strip():
+                    while lines and not lines[0][1].strip():
                         lines.pop(0)
-                    while lines and not lines[-1].strip():
+                    while lines and not lines[-1][1].strip():
                         lines.pop()
                     if lines:
-                        body.append({"type": "notes", "text": "\n".join(lines)})
+                        body.append({"type": "notes", "text": "\n".join(t for _, t in lines)})
+                        if not shaped:
+                            self.unfenced_check(lines)
                 else:
                     lines = self.assemble(part, sung)
                     if lines:
@@ -483,6 +494,26 @@ class _Parser:
                             m.pop("_trailing", None)
                         line.pop("_anchor_only", None)
                         line.pop("_line", None)
+
+    def unfenced_check(self, lines):
+        """A chart with no fence at all whose notes look like chord lines is
+        almost certainly a paste that was never fenced (§1.9)."""
+        if any(d["code"] == "unfenced-music" for d in self.diagnostics):
+            return
+        for lineno, text in lines:
+            if MD_HEADING.match(text) or LIST_ITEM.match(text):
+                continue
+            shape = line_shape(text, self.dialect)
+            chords = [it for m in shape["scan"]["measures"] for it in m["items"] if it["type"] in ("chord", "nochord")]
+            if shape["kind"] == "chords" and chords:
+                self.diag(
+                    "unfenced-music",
+                    lineno,
+                    "this reads as a line of chords, but it is outside a fence, so it is notes; "
+                    "put the music between ``` lines (or ~~~)",
+                    text,
+                )
+                return
 
     def assemble(self, part, sung):
         shapes = part["shapes"]
@@ -741,8 +772,10 @@ def _take_anchor(name: str):
 
 
 def _is_chord_run(text: str, dialect: str) -> bool:
-    words = text.replace("|", " ").split()
+    words = [w.rstrip(",;") for w in text.replace("|", " ").split()]
     for w in words:
+        if not w:
+            continue
         _, core, _ = _split_marks(w)
         if not core:
             continue

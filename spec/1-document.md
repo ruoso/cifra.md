@@ -89,6 +89,11 @@ that needs structure belongs in an application's own key.
 | `notation` | The dialect the chart's symbols are written in: `brazilian`, `american` or `realbook` (§5.6). Affects only the four ambiguous spellings. Default `brazilian`. |
 | `language` | BCP 47 tag for the words, when the song has them. Informative. |
 
+The value of `notation` compares case-insensitively: `American` is
+`american`. A reader given any other value MUST fall back to `brazilian`
+and MUST report that it did, where the person who wrote the document will
+see it, because the fallback changes which chord `C7+` is.
+
 The title is not a property; it is the heading. Any other key is
 application-defined. A reader MUST keep keys it does not know; a writer
 MUST write them back unchanged.
@@ -266,6 +271,13 @@ Rules:
 - A fence that is not closed runs to the end of the document. A reader
   MUST report it. A writer MUST close every fence it opens.
 - Fences are not recognised in the voicings part. A fence there is notes.
+- A chart with no fence at all, one of whose notes lines would read as a
+  chord line, is almost always a paste that was never fenced. A reader MUST
+  report it, naming the first such line and saying that music goes between
+  fences. A chart that has at least one fence is not checked: its notes are
+  notes.
+- `~~~` is a fence as much as ` ``` ` is, and is easier to type on a
+  keyboard where the backtick is a dead key.
 
 The fence is what makes the document render: a Markdown viewer sets the
 block in a monospaced face and keeps its line breaks, so the chords stay

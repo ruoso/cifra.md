@@ -53,7 +53,11 @@ significant.
   not a tuning is an error; a reader MUST report it and MUST skip the lines
   that follow it up to the next heading, so that they are not attributed to
   the previous block.
-- A heading with no colon is an error, handled the same way.
+- A heading with no colon is an error, handled the same way. The report
+  MUST say that a heading after the rule is read as a voicings block, that
+  the lines under it are not read, and that a section belongs before the
+  rule, because the likeliest cause is a `---` written between two
+  sections out of Markdown habit (§1.6).
 
 A teacher will write `## Voicings: cavaquinho`, or `## Voicings: D G B D`
 without octaves, because that is how an instrument is named in a lesson.
@@ -85,8 +89,9 @@ different label.
 - A document SHOULD NOT contain two blocks with the same tuning (§6.3) and
   the same name. If it does, a reader MUST read them as one block, in which
   a later line for a key replaces an earlier one.
-- The order of blocks is the order written. The **first** block for a
-  tuning is the one an application uses when no variation is chosen.
+- When no variation is chosen, an application uses the tuning's default
+  variation, the `Voicings` block, if there is one, and otherwise the
+  tuning's first block in the order written.
 - An empty block (a heading with no list items) is a variation that exists
   and has nothing chosen in it yet. A reader MUST keep it, and a writer
   writes it back as its heading.
@@ -195,7 +200,8 @@ never written in.
 Given an occurrence in the chart and an instrument:
 
 1. Find the block for the instrument's tuning (§6.3) and the variation in
-   use; with no variation in use, the first block for the tuning (§7.3).
+   use; with no variation in use, the tuning's default variation, else its
+   first block (§7.3).
    None: the occurrence has no chosen shape.
 2. Look up the occurrence's voicing key (§2.4) in that block. Absent: the
    occurrence has no chosen shape.

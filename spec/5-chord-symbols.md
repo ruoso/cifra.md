@@ -170,6 +170,7 @@ names a degree in {2, 4, 5, 6, 7, 9, 11, 13}.
 | `7m` | the seventh is minor |
 | `add d`, `addd` | add degree d unaltered, without implying a seventh (`add9`, `add2`, `add11`) |
 | `6/9` | add 6 and 9, no seventh |
+| `d/e` | a `/` between two degree elements is a separator, like a comma or brackets: `Am7/9` is `Am7(9)`, `C7/9-` is `C7(9-)`, `Cm7/5-` is `Cm7(5-)`. Brazilian cifras write it constantly. A `/` followed by a note name is a bass (§5.1.2) |
 | `alt` | the altered dominant: ♭7, ♭9 and ♯5 |
 
 A plain degree other than the top (`C7(9)`, `C7 13`) adds that degree

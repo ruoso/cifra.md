@@ -44,6 +44,7 @@ class TestBlocks:
         doc = parse(f"```\nC\n```\n---\n## Voicings {GUITAR}\n- C: x32010\n")
         assert doc["blocks"] == []
         assert doc["diagnostics"][0]["code"] == "bad-block-heading"
+        assert "move the rule" in doc["diagnostics"][0]["message"]
 
     def test_heading_with_a_bad_tuning_skips_its_lines(self):
         doc = parse(f"```\nC\n```\n---\n## Voicings: {GUITAR}\n- C: x32010\n## Voicings: guitar\n- G: 320003\nnotes\n## Voicings: {UKE}\n- C: 0003\n")

@@ -155,6 +155,33 @@ Only an editor needs 8.
 
 The [examples](examples/) directory holds complete documents, one per feature.
 
+## Writing one by hand
+
+The format is small, but five things catch people who write it from a
+template or paste a cifra from the web.
+
+1. **Music goes between fences.** The lines ` ``` ` (or `~~~`, easier on a
+   keyboard where the backtick is a dead key) mark where the chords and
+   words are. A chart pasted without them is notes, and a reader will tell
+   you so, but it will not play.
+2. **One `---`, after the last section.** The rule is where the song ends
+   and the voicings begin. A `---` between two verses, Markdown habit, puts
+   every verse after it into the voicings part, where it is not read.
+3. **Sections are `##`.** `[Intro]` and `Intro:` also work, so a pasted
+   cifra reads as it is; write `##` yourself.
+4. **A tuning is pitches with octave numbers**, lowest string first:
+   `## Voicings: E2 A2 D3 G3 B3 E4` for a guitar, `G4 C4 E4 A4` for a
+   ukulele, `D4 G4 B4 D5` for a cavaquinho. `## Voicings: guitar` is not
+   read. A capo is a tuning three (or however many) frets up.
+5. **Repeats are `|: :|` or `( )`, with `x2` for a count.** `(2x)` on its
+   own is not a repeat yet; it is kept as written and shown, nothing more.
+
+And three smaller ones. A line of words that happens to be chords, `A` or
+`Em`, is forced to read as words by starting it with `>`. The first line
+of words under a chord line needs at least two words, or the reader takes
+it for a chart with a typo. A cifra's header lines, `Tom: G`, `Capo: 2`,
+belong in the property list under the title, `- key: G`, not in the music.
+
 ## Design principles
 
 - **The text is the whole state.** Every choice the song carries is in the
