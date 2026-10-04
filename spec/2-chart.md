@@ -207,7 +207,7 @@ stated or counted, so that a display can show the stated ones.
 
 ## 2.9 Unknown tokens
 
-A word that reaches step 4 of §2.3 and does not parse as a chord symbol is
+A word that reaches step 7 of §2.3 and does not parse as a chord symbol is
 an unknown token. It is kept as written, in its place among the items, and
 reported.
 

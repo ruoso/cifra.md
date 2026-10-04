@@ -33,7 +33,7 @@ Must, specifically:
 ### Chord reader
 
 A chart reader that also builds the canonical chord model (§5.2) for every
-valid symbol, applying the document's dialect to the three ambiguities and
+valid symbol, applying the document's dialect to the four ambiguities and
 reporting that it did.
 
 Must meet: §5 in full.
@@ -77,7 +77,7 @@ Whatever the profile:
 
 ## 9.3 Test corpus
 
-A corpus of documents with their expected readings, in a form a test suite
-can consume, is intended to accompany this specification. Until it exists,
-the examples directory of this repository and the prose of each section are
-the reference.
+The reference corpus in `corpus/` holds, per entry, an uncanonical input,
+the model a reader must produce and the text a writer must produce. An
+implementation claiming any profile SHOULD pass every entry in both
+directions, as `corpus/README.md` describes.

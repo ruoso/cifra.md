@@ -141,7 +141,7 @@ time. Each document says what it depends on.
 | [2. The chart](spec/2-chart.md) | Chord lines, measures, bar lines, chord tokens, footnote markers, bar numbers | Reading a chart |
 | [3. Repeats](spec/3-repeats.md) | The measure repeat sign, repeat groups and counts, first and second endings, expansion | Reading a chart |
 | [4. Words](spec/4-lyrics.md) | Lyric lines, how chords are placed over syllables, stanza breaks | Reading a cifra with its words |
-| [5. Chord symbols](spec/5-chord-symbols.md) | The chord symbol grammar, its meaning, notation dialects, the three ambiguities | Knowing what a chord *is* |
+| [5. Chord symbols](spec/5-chord-symbols.md) | The chord symbol grammar, its meaning, notation dialects, the four ambiguities | Knowing what a chord *is* |
 | [6. Tunings](spec/6-tunings.md) | Pitch names, tuning lists, tuning identity | Reading voicings |
 | [7. Voicings](spec/7-voicings.md) | Voicing blocks, variations, fret strings, how a chord in the chart finds its shape | Reading voicings |
 | [8. Normalisation](spec/8-normalisation.md) | The canonical form of a document and the invariants an editor must keep | Writing or editing |

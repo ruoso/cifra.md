@@ -24,7 +24,7 @@ are to be read as in RFC 2119.
 
 Two kinds of implementation are addressed. A **reader** turns a document into
 the structure described here. A **writer** produces or edits documents. Most
-requirements fall on readers; section 7 is for writers. Section 8 defines
+requirements fall on readers; section 8 is for writers. Section 9 defines
 conformance profiles.
 
 Throughout, "a reader MUST accept" means the construct is part of the format
@@ -96,7 +96,7 @@ one variation, the shape of each voicing key (§7.2).
 
 **Notation dialect.** One of the conventions for spelling chord symbols:
 Brazilian cifra, American jazz, Real Book. Most spellings mean the same in
-every dialect; three do not (§5.6).
+every dialect; four do not (§5.6).
 
 ## 0.4 The document model
 
