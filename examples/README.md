@@ -14,3 +14,11 @@ valid Markdown file.
 | [metadata.cifra.md](metadata.cifra.md) | A title, properties and a declared notation dialect |
 | [notes.cifra.md](notes.cifra.md) | Free notes outside the fences, kept but not interpreted |
 | [capo.cifra.md](capo.cifra.md) | A capo as a tuning: the chart sounds, the block voices, the shape name is derived |
+
+And two setlists (spec §10), which name the songs above. Both are in
+canonical form.
+
+| File | Shows |
+|---|---|
+| [rehearsal.setlist.md](rehearsal.setlist.md) | The smallest useful setlist: a title, three songs, a `key` and a `note`. *Minimal* has no `key` of its own, so its `key: E` is shown as a note rather than applied (§10.7.1) |
+| [gig.setlist.md](gig.setlist.md) | A setlist property, notes before the list and between two sets, numbering that continues across them, link text that is not the song's title, a song played twice, an application-defined key, and the deeper indentation under item 10 |

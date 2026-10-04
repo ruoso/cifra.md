@@ -103,6 +103,25 @@ keeps every chord over its syllable, the voicings are a list, and notes are
 prose. A song opened in any Markdown viewer is readable as a sheet; a
 cifra.md reader adds the structure.
 
+Songs are gathered into **setlists** for a gig or a rehearsal. A setlist is
+a file of its own, `something.setlist.md`, beside the songs: a title and a
+numbered list of links to them, with the key the band plays each one in
+and a note where it needs one.
+
+```
+# Bar do Zé, 10 October
+
+1. [Garota de Ipanema](bossa/garota-de-ipanema.cifra.md)
+   - key: D
+2. [Corcovado](bossa/corcovado.cifra.md)
+3. [Carinhoso](choro/carinhoso.cifra.md)
+   - note: start from the B section
+```
+
+On a git host it is a list of links that open the songs; to a reader it
+is the order to play them in, each transposed for reading to the key
+given.
+
 ## Status
 
 Working draft. The format grew out of
@@ -120,7 +139,7 @@ ones. Where it does not yet follow this draft, the gap is listed in
 | [`schema/cifra.schema.json`](schema/cifra.schema.json) | JSON Schema (2020-12) of the parsed document model | Readers, to say what they produce; writers, to say what they take |
 | [`reference/`](reference/) | A reader and canonical writer in Python, with a test suite of one file per chapter | A second opinion on every sentence of the spec |
 | [`corpus/`](corpus/) | Reference corpus: per entry an uncanonical `input.md`, its `parsed.json`, and its `canonical.md` | New implementations, to validate themselves in both directions |
-| [`examples/`](examples/) | Complete documents, `*.cifra.md`, one per feature, all in canonical form | Reading |
+| [`examples/`](examples/) | Complete documents, `*.cifra.md`, one per feature, and two setlists, `*.setlist.md`, all in canonical form | Reading |
 
 The model is what a reader produces and a writer consumes. The schema is its
 normative shape; §0.4 of the overview describes it in prose. A **canonical
@@ -146,12 +165,14 @@ time. Each document says what it depends on.
 | [7. Voicings](spec/7-voicings.md) | Voicing blocks, variations, fret strings, how a chord in the chart finds its shape | Reading voicings |
 | [8. Normalisation](spec/8-normalisation.md) | The canonical form of a document and the invariants an editor must keep | Writing or editing |
 | [9. Conformance](spec/9-conformance.md) | Conformance profiles and what each requires | Claiming conformance |
+| [10. Setlists](spec/10-setlists.md) | The setlist file: a numbered list of links to songs, per-song `key` and `note`, paths, resolution, and its canonical form | Reading or writing setlists |
 | [Appendix A. Legacy forms](spec/appendix-a-legacy.md) | Earlier spellings a reader may accept | Compatibility |
 | [Appendix B. Reference differences](spec/appendix-b-reference-differences.md) | Where this draft and explore-chords disagree | Maintainers |
 
 A reader that only wants the chords of each bar needs documents 0 to 3 and
 the symbol grammar of 5. Adding words needs 4. Adding voicings needs 6 and 7.
-Only an editor needs 8.
+Only an editor needs 8. Setlists need 10, and only the parts of 1 and 5 it
+names.
 
 The [examples](examples/) directory holds complete documents, one per feature.
 

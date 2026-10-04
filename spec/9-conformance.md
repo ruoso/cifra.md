@@ -62,6 +62,36 @@ Must meet: §8.
 
 All of the above.
 
+### Setlist reader
+
+Reads a setlist (§10) and produces its title, properties, items and notes,
+with every song item's text and path.
+
+Must meet: §10.1 to §10.8. It needs from the song chapters only what §10
+refers to: the title (§1.4.1), fences (§1.9), and, to apply a `key`, a
+song's properties (§1.4) and roots (§5.1.1). It is independent of the
+profiles above, and Full does not include it.
+
+Must, specifically:
+
+- prepare the text exactly as §10.2 says, in that order;
+- number items by position, ignoring the numbers written;
+- treat the target as authoritative and the link text as a label;
+- decode, check and normalise paths as §10.5 says, and resolve them
+  against the setlist's own directory, never outside the book;
+- keep, report and skip, but never discard, unlinked items, items outside
+  the book, missing songs, unrecognised entries and notes;
+- apply a `key` only when §10.7.1 allows it, and otherwise show it as a
+  note.
+
+### Setlist writer
+
+A setlist reader that creates or edits setlists.
+
+Must meet: §10.9 and §10.10. In particular, it MUST write every setlist
+in the canonical form, which it decides from the setlist's text alone,
+and MUST NOT change a link's text except when the user asks (§10.9.3).
+
 ## 9.2 What every profile must do
 
 Whatever the profile:
@@ -80,4 +110,5 @@ Whatever the profile:
 The reference corpus in `corpus/` holds, per entry, an uncanonical input,
 the model a reader must produce and the text a writer must produce. An
 implementation claiming any profile SHOULD pass every entry in both
-directions, as `corpus/README.md` describes.
+directions, as `corpus/README.md` describes. The corpus has no setlist
+entries yet (§10, *Open questions*).
