@@ -68,7 +68,8 @@ or key, and canonical form does not write it back (§8.4.4).
 only punctuation is nothing. Each remaining word is classified, in this
 order:
 
-1. **Bar anchor**: `@` followed by one or more digits (§2.8).
+1. **Bar anchor**: `@` followed by one or more digits whose value is not
+   zero (§2.8).
 2. **Repeat sign**: exactly `%` (§3.1).
 3. **No-chord mark**: `N.C.` or `NC`, in any letter case (§2.6).
 4. **Beat mark**: exactly `/`, `.` or `-`: one beat on which the previous
@@ -188,8 +189,10 @@ a bar number can be **stated**, and a stated number overrides the count
 from there on.
 
 `@` followed by digits, as an item, states the number of the measure it is
-in. It SHOULD be the first item of the measure. A reader MUST accept it
-anywhere in the measure; if a measure states more than one, the last wins.
+in. Bars are numbered from 1: `@0`, `@00` and the like are not anchors but
+unknown tokens (§2.9), and `@05` is bar 5. An anchor SHOULD be the first
+item of the measure. A reader MUST accept it anywhere in the measure; if a
+measure states more than one, the last wins.
 
 A heading may state the number of its section's first bar instead (§1.7.4).
 

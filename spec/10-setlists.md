@@ -104,9 +104,10 @@ The space after the colon is required so that a note such as
 The title is the level-1 heading that is the first non-blank line of the
 setlist, read as a song's title is (§1.4.1): after any leading spaces, a
 single `#` not followed by another `#`. Its text is the rest of the line
-after the `#` and the spaces after it, possibly empty. A setlist need
-not have a title. A reader MUST NOT require one, and MAY name a setlist
-without one by its file name. A `#` heading anywhere else, and a heading
+after the `#` and the spaces after it. As in a song, a title whose text is
+empty, `#` alone, is no title. A setlist need not have a title. A reader
+MUST NOT require one, and names a setlist without one by its **file name**,
+without `.setlist.md`. A `#` heading anywhere else, and a heading
 of any other level anywhere, is notes: a setlist has no sections.
 
 The setlist MAY have properties, as a song does: bullet lines immediately
@@ -214,9 +215,11 @@ reader showing it MAY render it as inline Markdown.
 
 The text is the song's title as the setlist's writer saw it. **The target
 decides which song an item is; the text does not.** A reader showing a
-song item SHOULD show the song's own title (§1.4.1), read from the song,
-and uses the text only where it has no song to read: for an item whose
-song is missing (§10.8.2), or when it was given no book.
+song item SHOULD show the song's own title (§1.4.1), read from the song;
+when the song has no title, its **file name**, without `.cifra.md`, stands
+in for one, as it does for the text an editor writes (§10.10). The reader
+uses the text only where it has no song to read: for an item whose song is
+missing (§10.8.2), or when it was given no book.
 
 The target is authoritative because it is the only part that can be
 checked: it names one file, and the file says what its title is. The text
@@ -460,9 +463,9 @@ blank line:
 
 1. **The metadata**, if there is a title or a setlist property: the title
    line, then one line per entry under the title, with no blank line
-   between them. The title line is `# ` followed by the title, or `#` alone
-   if the title is the empty string. With no title, the part is the entry
-   lines alone.
+   between them. The title line is `# ` followed by the title. With no
+   title, the part is the entry lines alone; an empty title is no title
+   (§10.3.1), and its line is not written.
 2. Then, in document order, **runs of items** and **notes blocks**. A run
    of items is a maximal sequence of consecutive items, each item's line
    followed directly by its entry lines, with no blank line anywhere in

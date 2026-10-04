@@ -277,7 +277,9 @@ single chord, saying that a key belongs in the properties as `- key: G`
 
 A heading's text MAY end with `@` and a number: `## A second time @1`. The
 number is removed from the section's name and becomes the section's
-*anchor*, the bar number of its first bar (§2.8).
+*anchor*, the bar number of its first bar (§2.8). Bars are numbered from 1,
+so the number is a positive integer: `@0` is not an anchor, and stays in the
+name.
 
 It MAY also end with a count (§3.3): `## Refrão x2`, `[Refrão] (2x)`,
 `## Chorus bis`. The count is removed from the name and becomes the

@@ -410,3 +410,30 @@ def test_a_section_created_from_the_model():
     doc["sections"].append({"name": "New", "heading": "markdown", "anchor": None, "body": [line], "groups": []})
     assert write(doc) == "# T\n\n## New\n```\nC Am | F\n```\n"
     assert serialize(canonical(doc)) == write(doc)
+
+
+# --- Bars are numbered from 1: zero is never an anchor, a count or an ending -----------
+
+
+class TestZero:
+    def test_bar_anchor_zero_is_an_unknown_token(self):
+        doc = parse(fenced("@0 C | G"))
+        measure = doc["sections"][0]["body"][0]["lines"][0]["measures"][0]
+        assert "anchor" not in measure
+        assert any(it["type"] == "unknown" and it["text"] == "@0" for it in measure["items"])
+        canon(fenced("@0 C | G"))
+
+    def test_bar_anchor_with_leading_zero_is_its_value(self):
+        doc = parse(fenced("@05 C | G"))
+        assert doc["sections"][0]["body"][0]["lines"][0]["measures"][0]["anchor"] == 5
+
+    def test_heading_anchor_zero_stays_in_the_name(self):
+        doc = parse("## A @0\n```\nC\n```\n")
+        assert doc["sections"][0]["name"] == "A @0"
+        assert doc["sections"][0]["anchor"] is None
+
+    def test_count_zero_is_not_a_count(self):
+        doc = parse("## A x0\n```\nC\n```\n")
+        assert doc["sections"][0]["name"] == "A x0"
+        assert "times" not in doc["sections"][0]
+        canon(fenced("C | G x0"))

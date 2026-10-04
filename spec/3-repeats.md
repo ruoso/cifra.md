@@ -86,7 +86,8 @@ changes. Marks are clearest at measure boundaries.
 ## 3.3 Counts
 
 A **count** is a token of the form `x2`, `2x`, `×2` or `2×`: the letter `x`
-or the sign `×` and a positive integer, in either order; the same in round
+or the sign `×` and a positive integer, in either order (`x0` is not a
+count, but an unknown token); the same in round
 brackets, `(2x)`, `(x3)`, which is how a cifra writes it; or `bis` or
 `(bis)`, which is twice. It says how many times something is played in
 total, so `x2` is twice. Canonical form writes `x2` (§8.4.4).
