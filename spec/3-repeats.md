@@ -170,7 +170,7 @@ whatever the author wrote under it. This is how a cifra writes a line
 ## Open questions
 
 - Whether to define `%%`, the two-bar repeat, which some charts use.
-- Whether a heading may carry a count (`# Chorus x2`), meaning the whole
+- Whether a heading may carry a count (`## Chorus x2`), meaning the whole
   section is played twice. This draft treats it as part of the name.
 - Navigation marks (D.C., D.S., Coda, Fine, `§`) are also repeats, in the
   structural sense. They need anchors and a notion of the end of the song,

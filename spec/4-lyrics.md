@@ -141,5 +141,5 @@ they are simply not numbered.
 - Whether a chord line with bar lines should be able to be sung (a bar
   line over a lyric line). This draft allows it; the words divide at item
   columns and the bar lines divide measures.
-- Whether to let a document declare itself sung in front matter, removing
+- Whether to let a document declare itself sung in a property, removing
   the two-word rule.

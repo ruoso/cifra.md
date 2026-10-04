@@ -1,9 +1,11 @@
-# Intro
+# Repeats
+
+## Intro
 Dm | % | G7 | %
 
-# A
+## A
 |: Dm | G7 |1. C | A7 :|2. C | C |
 
-# B
+## B
 ( Gm  C7 | F  Dm ) x3
 Gm | A7 | Dm | Dm  2x

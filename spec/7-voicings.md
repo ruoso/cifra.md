@@ -9,12 +9,12 @@ blocks, one per tuning and variation.
 ```
 ---
 
-# Voicings: E2 A2 D3 G3 B3 E4
+## Voicings: E2 A2 D3 G3 B3 E4
 A     = x02220
 Cm    = x35543
 Cm[2] = 8-10-10-8-8-8
 
-# Voicings: G4 C4 E4 A4
+## Voicings: G4 C4 E4 A4
 Cm = 0333
 ```
 
@@ -33,11 +33,11 @@ to an instrument.
 ## 7.2 Voicing block headings
 
 In the voicings part, every Markdown heading (§1.6.1) opens a voicing
-block. Its text is:
+block. A writer emits it at level 2. Its text is:
 
 ```
-Voicings: <tuning>
-<name>: <tuning>
+## Voicings: <tuning>
+## <name>: <tuning>
 ```
 
 A label, a colon, and a tuning (§6.2). Whitespace around the colon is not
@@ -47,7 +47,7 @@ significant.
   of that tuning (§7.3). It is the canonical label, and the one a writer
   emits for a block it creates.
 - Any other label names a **variation** called by that label, as written:
-  `# Simple: E2 A2 D3 G3 B3 E4` is a variation called *Simple*. The label
+  `## Simple: E2 A2 D3 G3 B3 E4` is a variation called *Simple*. The label
   may contain spaces. Leading and trailing whitespace is trimmed.
 - The tuning MUST parse under §6.2. A heading whose text after the colon is
   not a tuning is an error; a reader MUST report it and MUST skip the lines

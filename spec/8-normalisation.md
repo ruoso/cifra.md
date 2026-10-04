@@ -26,21 +26,21 @@ A writer MUST write the chart back exactly as read, except for:
 
 In particular a writer MUST NOT reflow lines, change spacing between items,
 rewrite a chord symbol into another spelling, change a heading's form
-(§1.6), remove unknown tokens, or touch front matter keys it does not know.
+(§1.6), remove unknown tokens, or touch the title or properties it does not know.
 
 ## 8.3 Canonical voicings part
 
 The voicings part of a document in canonical form is:
 
-1. The chart, with trailing blank lines removed.
+1. The metadata and the chart, with trailing blank lines removed.
 2. One blank line, the rule `---`, one blank line.
 3. The blocks, each followed by one blank line. For each block: the heading
-   `# <label>: <tuning>`, then one line per key.
+   `## <label>: <tuning>`, then one line per key.
 
 Where:
 
 - The label is `Voicings` for the default variation and the variation's
-  name otherwise. A reader that found `# voicings:` in another case writes
+  name otherwise. A reader that found `## voicings:` in another case writes
   `Voicings`.
 - The tuning is written as the document wrote it (§6.3). A block the writer
   creates writes pitches separated by single spaces.

@@ -1,3 +1,5 @@
+# Tarde Clara
+
 [Intro] G  D  Em  C
 
 [Primeira Parte]
@@ -15,7 +17,7 @@ Refrão: G  D  C  G
 
 ---
 
-# Voicings: E2 A2 D3 G3 B3 E4
+## Voicings: E2 A2 D3 G3 B3 E4
 C = x32010
 D = xx0232
 Em = 022000

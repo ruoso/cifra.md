@@ -27,55 +27,66 @@ writer MUST NOT emit tabs and SHOULD replace them when editing a line.
 
 A **blank line** is a line that is empty or contains only whitespace.
 
-## 1.3 Front matter
+## 1.3 Title and properties
 
-A document MAY begin with a front matter block: a line consisting of exactly
-`---` as the very first line, then lines of `key: value`, then a line of
-exactly `---`. This is the convention shared by Jekyll, Hugo, Obsidian and
-pandoc, so a document with front matter renders as expected in those tools.
+A document MAY begin with its title, and the title MAY be followed by a
+list of properties. Together they are the document's **metadata**.
 
 ```
----
-title: Garota de Ipanema
-artist: Tom Jobim
-notation: brazilian
----
+# Garota de Ipanema
+- artist: Tom Jobim
+- notation: brazilian
+
+## Intro
 ```
 
-Rules:
+### 1.3.1 Title
 
-- The opening `---` MUST be the first line of the document. A `---` anywhere
-  else is the rule (§1.5), never front matter.
-- Each line between the fences is `key: value`. The key is one word of
-  letters, digits, `-` and `_`, case-insensitive; the value is the rest of
-  the line, trimmed. A reader MUST ignore a line it cannot read as a pair
-  and MUST NOT fail on it.
+The title is a level-1 heading, `#` followed by the title text, and it is
+the first non-blank line of the document. A level-1 heading anywhere else
+is a section heading (§1.6.1), so the title is the only construct that is
+recognised by its position.
+
+A document need not have a title. A reader MUST NOT require one.
+
+### 1.3.2 Properties
+
+The properties are a Markdown list immediately following the title: each
+line is `-`, a space, and `key: value`. The list ends at the first line that
+is not a list item. Blank lines between the title and the list, and
+between items, are permitted.
+
+- The key is one word of letters, digits, `-` and `_`, compared
+  case-insensitively. The value is the rest of the line after the colon,
+  trimmed. A list item that is not `key: value` is reported and ignored.
 - Keys are unique. If a key repeats, the last value wins.
-- A reader MUST NOT require any key. A document with no front matter is
-  complete.
+- `*` and `+` are accepted as the list marker, since Markdown allows them.
+  A writer MUST emit `-`.
+- A property list MAY appear without a title, as the first non-blank lines
+  of the document.
+- A reader MUST NOT require any property.
 
-The front matter is deliberately not full YAML. Values are strings; there are
-no lists, nesting or quoting rules. An implementation that parses it with a
-YAML library MUST treat every value as a string.
+Values are strings. There are no lists, nesting or quoting rules; a value
+that needs structure belongs in an application's own key.
 
-### 1.3.1 Reserved keys
+### 1.3.3 Reserved properties
 
 | Key | Meaning |
 |---|---|
-| `title` | The song's title. |
 | `artist` | Who the song is by. Free text. |
 | `notation` | The dialect the chart's symbols are written in: `brazilian`, `american` or `realbook` (§5.6). Affects only the three ambiguous spellings. Default `brazilian`. |
 | `language` | BCP 47 tag for the words, when the song has them. Informative. |
 
-Any other key is application-defined. A reader MUST keep keys it does not
-know; a writer MUST write them back unchanged.
+The title is not a property; it is the heading. Any other key is
+application-defined. A reader MUST keep keys it does not know; a writer
+MUST write them back unchanged.
 
 A document that uses one of the three ambiguous spellings (§5.6) SHOULD
 declare `notation`.
 
 ## 1.4 The two parts
 
-After the front matter, the document is two parts:
+After the metadata, the document is two parts:
 
 1. The **chart**: every line up to the first rule.
 2. The **voicings part**: every line after it.
@@ -98,8 +109,7 @@ else, with optional surrounding whitespace.
 ---
 ```
 
-The first rule in the document (not counting the front matter fences) ends
-the chart. A reader MUST ignore any later rule. A writer MUST emit exactly
+The first rule in the document ends the chart. A reader MUST ignore any later rule. A writer MUST emit exactly
 one, and MUST put a blank line before it (§0.5).
 
 A rule is never a chord. `---` does not occur in the chord grammar, so there
@@ -117,12 +127,17 @@ One or more `#`, then optional whitespace, then the heading text, to the end
 of the line.
 
 ```
-# Verse
+## Verse
 ## Chorus
 ```
 
-The number of `#` is not significant in this version. A reader MUST treat
-every level alike. A writer SHOULD use one `#`.
+Heading level is significant in one place only: a level-1 heading that is
+the first non-blank line of the document is the title (§1.3.1). Every other
+Markdown heading, of any level, is a section heading in the chart or a
+block heading in the voicings part. A writer MUST emit `##` for those, so
+that the document's outline reads as title, then sections, in any Markdown
+tool. Levels deeper than two are accepted and reserved: a reader MUST treat
+`###` as `##` in this version.
 
 Trailing `#`s, which CommonMark permits as a closing sequence, are part of
 the text in cifra.md. A writer MUST NOT emit them.
@@ -164,7 +179,7 @@ not a Markdown heading or bracket heading.
 
 ### 1.6.4 Bar number on a heading
 
-A heading's text MAY end with `@` and a number: `# A second time @1`. The
+A heading's text MAY end with `@` and a number: `## A second time @1`. The
 number is removed from the section's name and becomes the section's
 *anchor*, the bar number of its first bar (§2.7). This applies to all three
 forms.
@@ -188,6 +203,5 @@ section name in the chart is just a section called Voicings.
 
 ## Open questions
 
-- Whether `#` level should become significant, with `#` as the song title
-  and `##` as sections. This draft puts the title in front matter instead,
-  so that existing documents using `# Verse` keep their meaning.
+- Whether `###` should one day nest sections (a *Verse* with *a* and *b*
+  halves). Reserved for that reason.

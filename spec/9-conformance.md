@@ -72,7 +72,7 @@ Whatever the profile:
 - A reader MUST read a document that uses only the constructs of its
   profile identically to a full reader. A chart reader and a full reader
   agree on every chart without words or voicings.
-- Front matter keys that an implementation does not define MUST be kept.
+- Properties that an implementation does not define MUST be kept.
 
 ## 9.3 Test corpus
 

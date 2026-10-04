@@ -6,14 +6,16 @@ A song is one plain-text file. The smallest valid document is a chart: the
 sections of the song, with the chords of each bar.
 
 ```
-# Intro
+# Blues in D minor
+
+## Intro
 Dm | G7 | C7 | F
 
-# A
+## A
 Dm | G7 | C7 | F
 Bb | A7 | Dm | %
 
-# B
+## B
 Gm | C7 | F  Dm | Gm  A7
 ```
 
@@ -22,9 +24,11 @@ That is a complete document. Nothing else is required.
 A song may also be written with its words, the way a cifra is: a line of
 chords over each line of words, the chords placed by column over the
 syllables they change on. Sections may be named in brackets, as a cifra
-names them, or with `#`.
+names them, or with `##`.
 
 ```
+# Walking Down the Road
+
 [Intro] G  D  Em  C
 
 [Verse]
@@ -40,15 +44,14 @@ each chord is actually fingered on each instrument the song has been
 arranged for.
 
 ```
----
-title: Walking Down the Road
-notation: american
----
+# Walking Down the Road
+- artist: Nobody
+- notation: american
 
-# Intro
+## Intro
 A | Cm | A | Cm[2]
 
-# Verse
+## Verse
 A           Cm
 When I first saw you
 A           Cm[2]
@@ -56,12 +59,12 @@ walking down the road
 
 ---
 
-# Voicings: E2 A2 D3 G3 B3 E4
+## Voicings: E2 A2 D3 G3 B3 E4
 A = x02220
 Cm = x35543
 Cm[2] = 8-10-10-8-8-8
 
-# Voicings: G4 C4 E4 A4
+## Voicings: G4 C4 E4 A4
 Cm = 0333
 ```
 
@@ -72,12 +75,13 @@ still a song you can play from. A chord the song plays more than one way
 carries a footnote marker, `Cm[2]`, and each tuning's block says what its
 second `Cm` is.
 
-The front matter at the top is optional metadata. Its `notation` key says
-which chord-spelling convention the chart uses, Brazilian cifra, American
-jazz or Real Book, for the few symbols that mean different things in each.
+The title is a level-1 heading, and the list under it holds the song's
+properties. Both are optional. The `notation` property says which
+chord-spelling convention the chart uses, Brazilian cifra, American jazz or
+Real Book, for the few symbols that mean different things in each.
 
-Every cifra.md file is also a valid Markdown file. Headings are headings, the
-rule is a rule, lyric lines read as text, and a chart line reads as the line
+Every cifra.md file is also a valid Markdown file. The title is the title,
+sections are headings, the rule is a rule, lyric lines read as text, and a chart line reads as the line
 of chords it is. A song opened in any Markdown viewer is still readable; a
 cifra.md reader gets the structure.
 
@@ -99,7 +103,7 @@ time. Each document says what it depends on.
 | Document | Covers | Needed for |
 |---|---|---|
 | [0. Overview](spec/0-overview.md) | Scope, terms, the document model, Markdown compatibility, conformance language | Everything |
-| [1. Document structure](spec/1-document.md) | Encoding, lines, front matter, the two parts, the rule, headings, sections | Everything |
+| [1. Document structure](spec/1-document.md) | Encoding, lines, title and properties, the two parts, the rule, headings, sections | Everything |
 | [2. The chart](spec/2-chart.md) | Chord lines, measures, bar lines, chord tokens, footnote markers, bar numbers | Reading a chart |
 | [3. Repeats](spec/3-repeats.md) | The measure repeat sign, repeat groups and counts, first and second endings, expansion | Reading a chart |
 | [4. Words](spec/4-lyrics.md) | Lyric lines, how chords are placed over syllables, stanza breaks | Reading a cifra with its words |

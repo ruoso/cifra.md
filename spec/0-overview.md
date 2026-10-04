@@ -36,11 +36,11 @@ reader would accept more.
 
 **Document.** One file, one song.
 
-**Front matter.** An optional block of metadata at the top of the document
-(§1.3).
+**Metadata.** The optional title and property list at the top of the
+document (§1.3).
 
 **Chart.** The first part of the document: everything from the start (after
-any front matter) to the rule. The chart is the song as music, independent
+any metadata) to the rule. The chart is the song as music, independent
 of any instrument.
 
 **Rule.** A line of three or more hyphens that ends the chart (§1.5).
@@ -99,7 +99,8 @@ must be able to answer every question the model answers.
 
 ```
 Document
-  metadata        key → value, from front matter
+  title           from the level-1 heading, or none
+  properties      key → value, from the property list
   sections[]      in document order
   blocks[]        voicing blocks, in document order
 
@@ -153,9 +154,10 @@ Markdown constructs, and gives each its ordinary meaning:
 
 | Construct | Markdown | cifra.md |
 |---|---|---|
-| `# Name` | ATX heading | Section heading, or voicing block heading after the rule |
+| `# Name` as the first line | ATX heading, level 1 | The song's title |
+| `- key: value` under the title | Bullet list | A property |
+| `## Name` | ATX heading | Section heading, or voicing block heading after the rule |
 | `---` on its own line, after a blank line | Thematic break | The rule between chart and voicings |
-| `---` as the first line | Front matter (common extension) | Front matter |
 | `> words` | Block quote | A line forced to be read as words |
 | Everything else | Paragraph text | Chord lines, lyric lines, voicing lines |
 
@@ -179,7 +181,8 @@ Two consequences for writers:
 A reader classifies lines in a fixed order, because several constructs could
 otherwise claim the same line. The order is:
 
-1. Front matter (§1.3), only at the very start of the document.
+1. The title and properties (§1.3), only at the very start of the
+   document.
 2. The rule (§1.5). The first rule ends the chart.
 3. In the chart: a heading (§1.6), in any of its three forms, opens a
    section. Otherwise the line is a chord line, a lyric line or blank (§2,
@@ -194,5 +197,4 @@ have been read (§3.2).
 
 ## Open questions
 
-- Whether a reader should expose heading level (`#` versus `##`). This
-  draft says level is not significant.
+- Whether `###` should nest sections. Reserved; see §1.6.1.

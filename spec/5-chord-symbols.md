@@ -251,7 +251,7 @@ and `°7` and `dim7` are unambiguous.
 
 Rules:
 
-- The document's dialect is the `notation` front matter key (§1.3.1), or
+- The document's dialect is the `notation` property (§1.3.3), or
   `brazilian` if absent.
 - A reader MUST apply the document's dialect to these three spellings and
   MUST report that it did, so that an application can show which reading

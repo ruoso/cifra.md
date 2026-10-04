@@ -1,9 +1,11 @@
-# Intro
+# Minimal
+
+## Intro
 Dm | G7 | C7 | F
 
-# A
+## A
 Dm | G7 | C7 | F
 Bb | A7 | Dm | %
 
-# B
+## B
 Gm | C7 | F  Dm | Gm  A7

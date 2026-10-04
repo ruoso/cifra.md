@@ -44,7 +44,21 @@ variation's name, so `# Formas (G4 C4 E4 A4)` becomes a variation named
 Earlier documents could carry a block with no rule before it. Conversion:
 insert the rule before the first block heading.
 
-## A.5 Several documents for one song
+## A.5 Level-1 section headings
+
+Earlier documents had no title and wrote every section as a level-1
+heading, `# Verse`. Under §1.3.1 the first of those would now be read as
+the title.
+
+Conversion: demote every heading to level 2. An application that stores
+its songs' titles outside the text, as explore-chords does, SHOULD write
+the title in as a level-1 heading at the same time. A reader that knows a
+document comes from such a store MAY apply this conversion on load; a
+reader given an arbitrary file MUST NOT guess, because a one-section song
+whose first line is `# Verse` is indistinguishable from a song titled
+*Verse*.
+
+## A.6 Several documents for one song
 
 The earliest form produced a *separate copy* of a song per instrument. Two
 copies are the same song if their charts are the same (same sections,

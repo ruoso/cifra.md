@@ -146,7 +146,7 @@ anywhere in the measure; if a measure states more than one, the last wins.
 A heading may state the number of its section's first bar instead (§1.6.4).
 
 A stated number with no bar of its own belongs to the next bar: `@9 | Dm`,
-`@9` alone on a line, and `# A @9` followed by `Dm` all number the `Dm` bar
+`@9` alone on a line, and `## A @9` followed by `Dm` all number the `Dm` bar
 9. A reader MUST carry the number forward, across lines and across section
 boundaries, to the next measure that is counted. Dropping it would be the
 worst outcome, because nothing would look wrong.
@@ -158,10 +158,10 @@ group's measures are counted once however many times they are played
 Numbers may repeat and may jump; that is the point.
 
 ```
-# A
+## A
 Dm | G7 | C7 | F              bars 1 2 3 4
 
-# A, written out again @1
+## A, written out again @1
 Dm | G7 | C7 | F              bars 1 2 3 4
 Dm | G7 | @17 Em | A7         bars 5 6 17 18
 ```

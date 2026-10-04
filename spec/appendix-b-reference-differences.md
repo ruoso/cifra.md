@@ -8,8 +8,9 @@ a decision to revisit here.
 
 | # | Topic | This draft | explore-chords today |
 |---|---|---|---|
-| 1 | Notation dialect | Declared in front matter `notation`; default `brazilian` (§1.3) | An application preference, not in the text |
-| 2 | Front matter | Defined, with `title`, `artist`, `notation`, `language` reserved (§1.3) | Not read; a leading `---` is a rule. Title is kept outside the text |
+| 1 | Notation dialect | Declared by the `notation` property; default `brazilian` (§1.3.3) | An application preference, not in the text |
+| 2 | Title and properties | Level-1 heading as the first line, then a `- key: value` list (§1.3) | Title kept outside the text; a leading `# Title` would be read as a section |
+| 2a | Heading levels | `#` is the title; sections and blocks are `##` (§1.6.1) | Level ignored; sections are written `#` |
 | 3 | Block heading recognition | By position: every `#` heading after the rule is a block; label, colon, tuning (§7.2) | Anywhere in the document, by whether the heading text names a tuning; `for`, `(`, `-`, `–` accepted as separators |
 | 4 | Heading after the rule that is not a block | Error; its lines are skipped | Opens a chart section, whose lines are read as chart |
 | 5 | The rule | The first rule ends the chart; later rules ignored (§1.5) | Every rule closes the current section or block; chart can continue after one |
@@ -31,7 +32,7 @@ a decision to revisit here.
 | 19 | Unknown tokens | Kept, reported (§2.8) | Same |
 | 20 | Section with no lines | Kept (§1.7) | Kept when named |
 
-Items 1 to 10, 8a, 8b and 12 are behavioural changes the reference parser would
+Items 1 to 10, 2a, 8a, 8b and 12 are behavioural changes the reference parser would
 need to make to conform. Items 11 and 13 to 20 are confirmations.
 
 ## Decisions taken in this draft that the reference did not have to make

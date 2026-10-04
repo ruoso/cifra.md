@@ -11,4 +11,4 @@ valid Markdown file.
 | [repeats.md](repeats.md) | The measure repeat sign, a group with endings, a counted group, a counted line |
 | [bar-numbers.md](bar-numbers.md) | Stated bar numbers for a repeat written out straight |
 | [variations.md](variations.md) | Two variations of the voicings for one tuning |
-| [front-matter.md](front-matter.md) | Metadata and a declared notation dialect |
+| [metadata.md](metadata.md) | A title, properties and a declared notation dialect |
