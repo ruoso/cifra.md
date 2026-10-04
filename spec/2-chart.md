@@ -232,6 +232,21 @@ numbers to the measures of a sung line, and a sung line MUST NOT advance
 the count. Anchors in a sung document are kept as written but have no
 effect.
 
+On a sung line an anchor also keeps its **column**, as chords and bar
+lines do (§4.4), so that it can be written back where it was written
+(§8.4.5): the column of its `@`, counted as §4.4 counts columns, so
+`(@9` has its anchor one column after the `(`. A reader MUST record it,
+as the measure's `anchorColumn`, when the anchor that numbers the measure
+was written in the measure itself, between the measure's bar lines on
+that chord line; where the measure states more than one, the column is
+that of the last, the one that wins. An anchor that numbers the measure
+only because it was carried forward to it, from a line with no items,
+from before the measure's bar line on the same line (`@9 | Dm`), or from
+after the last bar of the line before (`Dm | @9`), has no column, and
+neither has a heading anchor or an anchor on a line that is not sung. An
+anchor is not an item: it takes no words, and the line of words is not
+divided at its column.
+
 A reader SHOULD record, for each numbered measure, whether its number was
 stated or counted, so that a display can show the stated ones.
 

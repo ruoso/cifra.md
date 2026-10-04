@@ -171,7 +171,8 @@ def scan_line(body: str, dialect: str) -> dict:
     """Measures and items of one chord line, with every item's column.
 
     Returns {"measures": [...], "closeBar": ..., "trailing": anchor|None,
-    "has_bar": bool}. Measures carry a private "_col" for their bar line.
+    "has_bar": bool}. Measures carry a private "_col" for their bar line and
+    "_anchorCol" for an anchor written in the measure itself.
     """
     bars = list(BARS.finditer(body))
     pieces = []
@@ -190,7 +191,7 @@ def scan_line(body: str, dialect: str) -> dict:
 
     for start, text, bar in pieces:
         items = []
-        anchor = None
+        anchor = anchor_col = None
         for w in WORD.finditer(text):
             col = start + w.start()
             word = w.group(0).rstrip(",;")
@@ -198,24 +199,25 @@ def scan_line(body: str, dialect: str) -> dict:
                 continue
             a = BAR_ANCHOR.match(word)
             if a:
-                anchor = int(a.group(1))
+                anchor, anchor_col = int(a.group(1)), col
                 continue
             if COUNT.match(word):
                 items.append({"type": "count", "times": _count_times(COUNT.match(word)), "column": col})
                 continue
             before, core, after = _split_marks(word)
             core = core.rstrip(",;")
+            after_col = col + len(before) + len(core)  # where the closing marks begin
             for k in range(len(before)):
                 items.append({"type": "mark", "open": True, "notation": "bracket", "column": col + k})
             if core and BAR_ANCHOR.match(core):
-                anchor = int(core[1:])
+                anchor, anchor_col = int(core[1:]), col + len(before)
                 core = ""
             if core:
                 item = _classify_core(core, dialect)
                 item["column"] = col + len(before)
                 items.append(item)
             for k in range(len(after)):
-                items.append({"type": "mark", "open": False, "notation": "bracket", "column": col + len(before) + len(core) + k})
+                items.append({"type": "mark", "open": False, "notation": "bracket", "column": after_col + k})
         close_mark = None
         if bar is not None and bar.group(1):
             close_mark = {"type": "mark", "open": False, "notation": "barline", "column": bar.start(1)}
@@ -227,7 +229,10 @@ def scan_line(body: str, dialect: str) -> dict:
             if bar_col is not None:
                 measure["_col"] = bar_col
             if anchor is not None:
+                # Written in its own measure: its column is kept for a sung
+                # line (§2.8). A number carried in from elsewhere has none.
                 measure["anchor"] = anchor
+                measure["_anchorCol"] = anchor_col
             elif carry_anchor is not None:
                 measure["anchor"] = carry_anchor
             carry_anchor = None
@@ -646,6 +651,7 @@ class _Parser:
                     for line in part["lines"]:
                         for m in line.get("measures", []):
                             m.pop("_col", None)
+                            m.pop("_anchorCol", None)
                             m.pop("_trailing", None)
                         line.pop("_anchor_only", None)
                         line.pop("_line", None)
@@ -747,6 +753,10 @@ class _Parser:
         for m in measures:
             if "_col" in m:
                 m["column"] = m.pop("_col")
+            if "_anchorCol" in m:
+                m["anchorColumn"] = m.pop("_anchorCol")
+        if scan["trailing"] is not None:
+            measures[-1]["_trailing"] = scan["trailing"]
         return {"kind": "sung", "measures": measures, "closeBar": scan["closeBar"], "forced": nxt["forced"]}
 
     def carry_anchors(self):

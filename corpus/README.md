@@ -63,3 +63,4 @@ and read what came out before committing it. `python -m tools.corpus
 | 30-title-only | A document that is only its title |
 | 31-empty | A document with nothing in it, which is the empty file |
 | 32-unclosed-verbatim | An unclosed verbatim fence and the blank lines after it |
+| 33-sung-anchors | Bar anchors on sung lines kept at their columns: against bar lines and brackets, the last of several, past a token that grows, and numbers carried in from an anchor-only line and from the end of the line before |

@@ -2,7 +2,7 @@
 ```
 N.C.  x2      Cm     G
 When I first saw you walking down
-( G  D )     Em @9
+( G  D ) @9  Em
 la la la la la la
 Cm    Cm    Am     Cm
 oh my words are here

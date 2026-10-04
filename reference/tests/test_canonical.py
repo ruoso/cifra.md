@@ -384,8 +384,8 @@ class TestSungLines:
         assert canon(fenced("G|D    :|\nla la la la la")) == fenced("G|D    :|\nla la la la la")
         assert canon(fenced("(nc  )\nla la la la")) == fenced("( N.C. )\nla la la la")
 
-    def test_anchor_goes_after_the_measure_on_a_sung_line(self):
-        assert canon(fenced("@9 G     D\nla la la la")) == fenced("   G     D @9\nla la la la")
+    def test_anchor_keeps_its_column_on_a_sung_line(self):
+        assert canon(fenced("@9 G     D\nla la la la")) == fenced("@9 G     D\nla la la la")
 
     def test_lead_words_and_leading_spaces(self):
         text = fenced("        G\nOh when I first\n    D\n    la la")
@@ -399,6 +399,140 @@ class TestSungLines:
         text = fenced(", >x  |  C\noh my words are here")
         assert parse(text)["sung"] is True
         assert canon(text) == text
+
+
+# --- §2.8, §8.4.5: a bar anchor on a sung line keeps its column -----------------------------------
+
+WORDS = "When I first saw you walking down"
+
+
+def sung_measures(text):
+    return parse(text)["sections"][0]["body"][0]["lines"][0]["measures"]
+
+
+def columns(text, line=0, kind="chord"):
+    """Every item's column of one kind on a sung line, in order."""
+    ms = parse(text)["sections"][0]["body"][0]["lines"][line]["measures"]
+    return [it["column"] for m in ms for it in m["items"] if it["type"] == kind]
+
+
+class TestSungAnchors:
+    @pytest.mark.parametrize(
+        "chords",
+        [
+            "@12 G|D",
+            "| @5 G   | D   | Em  |",
+            "@5 G       D",
+            "|@5 G|@6 D",  # touching a bar line
+            "(@5 G   D )",  # touching a `(` before it
+            "G  @5) D",  # touching a `)` after it
+            "G    D @5  Em",  # anywhere in its measure
+        ],
+    )
+    def test_written_back_where_it_was_written(self, chords):
+        text = fenced(f"{chords}\n{WORDS}")
+        want = chords.replace("Em  |", "Em |")  # the closing bar line has no column
+        assert canon(text) == fenced(f"{want}\n{WORDS}")
+        assert columns(canon(text)) == columns(text)
+
+    def test_the_column_is_in_the_model(self):
+        ms = sung_measures(fenced(f"| @5 G   | D   | Em  |\n{WORDS}"))
+        assert [(m.get("anchor"), m.get("anchorColumn"), m["column"]) for m in ms] == [(5, 2, 0), (None, None, 9), (None, None, 15)]
+
+    def test_the_anchor_does_not_divide_the_words(self):
+        ms = sung_measures(fenced(f"G     @5     D\n{WORDS}"))
+        assert [it["words"] for it in ms[0]["items"]] == ["When I first ", "saw you walking down"]
+
+    def test_the_last_anchor_wins_with_its_column(self):
+        text = fenced(f"@5 G @6  D\n{WORDS}")
+        m = sung_measures(text)[0]
+        assert (m["anchor"], m["anchorColumn"]) == (6, 5)
+        assert canon(text) == fenced(f"   G @6  D\n{WORDS}")
+
+    def test_a_heading_anchor_has_no_column(self):
+        text = fenced(f"G     D\n{WORDS}", heading="## A @9")
+        assert "anchor" not in sung_measures(text)[0]
+        assert canon(text) == text
+
+    def test_an_anchor_on_a_chart_line_has_no_column(self):
+        text = fenced(f"G     D\n{WORDS}\n@5 C | F")
+        line = parse(text)["sections"][0]["body"][0]["lines"][1]
+        assert line["kind"] == "chart" and "anchorColumn" not in line["measures"][0]
+        assert canon(text) == fenced(f"G     D\n{WORDS}\n@5 C | F")
+
+    # A number carried in from elsewhere has no column on this line: it goes
+    # right after the last item that makes its measure, then keeps that column.
+
+    def test_carried_from_an_anchor_only_line(self):
+        text = fenced(f"@9\n| G       | D\n{WORDS}")
+        m = sung_measures(text)[0]
+        assert m["anchor"] == 9 and "anchorColumn" not in m
+        out = canon(text)
+        assert out == fenced(f"| G @9    | D\n{WORDS}")
+        assert sung_measures(out)[0]["anchorColumn"] == 4
+        assert columns(out) == columns(text)
+
+    def test_carried_from_before_the_measure_s_bar_line(self):
+        text = fenced(f"@9 | G      | D\n{WORDS}")
+        assert "anchorColumn" not in sung_measures(text)[0]
+        assert canon(text) == fenced(f"   | G @9   | D\n{WORDS}")
+
+    def test_carried_from_the_end_of_the_line_before(self):
+        # The number used to be dropped here: a sung line did not pass on an
+        # anchor after its last bar.
+        text = fenced(f"G     | @9\n{WORDS}\n| D      | Em\n{WORDS}")
+        line = parse(text)["sections"][0]["body"][0]["lines"][1]
+        assert line["measures"][0]["anchor"] == 9 and "anchorColumn" not in line["measures"][0]
+        assert canon(text) == fenced(f"G |\n{WORDS}\n| D @9   | Em\n{WORDS}")
+
+    def test_carried_with_no_room_moves_what_follows(self):
+        # Where the gap cannot hold it, the rest of the line moves right, as
+        # it does for a token that grows; once written, it stays put.
+        text = fenced(f"@9\nG  | D\n{WORDS}")
+        assert canon(text) == fenced(f"G @9 | D\n{WORDS}")
+
+    # Tokens that change width move the anchor as they move any token.
+
+    def test_a_token_that_grows_pushes_the_anchor_not_the_chord(self):
+        text = fenced(f"nc @5   G\n{WORDS}")
+        out = canon(text)
+        assert out == fenced(f"N.C. @5 G\n{WORDS}")
+        assert sung_measures(out)[0]["anchorColumn"] == 5
+        assert columns(out) == columns(text)
+
+    def test_a_token_that_shrinks_leaves_the_anchor_in_place(self):
+        text = (
+            fenced(f"Cm[2] @5  G\n{WORDS}")
+            + f"\n---\n\n## Voicings: {GUITAR}\n- Cm: x35543\n- Cm[2]: x35543\n- G: 320003\n"
+        )
+        out = canon(text)
+        assert out.startswith(fenced(f"Cm    @5  G\n{WORDS}"))
+        assert sung_measures(out)[0]["anchorColumn"] == 6
+
+    # A model an application edited: the anchor yields, never a chord.
+
+    def test_an_anchor_column_on_a_chord_goes_after_it(self):
+        doc = parse(fenced(f"@5 G       D\n{WORDS}"))
+        doc["sections"][0]["body"][0]["lines"][0]["measures"][0]["anchorColumn"] = 3
+        out = write(doc)
+        assert out == fenced(f"   G @5    D\n{WORDS}")
+        assert write(parse(out)) == out
+
+    def test_an_anchor_column_outside_its_measure_stays_in_it(self):
+        doc = parse(fenced(f"G     | @5 D\n{WORDS}"))
+        doc["sections"][0]["body"][0]["lines"][0]["measures"][1]["anchorColumn"] = 1
+        out = write(doc)
+        assert out == fenced(f"G     | @5 D\n{WORDS}")
+        assert sung_measures(out)[1]["anchor"] == 5
+
+    def test_brackets_on_both_sides_are_never_touched_at_once(self):
+        doc = parse(fenced(f"( @5 ) G\n{WORDS}"))
+        m = doc["sections"][0]["body"][0]["lines"][0]["measures"][0]
+        m["items"][1]["column"] = 3  # the `)` moved against the anchor
+        m["anchorColumn"] = 1  # and the anchor against the `(`
+        out = write(doc)
+        assert out == fenced(f"(@5 )  G\n{WORDS}")
+        assert sung_measures(out)[0]["anchor"] == 5
 
 
 # --- serialising a model that was not read --------------------------------------------------------

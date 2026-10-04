@@ -88,7 +88,7 @@ def line_tokens(line: dict, sung: bool = False) -> list[dict]:
     for i, m in enumerate(ms):
         items = [it for it in m["items"] if it["type"] != "lead"]
         start = len(toks)
-        anchor = {"kind": "anchor", "text": f"@{m['anchor']}"} if "anchor" in m else None
+        anchor = {"kind": "anchor", "text": f"@{m['anchor']}", "measure": m} if "anchor" in m else None
         if i > 0:
             toks.append(bar(close=pending_close))
             pending_close = None
@@ -120,8 +120,8 @@ def line_tokens(line: dict, sung: bool = False) -> list[dict]:
                     toks.append(bar(close=it))
             else:
                 toks.append({"kind": "item", "item": it, "text": item_text(it)})
-            if j == last_subst and anchor is not None and sung:
-                toks.append(anchor)
+        if anchor is not None and sung and subst:
+            toks.insert(_anchor_slot(toks, start, m.get("anchorColumn")), anchor)
     close_bar = line["closeBar"]
     if close_bar is not None:
         last_bar = max((x for x, t in enumerate(toks) if t["kind"] == "bar"), default=None)
@@ -135,6 +135,30 @@ def line_tokens(line: dict, sung: bool = False) -> list[dict]:
             toks.append(bar())
             toks[-1]["bar"] = close_bar
     return toks
+
+
+def _anchor_slot(toks: list[dict], start: int, column) -> int:
+    """Where a sung measure's anchor goes among the measure's tokens,
+    `toks[start:]` (§8.4.4 step 5): in the stretch between the bar line
+    before the measure's first item that makes it and the first bar line
+    after its last, so that it reads back in the same measure; there,
+    before the first token that wants a column greater than its own, or
+    right after the last item that makes the measure when it has no
+    column."""
+    made = [x for x in range(start, len(toks)) if toks[x]["kind"] == "item" and substantive(toks[x]["item"])]
+    if column is None:
+        return made[-1] + 1
+    lo = made[0]
+    while lo > start and toks[lo - 1]["kind"] != "bar":
+        lo -= 1
+    hi = made[-1] + 1
+    while hi < len(toks) and toks[hi]["kind"] != "bar":
+        hi += 1
+    for x in range(lo, hi):
+        want = _desired(toks[x])
+        if want is not None and want > column:
+            return x
+    return hi
 
 
 def _token_text(t: dict) -> str:
@@ -172,6 +196,8 @@ def _misread(text: str, dialect: str) -> bool:
 def _desired(t: dict):
     if t["kind"] == "item":
         return t["item"].get("column")
+    if t["kind"] == "anchor":
+        return t["measure"].get("anchorColumn")
     if t["kind"] == "bar":
         if t["close"] is not None and "column" in t["close"]:
             return t["close"]["column"]
@@ -182,10 +208,24 @@ def _desired(t: dict):
     return None
 
 
+def _is_bracket(t: dict, open_: bool) -> bool:
+    if t["kind"] != "item":
+        return False
+    it = t["item"]
+    return it["type"] == "mark" and it["notation"] == "bracket" and it["open"] == open_
+
+
 def _may_touch(prev: dict, t: dict) -> bool:
     """Two tokens may be written with no space between them only where one is
     a bar line, which a reader splits off before anything else, and no colon
-    would then be taken for a repeat mark (§8.4.5)."""
+    would then be taken for a repeat mark; or where one is an anchor and the
+    other a bar line, a `(` before it or a `)` after it, which a reader
+    splits off again, though not both brackets, since `(@9)` balances and is
+    one word (§8.4.5)."""
+    if t["kind"] == "anchor":
+        return prev["kind"] == "bar" or _is_bracket(prev, True)
+    if prev["kind"] == "anchor":
+        return t["kind"] == "bar" or (_is_bracket(t, False) and not prev.get("after_open"))
     if prev["kind"] == "bar" and t["kind"] == "item":
         return not t["text"].startswith(":")
     if prev["kind"] == "item" and t["kind"] == "bar":
@@ -215,6 +255,8 @@ def _place(toks: list[dict]) -> list[dict]:
         else:
             at = pos + 1
         t["at"] = at
+        if t["kind"] == "anchor":
+            t["after_open"] = prev is not None and at == pos and _is_bracket(prev, True)
         pos = at + len(_token_text(t))
         prev = t
     return toks
@@ -256,6 +298,8 @@ def _settle_sung(line: dict, dialect: str) -> None:
                 t["measure"]["column"] = x
             if t["open"] is not None:
                 t["open"]["column"] = x + len(t["bar"])
+        elif t["kind"] == "anchor":
+            t["measure"]["anchorColumn"] = t["at"]
     items = sorted((it for m in line["measures"] for it in m["items"]), key=lambda it: it["column"])
     divide_words(items, lyric)
     lead = lyric[: items[0]["column"]]

@@ -142,10 +142,12 @@
       "type": "object",
       "required": ["bar", "items"],
       "additionalProperties": false,
+      "dependentRequired": { "anchorColumn": ["anchor"] },
       "properties": {
         "bar": { "$ref": "#/$defs/BarLine", "description": "The bar line before this measure." },
         "column": { "type": "integer", "minimum": 0, "description": "Column of the bar line, on a sung line." },
         "anchor": { "type": "integer", "minimum": 1, "description": "Bar number stated in this measure (§2.8)." },
+        "anchorColumn": { "type": "integer", "minimum": 0, "description": "Column of the anchor, on a sung line, when the anchor was written in this measure of this chord line; absent for a number carried forward from elsewhere (§2.8)." },
         "number": { "type": "integer", "minimum": 1, "description": "Bar number, counted or stated; only in an unsung document." },
         "stated": { "type": "boolean", "description": "Whether `number` was stated rather than counted." },
         "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Item" } }

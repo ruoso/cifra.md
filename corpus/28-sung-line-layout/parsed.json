@@ -139,7 +139,8 @@
                       "words": "a la"
                     }
                   ],
-                  "anchor": 9
+                  "anchor": 9,
+                  "anchorColumn": 9
                 }
               ],
               "closeBar": null,

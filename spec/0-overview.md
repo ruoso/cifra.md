@@ -140,6 +140,8 @@ Measure
   bar             the bar line before this measure, if any
   column?         (sung) column of that bar line
   anchor?         bar number stated in this measure
+  anchorColumn?   (sung) column of that anchor, when it was written in
+                  this measure (§2.8)
   number?         bar number, counted (chart lines in an unsung document)
   stated?         whether `number` was stated rather than counted
   items[]         in order

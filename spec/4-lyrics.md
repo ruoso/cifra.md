@@ -125,7 +125,9 @@ Rules:
 
 - Every item of the chord line (chords, repeat signs, marks, unknown
   tokens) has a column and takes words. Bar lines do not; they divide
-  measures as in §2.2, and the words divide with the chords.
+  measures as in §2.2, and the words divide with the chords. Nor does a
+  bar anchor, which is not an item: its column is kept (§2.8) only so
+  that it can be written back where it was written.
 - Words before the first item's column, if they are not all whitespace,
   form a leading item with no chord in the first measure.
 - An item whose column is at or past the end of the words has no words. A

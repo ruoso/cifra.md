@@ -66,7 +66,7 @@ Markdown section heading at level 2; music in backtick fences; verbatim
 fences with a trimmed, lower-cased info string; items one space apart,
 each in its one spelling (`N.C.`, `x2`, `1.`, a key without `[1]`);
 punctuation dropped; a bar anchor at the start of its measure, or on a
-sung line after its last chord; a line
+sung line at its column (§8.4.5); a line
 that holds no item, such as a bar anchor alone, read as a blank line, its
 anchor moving to the measure it numbers; blank lines in music only
 between two lines, one for each run. On a sung line every chord keeps its
@@ -289,8 +289,17 @@ order, leaving out the lead item of a sung line:
    mark of bar-line notation is held over to the next measure's bar line
    if it is the measure's last item and the measure is not the line's
    last; otherwise a new bar line token is written to carry it.
-5. On a sung line, the measure's anchor, if it has one, is written right
-   after the last item that makes the measure.
+5. On a sung line, the measure's anchor, if it has one, is written once
+   the measure's other tokens are, among them. Its **stretch** runs from
+   just after the last bar line token written before the measure's first
+   item that makes it (from the measure's first token, if none was) up to
+   the first bar line token written after the measure's last item that
+   makes it (to the end of the measure's tokens, if none was); written
+   anywhere in it, the anchor reads back in this measure. If the measure
+   has an `anchorColumn`, the anchor goes just before the first token of
+   the stretch that wants a column (§8.4.5) greater than that column, or
+   at the end of the stretch if none does. If it has none, the anchor
+   goes right after the measure's last item that makes it.
 6. After the last measure, if the line has a closing bar line: if the
    last bar line token written does not carry a measure's bar line and no
    item that makes a measure comes after it, that token takes the closing
@@ -341,7 +350,8 @@ forced line is written with `>` in place of its first character.
   measure's column;
 - otherwise, a bar line token that carries an open mark, that mark's
   column less the width of its bar line;
-- any other token (an anchor, the closing bar line), none.
+- an anchor, its measure's `anchorColumn`, if it has one (§2.8);
+- any other token (an anchor with no column, the closing bar line), none.
 
 Tokens are placed in order. Let *end* be the column just past the last
 character placed so far. The first token goes at the column it wants, or
@@ -349,16 +359,24 @@ at 0 if it wants none. Each later token goes at the column it wants if
 that is greater than *end*, or equal to *end* when the two tokens may
 touch; otherwise at *end* + 1. Two tokens **may touch** only when one is a
 bar line token and the other an item, and the item neither ends in `:`
-before the bar line nor begins with `:` after it: a reader splits a bar
-line from whatever touches it before anything else, while two other
-tokens touching would read as one word. Each gap is filled with spaces.
+before the bar line nor begins with `:` after it; or when one is an
+anchor and the other a bar line token on either side of it, an open
+bracket mark just before it or a close bracket mark just after it,
+except that an anchor placed touching an open bracket mark does not also
+touch a close bracket mark, since `(@9)` balances and would read as one
+unknown token. A reader splits a bar line from whatever touches it
+before anything else, and an unbalanced bracket from an anchor (§2.3
+step 7), while two other tokens touching would read as one word. Each
+gap is filled with spaces.
 
 If the chord line so placed would be read as a heading, an annotation or
 a forced line, it is placed again with a `,` token first, at column 0,
 which touches nothing: the guard of §8.4.4.
 
 **The model follows the placement.** Each item's column becomes the
-column it was placed at, a measure's column that of its bar line, and the
+column it was placed at, a measure's column that of its bar line, a
+measure's `anchorColumn` that of its anchor (an anchor that had no
+column gains one), and the
 line of words is divided again at the new columns as §4.4 divides it, a
 lead item appearing or going away as the words before the first column
 are or are not all spaces. When no token changed width and every token
@@ -376,10 +394,30 @@ nc    (2x)    Cm[1]  G          N.C.  x2      Cm     G
 When I first saw you walking    When I first saw you walking
 ```
 
-A bar anchor has no column of its own on a sung line, which is why it
-goes after its measure's last chord, where it disturbs nothing that comes
-before it. A line that moves is visible and can be fixed by hand; a chord
-silently landing on another syllable could not be.
+A bar anchor is placed by its column like any other token, so it is
+written back where it was written, and moves only as tokens do: right,
+just enough, when a token before it grows (`nc @5   G` is written
+`N.C. @5 G`, the `G` where it was), and never onto another token, even
+in a model an application edited, where it is placed after whatever
+holds its column. Columns are counted in the text as prepared (§4.4),
+after NFC and after tabs became spaces, so tokens read from one line
+never overlap.
+
+Only an anchor with no column, a number carried in from elsewhere, which
+canonical form moves into the measure it numbers (§8.2), has to be given
+a place: right after its measure's last item that makes it, where it
+disturbs nothing that comes before it, and from then on it has a column.
+Where the gap there cannot hold it, the rest of the line moves right,
+as it does after a token that grows:
+
+```
+@9
+G  | D                      G @9 | D
+la la la la                 la la la la
+```
+
+A line that moves is visible and can be fixed by hand; a chord silently
+landing on another syllable could not be.
 
 ### 8.4.6 The voicings part
 
