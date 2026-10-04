@@ -27,6 +27,10 @@ The canonical form has these properties, and a writer MUST preserve them:
 - **It reads back as its own model.** Reading the canonical text gives the
   model that was written, apart from the line numbers in diagnostics and
   in `sungAt`.
+- **It holds no marker line.** A text with a line of git's conflict
+  markers (§11.12.3) is a merge waiting for someone, not a document: it is
+  never canonical, whatever this section would make of its lines, and a
+  writer refuses to save it.
 
 A hand-written document need not be canonical, and a reader MUST accept
 documents that are not. A writer that saves a document MUST save it in
