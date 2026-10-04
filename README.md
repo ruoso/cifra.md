@@ -168,13 +168,14 @@ time. Each document says what it depends on.
 | [8. Normalisation](spec/8-normalisation.md) | The canonical form of a document, byte for byte, the footnote invariants, and the editing operations | Writing, editing, or checking that a file is canonical |
 | [9. Conformance](spec/9-conformance.md) | Conformance profiles and what each requires | Claiming conformance |
 | [10. Setlists](spec/10-setlists.md) | The setlist file: a numbered list of links to songs, per-song `key` and `note`, paths, resolution, and its canonical form | Reading or writing setlists |
+| [11. Merge](spec/11-merge.md) | The three-way merge of songs and setlists: the chart by lines, the voicings and properties by structure, footnote markers across versions, conflicts as values and as text with conflict markers | Syncing, merging, the git merge driver |
 | [Appendix A. Legacy forms](spec/appendix-a-legacy.md) | Earlier spellings a reader may accept | Compatibility |
 | [Appendix B. Reference differences](spec/appendix-b-reference-differences.md) | Where this draft and explore-chords disagree | Maintainers |
 
 A reader that only wants the chords of each bar needs documents 0 to 3 and
 the symbol grammar of 5. Adding words needs 4. Adding voicings needs 6 and 7.
 Only an editor needs 8. Setlists need 10, and only the parts of 1 and 5 it
-names.
+names. Only a program that merges needs 11.
 
 The [examples](examples/) directory holds complete documents, one per feature.
 

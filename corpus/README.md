@@ -68,3 +68,15 @@ and read what came out before committing it. `python -m tools.corpus
 | 32-unclosed-verbatim | An unclosed verbatim fence and the blank lines after it |
 | 33-sung-anchors | Bar anchors on sung lines kept at their columns: against bar lines and brackets, the last of several, past a token that grows, and numbers carried in from an anchor-only line and from the end of the line before |
 | 34-pushed-words | Sung lines whose words are pushed so that every chord stays over its character: brackets, a token that grows, `_` padding inside words (one, several, two in one word), padding written in excess or too little, underscores that are words, a chord line longer than its words, a carried anchor with no room, and words forced because they would read as chords without their padding |
+
+## Merge entries (proposed)
+
+*A proposal, not yet in use: there are no merge entries.* The merge of
+spec §11 would be pinned the same way, by entries in `corpus/merge/`,
+each holding `base`, `ours` and `theirs` inputs (a missing file is an
+absent input) and exactly one of `result.cifra.md`, `result.deleted` or
+`conflicts.json`, the last with `marked.cifra.md` when the conflicts have
+a marked text. Every implementation would reproduce the expected files
+byte for byte, give the same outcome with ours and theirs exchanged, and
+produce canonical results. Spec §11.16 gives the layout and the checks in
+full.

@@ -65,6 +65,17 @@ document is canonical does so by canonicalising it and comparing.
 
 All of the above.
 
+### Merger
+
+A writer that merges three versions of a song (§11): an application that
+syncs, or a git merge driver.
+
+Must meet: §11 for songs, and §5 to the extent §11.7.2 needs the chord
+model. It MUST give the same result, or the same conflicts and marked
+text, as any other conforming merger, and MUST refuse to save a marked
+text (§11.12.3). A merger that is also a setlist writer merges setlists
+as §11.13 says. Full does not include it.
+
 ### Setlist reader
 
 Reads a setlist (§10) and produces its title, properties, items and notes,
@@ -120,4 +131,5 @@ and the model a reader must produce from it, and the canonical text a
 writer must produce and the model a reader must produce from that. An
 implementation claiming any profile SHOULD pass every entry, in both
 directions, as `corpus/README.md` describes. The corpus has no setlist
-entries yet (§10, *Open questions*).
+entries yet (§10, *Open questions*), and no merge entries; §11.16
+proposes their layout.
