@@ -1,0 +1,90 @@
+{
+  "title": null,
+  "properties": {},
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "## n"
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 4,
+                      "words": "ot a heading"
+                    }
+                  ],
+                  "column": 2
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "lyric",
+              "text": "---",
+              "forced": false
+            },
+            {
+              "kind": "lyric",
+              "text": "- not: an item",
+              "forced": false
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": true,
+  "diagnostics": [
+    {
+      "code": "unclosed-fence",
+      "message": "a fence was opened and never closed",
+      "line": 2
+    }
+  ]
+}

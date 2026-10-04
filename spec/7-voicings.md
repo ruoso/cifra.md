@@ -77,7 +77,8 @@ different label.
 - The order of blocks is the order written. The **first** block for a
   tuning is the one an application uses when no variation is chosen.
 - An empty block (a heading with no list items) is a variation that exists
-  and has nothing chosen in it yet. A reader MUST keep it.
+  and has nothing chosen in it yet. A reader MUST keep it, and a writer
+  writes it back as its heading.
 
 ## 7.4 Voicing items
 
@@ -108,7 +109,10 @@ A line in a block that is not a list item and not blank is **notes**, as in
 the chart (§1.8): kept verbatim, not interpreted. Blank lines are not
 significant.
 
-Keys within a block are unique. If a key repeats, the last item wins.
+Keys within a block are unique. If a key repeats, the last item wins. The
+order of items is not significant; a reader presents them in the order
+§8.3 defines, and presents blocks in that order too, so that the model of
+a document and of its canonical form are the same.
 
 ## 7.5 Fret strings
 

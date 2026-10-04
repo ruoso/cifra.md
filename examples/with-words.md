@@ -5,7 +5,7 @@ A cifra pasted as one block. The bracket and label headings inside the
 fence open sections, exactly as `##` headings outside it would.
 
 ```
-[Intro] G  D  Em  C
+[Intro] G D Em C
 
 [Primeira Parte]
 G           D
@@ -18,7 +18,7 @@ G             D
 Em          C
 e o mar estava calmo
 
-Refrão: G  D  C  G
+Refrão: G D C G
 ```
 
 ---

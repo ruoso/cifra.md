@@ -1,4 +1,4 @@
-# Minimal
+# Blues in D minor
 
 ## Intro
 ```

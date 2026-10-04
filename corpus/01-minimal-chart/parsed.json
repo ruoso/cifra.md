@@ -1,0 +1,477 @@
+{
+  "title": "Blues in D minor",
+  "properties": {},
+  "sections": [
+    {
+      "name": "Intro",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G7",
+                      "index": 1,
+                      "key": "G7",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7",
+                      "index": 1,
+                      "key": "C7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G7",
+                      "index": 1,
+                      "key": "G7",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7",
+                      "index": 1,
+                      "key": "C7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 7,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 8,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Bb",
+                      "index": 1,
+                      "key": "Bb",
+                      "chord": {
+                        "root": {
+                          "letter": "B",
+                          "accidental": -1
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 9,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "A7",
+                      "index": 1,
+                      "key": "A7",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 10,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 11,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "repeat"
+                    }
+                  ],
+                  "number": 12,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "B",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Gm",
+                      "index": 1,
+                      "key": "Gm",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 13,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7",
+                      "index": 1,
+                      "key": "C7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 14,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 15,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Gm",
+                      "index": 1,
+                      "key": "Gm",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "A7",
+                      "index": 1,
+                      "key": "A7",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 16,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "diagnostics": []
+}

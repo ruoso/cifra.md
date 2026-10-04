@@ -1,0 +1,269 @@
+{
+  "title": null,
+  "properties": {},
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "wobble"
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "N.C."
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "(2x)"
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "C(7"
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Em7(b5)",
+                      "index": 1,
+                      "key": "Em7(b5)",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 7,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "unknown",
+                      "text": "[2]"
+                    },
+                    {
+                      "type": "count",
+                      "times": 2
+                    }
+                  ],
+                  "number": 8,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "unknown",
+                      "text": "1."
+                    },
+                    {
+                      "type": "unknown",
+                      "text": "@"
+                    }
+                  ],
+                  "number": 9,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "unknown",
+                      "text": "F)x2"
+                    }
+                  ],
+                  "number": 10,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 11,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "diagnostics": [
+    {
+      "code": "count-out-of-place",
+      "message": "a count that follows neither a repeat group nor ends a line",
+      "line": 4
+    },
+    {
+      "code": "ending-outside-group",
+      "message": "1. outside a repeat group is not an ending",
+      "line": 4
+    },
+    {
+      "code": "unclosed-group",
+      "message": "a repeat group was opened and never closed",
+      "line": 5
+    }
+  ]
+}

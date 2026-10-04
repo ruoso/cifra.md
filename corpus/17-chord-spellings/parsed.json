@@ -1,0 +1,783 @@
+{
+  "title": null,
+  "properties": {
+    "notation": "realbook"
+  },
+  "sections": [
+    {
+      "name": "",
+      "heading": null,
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C∆7",
+                      "index": 1,
+                      "key": "C∆7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C−7",
+                      "index": 1,
+                      "key": "C−7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cø7",
+                      "index": 1,
+                      "key": "Cø7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C°",
+                      "index": 1,
+                      "key": "C°",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -2
+                          }
+                        ],
+                        "bass": null
+                      },
+                      "ambiguities": [
+                        {
+                          "kind": "degreeSign",
+                          "chosen": "diminishedSeventh",
+                          "alternative": "diminishedTriad"
+                        }
+                      ]
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cdim",
+                      "index": 1,
+                      "key": "Cdim",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C+",
+                      "index": 1,
+                      "key": "C+",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "aug",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Csus4",
+                      "index": 1,
+                      "key": "Csus4",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "sus4",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 7,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7b9",
+                      "index": 1,
+                      "key": "C7b9",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 8,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7#5",
+                      "index": 1,
+                      "key": "C7#5",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "aug",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 9,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C13",
+                      "index": 1,
+                      "key": "C13",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": 0
+                          },
+                          {
+                            "degree": 13,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 10,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C6/9/E",
+                      "index": 1,
+                      "key": "C6/9/E",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 6,
+                            "alter": 0
+                          },
+                          {
+                            "degree": 9,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": {
+                          "letter": "E",
+                          "accidental": 0
+                        }
+                      }
+                    }
+                  ],
+                  "number": 11,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm(maj7)",
+                      "index": 1,
+                      "key": "Cm(maj7)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 12,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C♯m7",
+                      "index": 1,
+                      "key": "C♯m7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 1
+                        },
+                        "quality": "minor",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 13,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D♭7",
+                      "index": 1,
+                      "key": "D♭7",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": -1
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 14,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cadd9",
+                      "index": 1,
+                      "key": "Cadd9",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 9,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 15,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Calt",
+                      "index": 1,
+                      "key": "Calt",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "aug",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 16,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            },
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7M",
+                      "index": 1,
+                      "key": "C7M",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 17,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm7(5-)",
+                      "index": 1,
+                      "key": "Cm7(5-)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 18,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7(9-)",
+                      "index": 1,
+                      "key": "C7(9-)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 19,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7(5+)",
+                      "index": 1,
+                      "key": "C7(5+)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "aug",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 20,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C4",
+                      "index": 1,
+                      "key": "C4",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "sus4",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 21,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C5",
+                      "index": 1,
+                      "key": "C5",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "power",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 22,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "A7(b13)",
+                      "index": 1,
+                      "key": "A7(b13)",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 13,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 23,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G7(13)",
+                      "index": 1,
+                      "key": "G7(13)",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 13,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 24,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Em7(b5)",
+                      "index": 1,
+                      "key": "Em7(b5)",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 25,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Am7/G",
+                      "index": 1,
+                      "key": "Am7/G",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": {
+                          "letter": "G",
+                          "accidental": 0
+                        }
+                      }
+                    }
+                  ],
+                  "number": 26,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C/E",
+                      "index": 1,
+                      "key": "C/E",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": {
+                          "letter": "E",
+                          "accidental": 0
+                        }
+                      }
+                    }
+                  ],
+                  "number": 27,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "diagnostics": []
+}

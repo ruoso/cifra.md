@@ -1,0 +1,216 @@
+{
+  "title": null,
+  "properties": {
+    "notation": "american"
+  },
+  "sections": [
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7+",
+                      "index": 1,
+                      "key": "C7+",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "aug",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      },
+                      "ambiguities": [
+                        {
+                          "kind": "sevenPlus",
+                          "chosen": "dominantSharpFive",
+                          "alternative": "majorSeventh"
+                        }
+                      ]
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C9",
+                      "index": 1,
+                      "key": "C9",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      },
+                      "ambiguities": [
+                        {
+                          "kind": "bareNine",
+                          "chosen": "dominant",
+                          "alternative": "add"
+                        }
+                      ]
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "B°",
+                      "index": 1,
+                      "key": "B°",
+                      "chord": {
+                        "root": {
+                          "letter": "B",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -2
+                          }
+                        ],
+                        "bass": null
+                      },
+                      "ambiguities": [
+                        {
+                          "kind": "degreeSign",
+                          "chosen": "diminishedSeventh",
+                          "alternative": "diminishedTriad"
+                        }
+                      ]
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7(9)",
+                      "index": 1,
+                      "key": "C7(9)",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          },
+                          {
+                            "degree": 9,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Bdim",
+                      "index": 1,
+                      "key": "Bdim",
+                      "chord": {
+                        "root": {
+                          "letter": "B",
+                          "accidental": 0
+                        },
+                        "quality": "dim",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7M",
+                      "index": 1,
+                      "key": "C7M",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": 0
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "diagnostics": []
+}

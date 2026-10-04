@@ -1,0 +1,146 @@
+{
+  "title": null,
+  "properties": {},
+  "sections": [
+    {
+      "name": "Empty section",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [],
+      "groups": []
+    },
+    {
+      "name": "Deep heading",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Level one later on",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Intro",
+      "heading": "bracket",
+      "anchor": null,
+      "body": [],
+      "groups": []
+    },
+    {
+      "name": "Voicings: E2 A2",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": false,
+  "diagnostics": []
+}

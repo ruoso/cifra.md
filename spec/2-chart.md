@@ -149,8 +149,9 @@ A heading may state the number of its section's first bar instead (§1.6.4).
 A stated number with no bar of its own belongs to the next bar: `@9 | Dm`,
 `@9` alone on a line, and `## A @9` followed by `Dm` all number the `Dm` bar
 9. A reader MUST carry the number forward, across lines and across section
-boundaries, to the next measure that is counted. Dropping it would be the
-worst outcome, because nothing would look wrong.
+boundaries, to the next measure, which then has that number as its stated
+number. Dropping it would be the worst outcome, because nothing would look
+wrong.
 
 Numbers count the chart as written: a `%` measure is a bar, and a repeat
 group's measures are counted once however many times they are played

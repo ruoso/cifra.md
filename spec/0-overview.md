@@ -100,9 +100,11 @@ every dialect; three do not (§5.6).
 
 ## 0.4 The document model
 
-A reader produces this structure. Names are given for reference; an
-implementation may represent them however it likes, but a conforming reader
-must be able to answer every question the model answers.
+A reader produces this structure. Its normative shape is the JSON Schema in
+`schema/cifra.schema.json`; the sketch below is the same thing in prose. An
+implementation may represent it however it likes, but a conforming reader
+must be able to produce it as JSON, and a canonical writer (§8) must be able
+to take that JSON back.
 
 ```
 Document
@@ -121,29 +123,38 @@ Section
 Line
   kind            "chart" | "sung" | "lyric" | "break"
   measures[]      (chart, sung) one or more measures
+  closeBar        (chart, sung) the bar line after the last measure, if any
+  times?          (chart, sung) the line's repeat count (§3.3)
+  forced          (sung, lyric) whether the words carried a `>` marker
   text            (lyric) the words
 
 Measure
+  bar             the bar line before this measure, if any
+  column?         (sung) column of that bar line
   anchor?         bar number stated in this measure
   number?         bar number, counted (chart lines in an unsung document)
+  stated?         whether `number` was stated rather than counted
   items[]         in order
 
 Item
   one of:
-    Chord         symbol, index, key, text (as written), words?, valid
-    Repeat        the % sign; words?
-    Mark          open or close of a repeat group (§3.2); words?
-    Count         a repeat count, x2 (§3.3); words?
-    Ending        an ending marker, 1. (§3.4); words?
-    Unknown       a token that is not a chord; text; words?
+    Chord         symbol, index, key, chord (the §5.2 model), ambiguities?
+    Repeat        the % sign
+    Mark          open or close of a repeat group (§3.2), and its notation
+    Count         a repeat count, x2 (§3.3)
+    Ending        an ending marker, 1. (§3.4)
+    Unknown       a token that is not a chord; text
+    Lead          (sung only) words before the first item
+  column?, words? on every item of a sung line (§4.4)
 
 Block
-  tuning          the pitches, as parsed
-  tuningText      the tuning as written on the heading
-  variation       name, "" for the default variation
-  voicings        key → frets, from the block's list items
-  notes           the text that is not a list item, verbatim
-  problems[]      list items that could not be read
+  label           variation name, "" for the default variation
+  tuning          text as written, pitches, and identity by sound (§6.3)
+  voicings[]      key, symbol, index, frets; in canonical order (§8.3)
+  notes[]         the lines that are not list items, verbatim
+
+Document also carries `sung` (§4.2) and `diagnostics`: everything the
+reader had to report, each with a code and a line number.
 ```
 
 `words` is present only on items of a sung line: the syllables under that

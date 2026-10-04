@@ -1,0 +1,353 @@
+{
+  "title": "Notes Around the Music",
+  "properties": {},
+  "sections": [
+    {
+      "name": "",
+      "heading": null,
+      "anchor": null,
+      "body": [
+        {
+          "type": "notes",
+          "text": "Anything outside a fence is notes."
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Intro",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "notes",
+          "text": "Play the intro rubato, and let the last bar ring."
+        },
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G7",
+                      "index": 1,
+                      "key": "G7",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7",
+                      "index": 1,
+                      "key": "C7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        },
+        {
+          "type": "notes",
+          "text": "[not a heading out here]"
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "A",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Dm",
+                      "index": 1,
+                      "key": "Dm",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 5,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G7",
+                      "index": 1,
+                      "key": "G7",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 6,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "C7",
+                      "index": 1,
+                      "key": "C7",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [
+                          {
+                            "degree": 7,
+                            "alter": -1
+                          }
+                        ],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 7,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "F",
+                      "index": 1,
+                      "key": "F",
+                      "chord": {
+                        "root": {
+                          "letter": "F",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 8,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        },
+        {
+          "type": "notes",
+          "text": "Second time, the bass walks up."
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [
+    {
+      "label": "",
+      "tuning": {
+        "text": "E2 A2 D3 G3 B3 E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "Dm",
+          "symbol": "Dm",
+          "index": 1,
+          "frets": [
+            "x",
+            "x",
+            0,
+            2,
+            3,
+            1
+          ]
+        },
+        {
+          "key": "G7",
+          "symbol": "G7",
+          "index": 1,
+          "frets": [
+            3,
+            2,
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ],
+      "notes": [
+        "Capo on the second fret for the recording.",
+        "```",
+        "not music either",
+        "```"
+      ]
+    }
+  ],
+  "sung": false,
+  "diagnostics": []
+}

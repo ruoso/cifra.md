@@ -103,13 +103,29 @@ cifra.md reader adds the structure.
 
 ## Status
 
-Working draft. The format is implemented by
-[explore-chords](https://github.com/ruoso/explore-chords), from which it grew.
-This repository is where the format is defined independently of that
-implementation, so that other readers and writers can be built against it.
+Working draft. The format grew out of
+[explore-chords](https://github.com/ruoso/explore-chords), but it is defined
+here, by the specification, the schema, the reference implementation and the
+corpus below, and explore-chords is one implementation among the possible
+ones. Where it does not yet follow this draft, the gap is listed in
+[Appendix B](spec/appendix-b-reference-differences.md).
 
-Where this draft departs from what explore-chords currently accepts, the
-departure is listed in [Appendix B](spec/appendix-b-reference-differences.md).
+## What is in this repository
+
+| Directory | What | For whom |
+|---|---|---|
+| [`spec/`](spec/) | The specification, one document per layer | Anyone implementing or extending the format |
+| [`schema/cifra.schema.json`](schema/cifra.schema.json) | JSON Schema (2020-12) of the parsed document model | Readers, to say what they produce; writers, to say what they take |
+| [`reference/`](reference/) | A reader and canonical writer in Python, with a test suite of one file per chapter | A second opinion on every sentence of the spec |
+| [`corpus/`](corpus/) | Reference corpus: per entry an uncanonical `input.md`, its `parsed.json`, and its `canonical.md` | New implementations, to validate themselves in both directions |
+| [`examples/`](examples/) | Complete documents, one per feature, all in canonical form | Reading |
+
+The model is what a reader produces and a writer consumes. The schema is its
+normative shape; §0.4 of the overview describes it in prose. A **canonical
+writer** regenerates a document from the model alone, so anything the model
+does not hold (malformed voicing items, the exact spacing of a chord line)
+is not written back, and the canonical form is a fixed point: reading it and
+writing it again gives the same text.
 
 ## The specification
 

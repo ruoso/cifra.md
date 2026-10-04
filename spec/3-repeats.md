@@ -90,8 +90,8 @@ or the sign `×` and a positive integer, in either order. It says how many
 times something is played in total, so `x2` is twice.
 
 - A count immediately after a group's closing mark, as the next item on the
-  same line, is the group's count: `( C | G ) x3`, `|: C | G :| 3x`,
-  `(C | G)x3`. A group with endings (§3.4) takes its count from them and
+  same line, is the group's count: `( C | G ) x3`, `|: C | G :| 3x`.
+  It is a word of its own: `(C | G)x3` is not a count. A group with endings (§3.4) takes its count from them and
   MUST NOT also carry a count token; a reader MUST report one that does and
   use the endings.
 - A group without a count or endings is played **twice**.
@@ -139,10 +139,6 @@ Rules:
 As written, markers are items. They are not bars and take no words. A
 measure that holds only a marker (`|1. |`) is not a measure (§2.2), and
 the marker belongs to the measure that follows.
-
-A chord line SHOULD NOT begin with an ending marker, because `1.` at the
-start of a line is a Markdown list item; writing the bar line first, `|1.`,
-avoids it.
 
 ## 3.5 Expansion
 

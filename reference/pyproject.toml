@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cifra-md"
+version = "0.1.0"
+description = "Reference reader and canonical writer for the cifra.md chord chart format"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest", "jsonschema"]
+
+[project.scripts]
+cifra-md = "cifra_md.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["cifra_md*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

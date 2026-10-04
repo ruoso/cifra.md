@@ -1,0 +1,269 @@
+{
+  "title": null,
+  "properties": {},
+  "sections": [
+    {
+      "name": "Verse",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "When I   "
+                    }
+                  ]
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 9,
+                      "words": "saw you  "
+                    },
+                    {
+                      "type": "repeat",
+                      "column": 18,
+                      "words": "oh"
+                    }
+                  ],
+                  "column": 7
+                }
+              ],
+              "closeBar": "|",
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0,
+                      "words": "la"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 2,
+                      "words": " la l"
+                    },
+                    {
+                      "type": "repeat",
+                      "column": 7,
+                      "words": "a "
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "bracket",
+                      "column": 9,
+                      "words": "la"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "Oh when "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 8,
+                      "words": "I first"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "When I sa"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 9,
+                      "words": "w"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 14,
+                      "words": ""
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 20,
+                      "words": ""
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            }
+          ]
+        }
+      ],
+      "groups": [
+        {
+          "open": {
+            "part": 0,
+            "line": 1,
+            "measure": 0,
+            "item": 0
+          },
+          "close": {
+            "part": 0,
+            "line": 1,
+            "measure": 0,
+            "item": 3
+          },
+          "count": 2,
+          "endings": []
+        }
+      ]
+    }
+  ],
+  "blocks": [],
+  "sung": true,
+  "diagnostics": [
+    {
+      "code": "repeat-beside-items",
+      "message": "a % beside other items has no defined meaning",
+      "line": 3
+    },
+    {
+      "code": "repeat-beside-items",
+      "message": "a % beside other items has no defined meaning",
+      "line": 5
+    }
+  ]
+}

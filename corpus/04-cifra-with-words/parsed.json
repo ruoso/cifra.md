@@ -1,0 +1,382 @@
+{
+  "title": "Tarde Clara",
+  "properties": {},
+  "sections": [
+    {
+      "name": "Intro",
+      "heading": "bracket",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Primeira Parte",
+      "heading": "bracket",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "Quando eu te"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 12,
+                      "words": " vi passar"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "naquela tarde cl"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 16,
+                      "words": "ara"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "break"
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "  A tarde era "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 14,
+                      "words": "clara"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": true
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "e o mar esta"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 12,
+                      "words": "va calmo"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "lyric",
+              "text": "calmo",
+              "forced": false
+            }
+          ]
+        }
+      ],
+      "groups": []
+    },
+    {
+      "name": "Refrão",
+      "heading": "label",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "C",
+                      "index": 1,
+                      "key": "C",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [],
+  "sung": true,
+  "diagnostics": []
+}

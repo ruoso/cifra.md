@@ -1,5 +1,3 @@
-# Repeats
-
 ## Intro
 ```
 Dm | % | G7 | %
@@ -14,4 +12,5 @@ Dm | % | G7 | %
 ```
 ( Gm C7 | F Dm ) x3
 Gm | A7 | Dm | Dm x2
+||: C | G :||
 ```

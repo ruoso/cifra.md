@@ -1,0 +1,261 @@
+{
+  "title": null,
+  "properties": {},
+  "sections": [
+    {
+      "name": "Verse",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "chart",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "A",
+                      "index": 1,
+                      "key": "A",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 1,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 1,
+                      "key": "Cm",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 2,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "A",
+                      "index": 1,
+                      "key": "A",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 3,
+                  "stated": false
+                },
+                {
+                  "bar": "|",
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "Cm",
+                      "index": 2,
+                      "key": "Cm[2]",
+                      "chord": {
+                        "root": {
+                          "letter": "C",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      }
+                    }
+                  ],
+                  "number": 4,
+                  "stated": false
+                }
+              ],
+              "closeBar": null
+            }
+          ]
+        }
+      ],
+      "groups": []
+    }
+  ],
+  "blocks": [
+    {
+      "label": "",
+      "tuning": {
+        "text": "E2, A2, D3, G3, B3, E4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 2
+          },
+          {
+            "note": {
+              "letter": "D",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "B",
+              "accidental": 0
+            },
+            "octave": 3
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "40 45 50 55 59 64"
+      },
+      "voicings": [
+        {
+          "key": "A",
+          "symbol": "A",
+          "index": 1,
+          "frets": [
+            "x",
+            0,
+            2,
+            2,
+            2,
+            0
+          ]
+        },
+        {
+          "key": "Cm",
+          "symbol": "Cm",
+          "index": 1,
+          "frets": [
+            "x",
+            3,
+            5,
+            5,
+            4,
+            3
+          ]
+        },
+        {
+          "key": "Cm[2]",
+          "symbol": "Cm",
+          "index": 2,
+          "frets": [
+            8,
+            10,
+            10,
+            8,
+            8,
+            8
+          ]
+        }
+      ],
+      "notes": []
+    },
+    {
+      "label": "",
+      "tuning": {
+        "text": "G4 C4 E4 A4",
+        "pitches": [
+          {
+            "note": {
+              "letter": "G",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "C",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "E",
+              "accidental": 0
+            },
+            "octave": 4
+          },
+          {
+            "note": {
+              "letter": "A",
+              "accidental": 0
+            },
+            "octave": 4
+          }
+        ],
+        "id": "67 60 64 69"
+      },
+      "voicings": [
+        {
+          "key": "Cm",
+          "symbol": "Cm",
+          "index": 1,
+          "frets": [
+            0,
+            3,
+            3,
+            3
+          ]
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "sung": false,
+  "diagnostics": []
+}

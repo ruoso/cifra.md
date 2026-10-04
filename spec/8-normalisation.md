@@ -29,8 +29,9 @@ rewrite a chord symbol into another spelling, change a heading's form
 (§1.6), move music between fences, remove unknown tokens, alter notes, or
 touch the title or properties it does not know.
 
-A writer that creates a section emits its heading, a blank line, and one
-fence holding its music.
+A writer that creates a section emits its heading and one fence holding
+its music. Items in a measure are separated by one space, and bar lines
+have one space either side.
 
 ## 8.3 Canonical voicings part
 
@@ -59,8 +60,8 @@ Where:
   index ascending, so a chord's variants sit together: `A`, `Cm`, `Cm[2]`,
   `G`. Code points rather than a locale collation, so that the order is the
   same on every machine.
-- A block with no items is omitted if it is the default variation and kept
-  if it is named (§7.3), unless it has notes, in which case it is kept.
+- A block with no items is written as its heading alone. Its existence
+  says the tuning was considered (§7.3).
 - Problem items (§7.4) are not written back. A writer that would lose
   information this way SHOULD tell the user before saving.
 

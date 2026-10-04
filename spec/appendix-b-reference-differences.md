@@ -1,10 +1,11 @@
-# Appendix B. Differences from the reference implementation
+# Appendix B. Differences from explore-chords
 
-Informative. explore-chords implements this format and is where it grew up,
-but its parser evolved with the application rather than from a written
-plan. This draft was written from the semantics, and departs from the
-current parser in the places below. Each item is a change to make there, or
-a decision to revisit here.
+Informative. The format grew up inside explore-chords, whose parser evolved
+with the application rather than from a written plan. This specification
+was written from the semantics, and the reference implementation in
+`reference/` follows it. The table lists where explore-chords' parser still
+differs; each item is a change to make there, or a decision to revisit
+here.
 
 | # | Topic | This draft | explore-chords today |
 |---|---|---|---|
