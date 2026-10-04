@@ -2,10 +2,42 @@
 
 A Markdown profile for chord charts.
 
-A song is one plain-text file. The first part is the **chart**: the sections of
-the song, with the chords of each bar, and optionally the words sung under
-them. After a rule comes the second part, the **voicings**: how each chord is
-actually fingered on each instrument the song has been arranged for.
+A song is one plain-text file. The smallest valid document is a chart: the
+sections of the song, with the chords of each bar.
+
+```
+# Intro
+Dm | G7 | C7 | F
+
+# A
+Dm | G7 | C7 | F
+Bb | A7 | Dm | %
+
+# B
+Gm | C7 | F  Dm | Gm  A7
+```
+
+That is a complete document. Nothing else is required.
+
+A song may also be written with its words, the way a cifra is: a line of
+chords over each line of words, the chords placed by column over the
+syllables they change on. Sections may be named in brackets, as a cifra
+names them, or with `#`.
+
+```
+[Intro] G  D  Em  C
+
+[Verse]
+G           D
+When I first saw you
+Em              C
+walking down the road
+```
+
+Both are the **chart**, the song as music, independent of any instrument.
+Either may be followed by a rule and a second part, the **voicings**: how
+each chord is actually fingered on each instrument the song has been
+arranged for.
 
 ```
 ---
@@ -33,9 +65,10 @@ Cm[2] = 8-10-10-8-8-8
 Cm = 0333
 ```
 
-The chart is the song, and it is the same on every instrument. What differs
-per instrument is how each chord is played, so voicings are kept in blocks
-headed by the tuning they are for. A chord the song plays more than one way
+The chart is the same on every instrument. What differs per instrument is
+how each chord is played, so voicings are kept in blocks headed by the
+tuning they are for, and a document with no block for your instrument is
+still a song you can play from. A chord the song plays more than one way
 carries a footnote marker, `Cm[2]`, and each tuning's block says what its
 second `Cm` is.
 
