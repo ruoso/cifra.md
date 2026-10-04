@@ -87,14 +87,6 @@ def is_bar(measure: dict) -> bool:
     return any(substantive(it) for it in measure["items"])
 
 
-def divide_words(items: list[dict], words: str) -> None:
-    """Each item takes the words from its column to the next item's (§4.4).
-    `items` are in column order."""
-    for k, it in enumerate(items):
-        end = items[k + 1]["column"] if k + 1 < len(items) else len(words)
-        it["words"] = words[it["column"] : end] if it["column"] < len(words) else ""
-
-
 def key_for(symbol: str, index: int) -> str:
     return f"{symbol}[{index}]" if index > 1 else symbol
 
@@ -640,6 +632,7 @@ class _Parser:
         self.sections = kept_sections
 
         self.carry_anchors()
+        self.converge_sung()
         if not sung:
             self.number_bars()
         for section in self.sections:
@@ -654,6 +647,7 @@ class _Parser:
                             m.pop("_anchorCol", None)
                             m.pop("_trailing", None)
                         line.pop("_anchor_only", None)
+                        line.pop("_words", None)
                         line.pop("_line", None)
 
     def unfenced_check(self, lines):
@@ -680,7 +674,7 @@ class _Parser:
 
     def assemble(self, part, sung):
         """The lines of one music part. A run of blank lines between two
-        lines of the part is one break (§4.5); a line with no items reads as
+        lines of the part is one break (§4.6); a line with no items reads as
         blank, though its anchor is kept to carry forward (§2.8)."""
         shapes = part["shapes"]
         raws = part["raw"]
@@ -744,12 +738,6 @@ class _Parser:
         scan = sh["scan"]
         words = nxt["body"]
         measures = scan["measures"]
-        items = sorted((it for m in measures for it in m["items"]), key=lambda it: it["column"])
-        divide_words(items, words)
-        if items:
-            lead = words[: items[0]["column"]]
-            if lead.strip(" "):
-                measures[0]["items"].insert(0, {"type": "lead", "column": 0, "words": lead})
         for m in measures:
             if "_col" in m:
                 m["column"] = m.pop("_col")
@@ -757,7 +745,9 @@ class _Parser:
                 m["anchorColumn"] = m.pop("_anchorCol")
         if scan["trailing"] is not None:
             measures[-1]["_trailing"] = scan["trailing"]
-        return {"kind": "sung", "measures": measures, "closeBar": scan["closeBar"], "forced": nxt["forced"]}
+        # The columns as written; `converge` lays the line out once anchors
+        # carried in from elsewhere have reached it.
+        return {"kind": "sung", "measures": measures, "closeBar": scan["closeBar"], "forced": nxt["forced"], "_words": words}
 
     def carry_anchors(self):
         """A stated number with no bar of its own belongs to the next bar (§2.8)."""
@@ -787,6 +777,19 @@ class _Parser:
                         if "_trailing" in m:
                             pending = m.pop("_trailing")
                 part["lines"] = kept
+
+    def converge_sung(self):
+        """Lay out every sung line as the canonical writer does (§4.5.3), so
+        that the model holds the columns and words of the canonical form."""
+        from .layout import converge
+
+        for section in self.sections:
+            for part in section["body"]:
+                if part["type"] != "music":
+                    continue
+                for line in part["lines"]:
+                    if line["kind"] == "sung":
+                        converge(line, line.pop("_words"), self.dialect)
 
     def number_bars(self):
         bar = 1

@@ -69,7 +69,9 @@ heading, a fence, the rule, or notes (§1.5).
 **Chord line.** A line whose content is chords and chart punctuation (§2).
 
 **Lyric line.** A line of words (§4). A chord line directly above a lyric
-line is *sung*: its chords are placed over the words by column.
+line is *sung*: each of its chords is attached to the character of the
+words it is written over, and when a chord needs more room the words are
+pushed, never the chord (§4.4, §4.5).
 
 **Measure** or **bar.** A unit of a chord line, delimited by bar lines (§2.2).
 
@@ -128,7 +130,7 @@ Section
 
 Line
   kind            "chart" | "sung" | "lyric" | "break" | "annotation"
-                  (a break is a run of blank lines between two lines, §4.5)
+                  (a break is a run of blank lines between two lines, §4.6)
   run?            (chart) the line has no bar lines: a run of chords (§2.1)
   measures[]      (chart, sung) one or more measures
   closeBar        (chart, sung) the bar line after the last measure, if any
@@ -138,10 +140,9 @@ Line
 
 Measure
   bar             the bar line before this measure, if any
-  column?         (sung) column of that bar line
+  column?         (sung) column of that bar line, as laid out (§4.5)
   anchor?         bar number stated in this measure
-  anchorColumn?   (sung) column of that anchor, when it was written in
-                  this measure (§2.8)
+  anchorColumn?   (sung) column of that anchor, as laid out (§2.8, §4.5)
   number?         bar number, counted (chart lines in an unsung document)
   stated?         whether `number` was stated rather than counted
   items[]         in order
@@ -156,8 +157,10 @@ Item
     Count         a repeat count, x2 (§3.3)
     Ending        an ending marker, 1. (§3.4)
     Unknown       a token that is not a chord; text
-    Lead          (sung only) words before the first item
-  column?, words? on every item of a sung line (§4.4)
+    Lead          (sung only) words before the first attached item
+  column?         on every item of a sung line, as laid out (§4.5)
+  words?          on the lead and on each item of a sung line that makes
+                  a measure, the items attached to the words (§4.4)
 
 Block
   label           variation name, "" for the default variation
@@ -170,8 +173,13 @@ Document also carries `sung` and `sungAt`, the line that made it sung
 reader had to report, each with a code and a line number.
 ```
 
-`words` is present only on items of a sung line: the syllables under that
-item, up to the next item's column (§4.4).
+`words` is present only on items of a sung line that are attached to the
+words: the syllables under that item, up to the next attached item's
+column (§4.4). The line of words is not stored apart: it is the lead's
+words and the items' words in column order, with the gaps between them
+filled with `_` padding inside a word (§4.5.2). The model holds a sung
+line as laid out (§4.5): its columns and words are those of the
+canonical form, whatever spacing the text was written with.
 
 Two cross-cutting facts about the document, both derivable from the model:
 

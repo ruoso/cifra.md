@@ -2,7 +2,8 @@
 
 Depends on: everything before. This section is for writers: programs that
 create or edit documents, or check that one is in canonical form. A
-reader needs none of it.
+reader needs none of it, except the chord line tokens of §8.4.4, which
+the layout of sung lines (§4.5) is defined on.
 
 ## 8.1 The canonical form
 
@@ -39,7 +40,11 @@ keeps everything the format defines and reports what it does not keep
 (§9.2), so that an application can tell the author before it saves what
 canonicalising will drop. What canonicalising never changes is what the
 song plays: its sections, chords, bars, repeats, words and chosen shapes,
-except that §8.3 merges two footnote markers that no block tells apart.
+except that §8.3 merges two footnote markers that no block tells apart;
+and it never moves a chord to another syllable. On a sung line it may
+push the words to make room for a chord, with spaces between words and
+`_` inside one (§4.5): the words are still the same words, under the same
+chords.
 
 Canonicalising never applies the conversions of Appendix A. Migrating a
 document from a legacy form is an operation of its own (§8.7).
@@ -66,11 +71,16 @@ Markdown section heading at level 2; music in backtick fences; verbatim
 fences with a trimmed, lower-cased info string; items one space apart,
 each in its one spelling (`N.C.`, `x2`, `1.`, a key without `[1]`);
 punctuation dropped; a bar anchor at the start of its measure, or on a
-sung line at its column (§8.4.5); a line
+sung line at its column (§4.5); a line
 that holds no item, such as a bar anchor alone, read as a blank line, its
 anchor moving to the measure it numbers; blank lines in music only
-between two lines, one for each run. On a sung line every chord keeps its
-column wherever it can (§8.4.5). Notes are kept as they were read, with
+between two lines, one for each run. A sung line is written as the
+layout of §4.5 lays it out: every chord over the character it was written
+over, the words pushed where a token needs more room than it was given,
+`_` padding written where the layout needs it and nowhere else, and the
+words written forced when, padded, they would no longer read as words.
+A reader has already laid the line out, so this changes nothing in the
+model that the reader produced. Notes are kept as they were read, with
 each run of blank lines in them collapsed to one.
 
 **The voicings part.** Drops what a reader skips: problem items, bad
@@ -131,8 +141,9 @@ applied to chart tokens and block keys in one step; a writer MUST NOT
 leave a state where a chart token names an index no block was rewritten
 for.
 
-A rewritten token on a sung line changes width; §8.4.5 keeps the other
-items over their syllables.
+A rewritten token on a sung line changes width, so canonicalising lays
+the line out again (§4.5) after applying these invariants: every chord
+stays over its syllable, and the words move if they must.
 
 ## 8.4 Writing the canonical text
 
@@ -297,7 +308,7 @@ order, leaving out the lead item of a sung line:
    makes it (to the end of the measure's tokens, if none was); written
    anywhere in it, the anchor reads back in this measure. If the measure
    has an `anchorColumn`, the anchor goes just before the first token of
-   the stretch that wants a column (§8.4.5) greater than that column, or
+   the stretch that has a written column (§4.5.1) greater than that column, or
    at the end of the stretch if none does. If it has none, the anchor
    goes right after the measure's last item that makes it.
 6. After the last measure, if the line has a closing bar line: if the
@@ -333,91 +344,35 @@ when it was read, `, >x C`, and would otherwise lose it.
 
 ### 8.4.5 Sung lines
 
-On a sung line the chord line's columns are the syllables (§4.4), so its
-tokens are placed by column rather than joined by spaces. The line of
-words is never changed.
+A sung line in a canonical model is already laid out (§4.5): a reader
+lays it out when it reads it, and canonicalising lays it out again after
+§8.3. The writer prints it, two lines, from the columns and words the
+model holds, and decides nothing.
+
+**The chord line** is its tokens (§8.4.4), each at its written column
+(§4.5.1), with spaces before it; a token with no written column, which in
+a laid-out line is only the closing bar line, goes one space after the
+token before it. If the line so written would be read as a heading, an
+annotation or a forced line, its first character, which the layout left
+as a space, is written `,`: the guard of §8.4.4.
 
 **The line of words** is the lead item's words, or, when there is no lead
-item, as many spaces as the first item's column; followed by the words of
-every other item in column order. This is the line as it was read. A
-forced line is written with `>` in place of its first character.
-
-**Placing the chord line.** Each token wants a column:
-
-- an item, its column;
-- a bar line token that carries a close mark, that mark's column;
-- otherwise, a bar line token that takes a measure's bar line, the
-  measure's column;
-- otherwise, a bar line token that carries an open mark, that mark's
-  column less the width of its bar line;
-- an anchor, its measure's `anchorColumn`, if it has one (§2.8);
-- any other token (an anchor with no column, the closing bar line), none.
-
-Tokens are placed in order. Let *end* be the column just past the last
-character placed so far. The first token goes at the column it wants, or
-at 0 if it wants none. Each later token goes at the column it wants if
-that is greater than *end*, or equal to *end* when the two tokens may
-touch; otherwise at *end* + 1. Two tokens **may touch** only when one is a
-bar line token and the other an item, and the item neither ends in `:`
-before the bar line nor begins with `:` after it; or when one is an
-anchor and the other a bar line token on either side of it, an open
-bracket mark just before it or a close bracket mark just after it,
-except that an anchor placed touching an open bracket mark does not also
-touch a close bracket mark, since `(@9)` balances and would read as one
-unknown token. A reader splits a bar line from whatever touches it
-before anything else, and an unbalanced bracket from an anchor (§2.3
-step 7), while two other tokens touching would read as one word. Each
-gap is filled with spaces.
-
-If the chord line so placed would be read as a heading, an annotation or
-a forced line, it is placed again with a `,` token first, at column 0,
-which touches nothing: the guard of §8.4.4.
-
-**The model follows the placement.** Each item's column becomes the
-column it was placed at, a measure's column that of its bar line, a
-measure's `anchorColumn` that of its anchor (an anchor that had no
-column gains one), and the
-line of words is divided again at the new columns as §4.4 divides it, a
-lead item appearing or going away as the words before the first column
-are or are not all spaces. When no token changed width and every token
-wanted a column, every token goes where it wants and nothing moves.
-
-So when a token grows, as `Cm` does when it becomes `Cm[2]` or `nc` when
-it is written `N.C.`, the tokens after it keep their columns as long as
-the gap after it can absorb the growth, always leaving one space; where it
-cannot, the rest of the line moves right just enough. When a token
-shrinks, as `(2x)` does when it is written `x2`, the tokens after it stay
-where they were:
+item, as many spaces as the first attached item's column; then, for each
+attached item (§4.4) in column order that has words, the gap from the
+end of what is written so far up to the item's column, filled with `_`
+(the padding of §4.5.2; such a gap is always inside a word), followed by
+the item's words. A forced line is written with `>` in place of its first
+character, which is a space.
 
 ```
-nc    (2x)    Cm[1]  G          N.C.  x2      Cm     G
-When I first saw you walking    When I first saw you walking
+( G   D ) Em        N.C. G      Am         G @9 | D
+l_a la la la la     Qua__ndo eu te vi      Wh_____en I first
 ```
 
-A bar anchor is placed by its column like any other token, so it is
-written back where it was written, and moves only as tokens do: right,
-just enough, when a token before it grows (`nc @5   G` is written
-`N.C. @5 G`, the `G` where it was), and never onto another token, even
-in a model an application edited, where it is placed after whatever
-holds its column. Columns are counted in the text as prepared (§4.4),
-after NFC and after tabs became spaces, so tokens read from one line
-never overlap.
-
-Only an anchor with no column, a number carried in from elsewhere, which
-canonical form moves into the measure it numbers (§8.2), has to be given
-a place: right after its measure's last item that makes it, where it
-disturbs nothing that comes before it, and from then on it has a column.
-Where the gap there cannot hold it, the rest of the line moves right,
-as it does after a token that grows:
-
-```
-@9
-G  | D                      G @9 | D
-la la la la                 la la la la
-```
-
-A line that moves is visible and can be fixed by hand; a chord silently
-landing on another syllable could not be.
+Because the reader lays the line out exactly as written here, reading the
+canonical text gives back the same columns and words, and writing them
+again gives the same text. Layout that was once a writer's choice, such
+as where a token that grew should go, is all in §4.5.
 
 ### 8.4.6 The voicings part
 
@@ -461,8 +416,9 @@ applies §8.3.
 
 A writer that creates a section adds to the model a section with a
 Markdown heading and one music part holding its lines; §8.4 then says how
-it is written. A writer that creates a sung line chooses its columns, and
-from then on §8.4.5 keeps them.
+it is written. A writer that creates or edits a sung line chooses its
+columns and words; canonicalising lays the line out (§4.5), and from then
+on the layout keeps every chord over the character it was put over.
 
 ### 8.5.1 Choose a shape for one occurrence
 

@@ -23,7 +23,8 @@ python -m tools.corpus --write      # regenerate the corpus outputs after a deli
 | `cifra_md/tuning.py` | §6 | Tuning lists and identity by sound |
 | `cifra_md/frets.py` | §7.5 | Fret strings |
 | `cifra_md/parse.py` | §1 to §4, §7 | `parse(text or bytes) -> dict`: the whole reader |
-| `cifra_md/write.py` | §8 | `write(doc) -> str`: the canonical writer; `canonical(doc)`, the model of the canonical form (§8.2, §8.3, §8.4.5); `serialize`, which prints a canonical model (§8.4) |
+| `cifra_md/layout.py` | §4.4, §4.5, §8.4.4, §8.4.5 | Chord line tokens; `converge`, the layout of a sung line that the reader and `canonical` both run; printing a laid-out sung line |
+| `cifra_md/write.py` | §8 | `write(doc) -> str`: the canonical writer; `canonical(doc)`, the model of the canonical form (§8.2, §8.3, §4.5); `serialize`, which prints a canonical model (§8.4) |
 | `tools/corpus.py` | corpus/README.md | Generates and checks the reference corpus |
 
 `parse` returns plain dicts and lists that match the JSON Schema exactly, so

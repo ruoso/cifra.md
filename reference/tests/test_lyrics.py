@@ -142,11 +142,12 @@ class TestColumns:
         assert ms[0]["items"][0]["words"] == "When I   "
         assert ms[1]["items"][0]["words"] == "saw you"
 
-    def test_marks_and_repeat_signs_take_words(self):
+    def test_repeat_signs_take_words_and_marks_do_not(self):
         _, ls = lines("( G    % )\nla la la la")
         its = ls[0]["measures"][0]["items"]
-        assert [it["type"] for it in its] == ["mark", "chord", "repeat", "mark"]
-        assert "".join(it["words"] for it in its) == "la la la la"
+        assert [it["type"] for it in its] == ["lead", "mark", "chord", "repeat", "mark"]
+        assert [it.get("words") for it in its] == ["la", None, " la l", "a la", None]
+        assert [it["column"] for it in its] == [0, 0, 2, 7, 9]
 
     def test_forced_line_keeps_columns(self):
         _, ls = lines("G             D\n> A tarde era clara")

@@ -162,10 +162,12 @@ voicings, both of which are defined on the chart as written.
 
 ## 3.6 Repeats and words
 
-On a sung line (§4.4), marks, counts and markers are items and take words
-like any other item, since the words under them belong somewhere. A group
-on a sung line means the chords repeat; what is sung the second time is
-whatever the author wrote under it. This is how a cifra writes a line
+On a sung line (§4.4), marks, counts and markers are items with a column,
+but they take no words and are not attached to a character: the words
+belong to the chords around them, and a mark follows the chord before it
+when the layout moves it (§4.5). A group on a sung line means the chords
+repeat; what is sung the second time is whatever the author wrote under
+it. This is how a cifra writes a line
 "(2x)", and a reader MUST NOT try to do better.
 
 ## Open questions

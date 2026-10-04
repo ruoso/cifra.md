@@ -9,13 +9,16 @@ Each entry is a directory with four files:
 | `canonical.cifra.md` | The canonical text (spec §8) of that model: what a conforming writer saves. | Generated |
 | `parsed.json` | The model a conforming reader produces from `canonical.cifra.md`, diagnostics included: the model of the canonical form, and what any reader gets from the file once it has been saved. | Generated |
 
-Where canonicalising changes the model, the two JSON files differ, and the
-difference is the change: a problem item or a list item that is not a
-property is gone, footnote markers are merged and renumbered (§8.3), a
-sung line's columns have moved where a token changed width (§8.4.5), and
+A reader lays out every sung line as canonical form writes it (spec
+§4.5), so the two JSON files agree on every sung line's columns and words
+however the input was spaced. Where canonicalising changes the model, the
+two JSON files differ, and the difference is the change: a problem item or
+a list item that is not a property is gone, an unused voicing or an empty
+fingering is dropped, footnote markers are merged and renumbered (§8.3),
+with any sung line whose token that changed laid out again, and
 diagnostics that only the uncanonical input could produce are absent.
 Line numbers in diagnostics and in `sungAt` are those of the file each
-model was read from.
+model was read from. Nothing else may differ between them.
 
 An implementation validates itself by checking, for every entry:
 
@@ -64,3 +67,4 @@ and read what came out before committing it. `python -m tools.corpus
 | 31-empty | A document with nothing in it, which is the empty file |
 | 32-unclosed-verbatim | An unclosed verbatim fence and the blank lines after it |
 | 33-sung-anchors | Bar anchors on sung lines kept at their columns: against bar lines and brackets, the last of several, past a token that grows, and numbers carried in from an anchor-only line and from the end of the line before |
+| 34-pushed-words | Sung lines whose words are pushed so that every chord stays over its character: brackets, a token that grows, `_` padding inside words (one, several, two in one word), padding written in excess or too little, underscores that are words, a chord line longer than its words, a carried anchor with no room, and words forced because they would read as chords without their padding |

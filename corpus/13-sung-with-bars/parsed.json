@@ -74,11 +74,15 @@
                   "bar": null,
                   "items": [
                     {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "la"
+                    },
+                    {
                       "type": "mark",
                       "open": true,
                       "notation": "bracket",
-                      "column": 0,
-                      "words": "la"
+                      "column": 0
                     },
                     {
                       "type": "chord",
@@ -100,14 +104,13 @@
                     {
                       "type": "repeat",
                       "column": 7,
-                      "words": "a "
+                      "words": "a la"
                     },
                     {
                       "type": "mark",
                       "open": false,
                       "notation": "bracket",
-                      "column": 9,
-                      "words": "la"
+                      "column": 9
                     }
                   ]
                 }
@@ -238,13 +241,13 @@
             "part": 0,
             "line": 1,
             "measure": 0,
-            "item": 0
+            "item": 1
           },
           "close": {
             "part": 0,
             "line": 1,
             "measure": 0,
-            "item": 3
+            "item": 4
           },
           "count": 2,
           "endings": []

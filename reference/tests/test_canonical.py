@@ -361,7 +361,7 @@ class TestVoicings:
         assert canon(text) == text
 
 
-# --- §8.4.5 sung lines ---------------------------------------------------------------------------
+# --- §4.5, §8.4.5 sung lines ------------------------------------------------------------------------
 
 
 class TestSungLines:
@@ -374,15 +374,16 @@ class TestSungLines:
 
     def test_a_token_that_grows_pushes_only_when_it_must(self):
         assert canon(fenced("nc    G\nla la la la")) == fenced("N.C.  G\nla la la la")
+        # No room: the words move, and G stays over the second `la`.
         out = canon(fenced("nc G\nla la la la"))
-        assert out == fenced("N.C. G\nla la la la")
+        assert out == fenced("N.C. G\nla   la la la")
         items = parse(out)["sections"][0]["body"][0]["lines"][0]["measures"][0]["items"]
-        assert [(it["column"], it["words"]) for it in items] == [(0, "la la"), (5, " la la")]
+        assert [(it["column"], it["words"]) for it in items] == [(0, "la   "), (5, "la la la")]
 
     def test_only_a_bar_line_touches_its_neighbours(self):
-        assert canon(fenced("(G   D)  Em\nla la la la la")) == fenced("( G  D ) Em\nla la la la la")
+        assert canon(fenced("(G   D)  Em\nla la la la la")) == fenced("( G   D ) Em\nl_a la la la la")
         assert canon(fenced("G|D    :|\nla la la la la")) == fenced("G|D    :|\nla la la la la")
-        assert canon(fenced("(nc  )\nla la la la")) == fenced("( N.C. )\nla la la la")
+        assert canon(fenced("(nc  )\nla la la la")) == fenced("( N.C. )\nl_a la la la")
 
     def test_anchor_keeps_its_column_on_a_sung_line(self):
         assert canon(fenced("@9 G     D\nla la la la")) == fenced("@9 G     D\nla la la la")
@@ -460,13 +461,14 @@ class TestSungAnchors:
         assert line["kind"] == "chart" and "anchorColumn" not in line["measures"][0]
         assert canon(text) == fenced(f"G     D\n{WORDS}\n@5 C | F")
 
-    # A number carried in from elsewhere has no column on this line: it goes
-    # right after the last item that makes its measure, then keeps that column.
+    # A number carried in from elsewhere was written at no column of this
+    # line: the layout puts it right after the last item that makes its
+    # measure, the reader records that column, and it keeps it.
 
     def test_carried_from_an_anchor_only_line(self):
         text = fenced(f"@9\n| G       | D\n{WORDS}")
         m = sung_measures(text)[0]
-        assert m["anchor"] == 9 and "anchorColumn" not in m
+        assert m["anchor"] == 9 and m["anchorColumn"] == 4  # the column the layout gave it
         out = canon(text)
         assert out == fenced(f"| G @9    | D\n{WORDS}")
         assert sung_measures(out)[0]["anchorColumn"] == 4
@@ -474,7 +476,7 @@ class TestSungAnchors:
 
     def test_carried_from_before_the_measure_s_bar_line(self):
         text = fenced(f"@9 | G      | D\n{WORDS}")
-        assert "anchorColumn" not in sung_measures(text)[0]
+        assert sung_measures(text)[0]["anchorColumn"] == 7
         assert canon(text) == fenced(f"   | G @9   | D\n{WORDS}")
 
     def test_carried_from_the_end_of_the_line_before(self):
@@ -482,14 +484,17 @@ class TestSungAnchors:
         # anchor after its last bar.
         text = fenced(f"G     | @9\n{WORDS}\n| D      | Em\n{WORDS}")
         line = parse(text)["sections"][0]["body"][0]["lines"][1]
-        assert line["measures"][0]["anchor"] == 9 and "anchorColumn" not in line["measures"][0]
+        assert line["measures"][0]["anchor"] == 9 and line["measures"][0]["anchorColumn"] == 4
         assert canon(text) == fenced(f"G |\n{WORDS}\n| D @9   | Em\n{WORDS}")
 
-    def test_carried_with_no_room_moves_what_follows(self):
-        # Where the gap cannot hold it, the rest of the line moves right, as
-        # it does for a token that grows; once written, it stays put.
+    def test_carried_with_no_room_pushes_the_words(self):
+        # Where the gap cannot hold it, the words move right, as they do for
+        # a token that grows, and D stays over the `I`; once written, it
+        # stays put.
         text = fenced(f"@9\nG  | D\n{WORDS}")
-        assert canon(text) == fenced(f"G @9 | D\n{WORDS}")
+        out = canon(text)
+        assert out == fenced(f"G @9 | D\nWhen   I first saw you walking down")
+        assert parse(text)["sections"][0]["body"][0]["lines"][0] == parse(out)["sections"][0]["body"][0]["lines"][0]
 
     # Tokens that change width move the anchor as they move any token.
 
@@ -528,11 +533,142 @@ class TestSungAnchors:
     def test_brackets_on_both_sides_are_never_touched_at_once(self):
         doc = parse(fenced(f"( @5 ) G\n{WORDS}"))
         m = doc["sections"][0]["body"][0]["lines"][0]["measures"][0]
-        m["items"][1]["column"] = 3  # the `)` moved against the anchor
+        m["items"][2]["column"] = 3  # the `)` moved against the anchor
         m["anchorColumn"] = 1  # and the anchor against the `(`
         out = write(doc)
         assert out == fenced(f"(@5 )  G\n{WORDS}")
         assert sung_measures(out)[0]["anchor"] == 5
+
+
+# --- §4.5: the words are pushed, never a chord ---------------------------------------------------
+
+STRIP = ("diagnostics", "sungAt")
+
+
+def strip(doc):
+    return {k: v for k, v in doc.items() if k not in STRIP}
+
+
+def attached(chords, words):
+    """What each item that makes a measure is attached to, read from a chord
+    line and its words as written: the letters before its character, spaces
+    and padding left out, and the character itself (None past the end)."""
+    from cifra_md.layout import unpad
+    from cifra_md.parse import _strip_marker, scan_line, substantive
+
+    from cifra_md.text import prepare
+
+    chords, words = prepare(chords)[0], prepare(words)[0]
+    if words.lstrip(" ").startswith(">"):
+        words = _strip_marker(words)
+    bare, ref = unpad(words)
+    out = []
+    for m in scan_line(chords, "en")["measures"]:
+        for it in m["items"]:
+            if substantive(it):
+                p = ref(it["column"])
+                out.append((bare[:p].replace(" ", ""), bare[p] if p < len(bare) else None))
+    return out
+
+
+def sung(chords, words):
+    """Canonicalise one sung line; check that the model read from it is the
+    model read from its canonical text, and that every chord is over the same
+    character in both. Returns the two canonical lines."""
+    text = fenced(f"{chords}\n{words}")
+    out = canon(text)
+    assert strip(parse(text)) == strip(parse(out)), out
+    got = out.split("```\n")[1].split("\n")[:2]
+    assert attached(*got) == attached(chords, words), out
+    return got
+
+
+class TestPushedWords:
+    def test_brackets_push_the_words_not_the_chords(self):
+        assert sung("(G   D)", "When I first saw you") == ["( G   D )", "W_hen I first saw you"]
+        assert sung("(G   D)  Em", "la la la la la") == ["( G   D ) Em", "l_a la la la la"]
+
+    def test_at_a_word_boundary_the_padding_is_spaces(self):
+        assert sung("((G  D", "  when I") == ["( ( G  D", "    when I"]
+        assert sung("nc G", "la la la la") == ["N.C. G", "la   la la la"]
+
+    def test_inside_a_word_the_padding_is_underscores(self):
+        assert sung("(G", "When I saw") == ["( G", "W_hen I saw"]
+        assert sung("((G", "When I saw") == ["( ( G", "Wh__en I saw"]
+
+    def test_a_word_split_across_two_chords_both_pushed(self):
+        assert sung("(G (D", "Quando eu") == ["( G ( D", "Q_uan_do eu"]
+        assert sung("((G ((D", "Quantos eu") == ["( ( G ( ( D", "Qu__anto__s eu"]
+
+    def test_padding_is_not_words(self):
+        doc = parse(fenced("(G   D)\nWhen I first saw you"))
+        items = [it for it in doc["sections"][0]["body"][0]["lines"][0]["measures"][0]["items"] if "words" in it]
+        assert [it["words"] for it in items] == ["W", "hen ", "I first saw you"]
+        assert "".join(it["words"] for it in items) == "When I first saw you"
+
+    def test_written_padding_is_read_back(self):
+        assert sung("( G   D )", "W_hen I first saw you") == ["( G   D )", "W_hen I first saw you"]
+        assert sung("( G ( D", "Q_uan_do eu") == ["( G ( D", "Q_uan_do eu"]
+
+    def test_excess_padding_is_removed(self):
+        assert sung("( G", "W____hen I") == ["( G", "W_hen I"]
+        assert sung("G", "W__hen I") == ["G", "When I"]
+
+    def test_missing_padding_is_added(self):
+        assert sung("((G", "Wh_en I saw") == ["( ( G", "Wh__en I saw"]
+
+    def test_a_chord_over_padding_is_attached_to_what_follows_it(self):
+        assert sung("(G", "W___hen I") == ["( G", "W_hen I"]
+        assert sung("(G (D", "Q_u___a_ndo eu") == ["( G ( D", "Q_u___ando eu"]
+
+    def test_underscores_that_touch_a_space_are_words(self):
+        assert sung("G   D", "la _x_ la") == ["G   D", "la _x_ la"]
+        assert sung("(G", "_x y") == ["( G", "_ x y"]
+        assert sung("G", "x_ y") == ["G", "x_ y"]
+
+    def test_underscores_are_words_on_lines_that_are_not_sung(self):
+        text = fenced("G   D\nla la la\n\nsnake_case words here")
+        assert canon(text) == text
+        assert parse(text)["sections"][0]["body"][0]["lines"][2]["text"] == "snake_case words here"
+
+    def test_a_growing_token_pushes_the_words(self):
+        assert sung("nc G", "Quando eu") == ["N.C. G", "Qua__ndo eu"]
+
+    def test_a_chord_line_longer_than_the_words(self):
+        assert sung("G       D    Em    nc", "When I saw") == ["G       D    Em    N.C.", "When I saw"]
+        # Past the end, a chord keeps its distance from the end of the words.
+        assert sung("nc D    Em", "When I") == ["N.C. D    Em", "Whe__n I"]
+        assert sung("(G       D", "When I") == ["( G       D", "W_hen I"]
+
+    def test_a_carried_anchor_with_no_room_pushes_the_words(self):
+        text = fenced("@9\nG|D\nWhen I first")
+        out = canon(text)
+        assert out == fenced("G @9 | D\nWh_____en I first")
+        assert strip(parse(text)) == strip(parse(out))
+
+    def test_forced_words_stay_forced(self):
+        assert sung("(G   D", "> A tarde era") == ["( G   D", ">  A tarde era"]
+
+    def test_words_that_would_no_longer_read_as_words_are_forced(self):
+        # Without its padding `A_m Em la` is `Am Em la`, which reads as chords.
+        text = "- words: yes\n\n" + fenced("G\nA_m Em la")
+        out = canon(text)
+        assert out == "- words: yes\n\n" + fenced(" G\n>Am Em la")
+        assert strip(parse(text)) == strip(parse(out))
+
+    def test_tabs_nfc_and_trailing_spaces_come_first(self):
+        assert sung("(G\tD", "Cafe\u0301 \t com \t ") == ["( G D", "C_af\u00e9   com"]
+
+    def test_i2_growth_pushes_the_words(self):
+        # An edit leaves Cm[3] where Cm was; I2 makes it Cm[2], wider than
+        # the gap after it, and canonical() lays the line out again.
+        doc = parse(fenced("Cm G    Cm\nQuando eu te vi") + VOICED + "- Cm: x35543\n")
+        line = doc["sections"][0]["body"][0]["lines"][0]
+        line["measures"][0]["items"][0].update(index=3, key="Cm[3]")
+        out = write(doc)
+        assert out.startswith(fenced("Cm[2] G    Cm\nQua___ndo eu te vi"))
+        assert strip(parse(out)) == strip(canonical(doc))
+        assert canonical(canonical(doc)) == canonical(doc)
 
 
 # --- serialising a model that was not read --------------------------------------------------------

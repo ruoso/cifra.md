@@ -100,6 +100,7 @@
     },
     "SungLine": {
       "type": "object",
+      "description": "A chord line with its line of words, as laid out (§4.4, §4.5). The line of words is not stored apart: it is the lead's words and the attached items' words in column order, a gap inside a word between them being `_` padding.",
       "required": ["kind", "measures", "closeBar", "forced"],
       "additionalProperties": false,
       "properties": {
@@ -107,7 +108,7 @@
         "measures": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Measure" } },
         "closeBar": { "$ref": "#/$defs/BarLine" },
         "times": { "type": "integer", "minimum": 1 },
-        "forced": { "type": "boolean", "description": "The lyric line carried a `>` marker (§4.3)." }
+        "forced": { "type": "boolean", "description": "The lyric line carried a `>` marker (§4.3), or the layout forced it because, padded, it would not read as words (§4.5.3)." }
       }
     },
     "LyricLine": {
@@ -129,7 +130,7 @@
     },
     "BreakLine": {
       "type": "object",
-      "description": "A run of blank lines between two lines of a fence's music (§4.5).",
+      "description": "A run of blank lines between two lines of a fence's music (§4.6).",
       "required": ["kind"],
       "additionalProperties": false,
       "properties": { "kind": { "const": "break" } }
@@ -145,9 +146,9 @@
       "dependentRequired": { "anchorColumn": ["anchor"] },
       "properties": {
         "bar": { "$ref": "#/$defs/BarLine", "description": "The bar line before this measure." },
-        "column": { "type": "integer", "minimum": 0, "description": "Column of the bar line, on a sung line." },
+        "column": { "type": "integer", "minimum": 0, "description": "Column of the bar line, on a sung line, as laid out (§4.5)." },
         "anchor": { "type": "integer", "minimum": 1, "description": "Bar number stated in this measure (§2.8)." },
-        "anchorColumn": { "type": "integer", "minimum": 0, "description": "Column of the anchor, on a sung line, when the anchor was written in this measure of this chord line; absent for a number carried forward from elsewhere (§2.8)." },
+        "anchorColumn": { "type": "integer", "minimum": 0, "description": "Column of the anchor, on a sung line, as laid out (§2.8, §4.5): present for every anchor of a sung line, one carried forward from elsewhere included." },
         "number": { "type": "integer", "minimum": 1, "description": "Bar number, counted or stated; only in an unsung document." },
         "stated": { "type": "boolean", "description": "Whether `number` was stated rather than counted." },
         "items": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/Item" } }
@@ -167,7 +168,7 @@
       ]
     },
     "ItemPlacement": {
-      "description": "Present on items of a sung line only (§4.4).",
+      "description": "On a sung line only. `column` is on every item, as laid out (§4.5); `words` only on items attached to the words, those that make a measure (§4.4): the words from the item's column to the next attached item's, `_` padding left out.",
       "properties": {
         "column": { "type": "integer", "minimum": 0 },
         "words": { "type": "string" }
@@ -229,8 +230,7 @@
         "type": { "const": "mark" },
         "open": { "type": "boolean" },
         "notation": { "enum": ["bracket", "barline"] },
-        "column": { "type": "integer", "minimum": 0 },
-        "words": { "type": "string" }
+        "column": { "type": "integer", "minimum": 0 }
       }
     },
     "CountItem": {
@@ -240,8 +240,7 @@
       "properties": {
         "type": { "const": "count" },
         "times": { "type": "integer", "minimum": 1 },
-        "column": { "type": "integer", "minimum": 0 },
-        "words": { "type": "string" }
+        "column": { "type": "integer", "minimum": 0 }
       }
     },
     "EndingItem": {
@@ -251,8 +250,7 @@
       "properties": {
         "type": { "const": "ending" },
         "number": { "type": "integer", "minimum": 1 },
-        "column": { "type": "integer", "minimum": 0 },
-        "words": { "type": "string" }
+        "column": { "type": "integer", "minimum": 0 }
       }
     },
     "UnknownItem": {
@@ -268,7 +266,7 @@
     },
     "LeadItem": {
       "type": "object",
-      "description": "Words before the first item of a sung line (§4.4).",
+      "description": "Words before the first attached item of a sung line (§4.4), when they are not all spaces.",
       "required": ["type", "words"],
       "additionalProperties": false,
       "properties": {

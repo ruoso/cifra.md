@@ -3,7 +3,7 @@
 `write(doc)` is `serialize(canonical(doc))`. `canonical` applies everything
 canonicalisation changes in the model (§8.2): it drops what the canonical
 form does not keep, applies the footnote invariants (§8.3) and lays out
-every sung line (§8.5.5), so that `serialize` only has to print.
+every sung line again (§4.5.3), so that `serialize` only has to print.
 """
 
 from __future__ import annotations
@@ -13,306 +13,20 @@ import re
 
 from .chord import DEFAULT_DIALECT, DIALECTS
 from .frets import format_fingers, format_frets
+from .layout import (
+    chart_line_text,
+    converge,
+    lyric_text,
+    sung_text,
+)
 from .parse import (
-    ANNOTATION,
-    BRACKET_HEADING,
     CLOSING_SEQUENCE,
     COUNT,
-    LABEL_HEADING,
-    LYRIC_MARKER,
     _is_chord_run,
     _Parser,
-    divide_words,
-    substantive,
     ascii_lower,
     key_for,
 )
-
-
-# --- item text -------------------------------------------------------------------
-
-
-def item_text(it: dict) -> str:
-    t = it["type"]
-    if t == "chord":
-        return it["key"]
-    if t == "repeat":
-        return "%"
-    if t == "nochord":
-        return "N.C."
-    if t == "beat":
-        return it["mark"]
-    if t == "mark":
-        if it["notation"] == "bracket":
-            return "(" if it["open"] else ")"
-        return ":"
-    if t == "count":
-        return f"x{it['times']}"
-    if t == "ending":
-        return f"{it['number']}."
-    if t == "unknown":
-        return it["text"]
-    return ""
-
-
-def _is_open_bar(it):
-    return it["type"] == "mark" and it["notation"] == "barline" and it["open"]
-
-
-def _is_close_bar(it):
-    return it["type"] == "mark" and it["notation"] == "barline" and not it["open"]
-
-
-# --- chord line tokens -------------------------------------------------------------
-
-
-def line_tokens(line: dict, sung: bool = False) -> list[dict]:
-    """A chord line as a sequence of bar, anchor and item tokens, in writing
-    order (§8.5.4).
-
-    Bar tokens: {"kind": "bar", "bar": "|" or "||", "close": item|None,
-    "open": item|None, "measure": measure|None}. The bar token that carries a
-    measure's bar line is the last one written before the measure's first
-    item that makes it a measure; any other bar token is one the model holds
-    no place for: one written so that a repeat mark has a bar line to stand
-    against, or the line's closing bar.
-    """
-    toks: list[dict] = []
-    ms = line["measures"]
-    n = len(ms)
-    pending_close = None  # a close mark waiting for the next measure's bar
-
-    def bar(open_=None, close=None):
-        return {"kind": "bar", "bar": "|", "close": close, "open": open_, "measure": None}
-
-    for i, m in enumerate(ms):
-        items = [it for it in m["items"] if it["type"] != "lead"]
-        start = len(toks)
-        anchor = {"kind": "anchor", "text": f"@{m['anchor']}", "measure": m} if "anchor" in m else None
-        if i > 0:
-            toks.append(bar(close=pending_close))
-            pending_close = None
-        subst = [j for j, it in enumerate(items) if substantive(it)]
-        first = subst[0] if subst else None
-        last_subst = subst[-1] if subst else None
-        for j, it in enumerate(items):
-            mine = toks[start:]
-            if j == first:
-                bars = [t for t in mine if t["kind"] == "bar"]
-                if m["bar"] is not None:
-                    if not bars:
-                        toks.append(bar())
-                        bars = [toks[-1]]
-                    bars[-1]["bar"] = m["bar"]
-                    bars[-1]["measure"] = m
-                if anchor is not None and not sung:
-                    toks.append(anchor)
-            last = toks[-1] if len(toks) > start else None
-            if _is_open_bar(it):
-                if last is not None and last["kind"] == "bar" and last["open"] is None:
-                    last["open"] = it
-                else:
-                    toks.append(bar(open_=it))
-            elif _is_close_bar(it):
-                if j == len(items) - 1 and i + 1 < n:
-                    pending_close = it
-                else:
-                    toks.append(bar(close=it))
-            else:
-                toks.append({"kind": "item", "item": it, "text": item_text(it)})
-        if anchor is not None and sung and subst:
-            toks.insert(_anchor_slot(toks, start, m.get("anchorColumn")), anchor)
-    close_bar = line["closeBar"]
-    if close_bar is not None:
-        last_bar = max((x for x, t in enumerate(toks) if t["kind"] == "bar"), default=None)
-        if (
-            last_bar is not None
-            and toks[last_bar]["measure"] is None
-            and not any(t["kind"] == "item" and substantive(t["item"]) for t in toks[last_bar + 1 :])
-        ):
-            toks[last_bar]["bar"] = close_bar
-        else:
-            toks.append(bar())
-            toks[-1]["bar"] = close_bar
-    return toks
-
-
-def _anchor_slot(toks: list[dict], start: int, column) -> int:
-    """Where a sung measure's anchor goes among the measure's tokens,
-    `toks[start:]` (§8.4.4 step 5): in the stretch between the bar line
-    before the measure's first item that makes it and the first bar line
-    after its last, so that it reads back in the same measure; there,
-    before the first token that wants a column greater than its own, or
-    right after the last item that makes the measure when it has no
-    column."""
-    made = [x for x in range(start, len(toks)) if toks[x]["kind"] == "item" and substantive(toks[x]["item"])]
-    if column is None:
-        return made[-1] + 1
-    lo = made[0]
-    while lo > start and toks[lo - 1]["kind"] != "bar":
-        lo -= 1
-    hi = made[-1] + 1
-    while hi < len(toks) and toks[hi]["kind"] != "bar":
-        hi += 1
-    for x in range(lo, hi):
-        want = _desired(toks[x])
-        if want is not None and want > column:
-            return x
-    return hi
-
-
-def _token_text(t: dict) -> str:
-    if t["kind"] == "bar":
-        return (":" if t["close"] else "") + t["bar"] + (":" if t["open"] else "")
-    return t["text"]
-
-
-GUARD = ","
-
-
-def chart_line_text(line: dict, dialect: str = DEFAULT_DIALECT) -> str:
-    text = " ".join(_token_text(t) for t in line_tokens(line))
-    if _misread(text, dialect):
-        # A chord line whose first word would make it a heading, an
-        # annotation or words is written after a `,`, which a reader drops.
-        text = GUARD + " " + text
-    return text
-
-
-def _misread(text: str, dialect: str) -> bool:
-    """Would a reader take this chord line for a heading, an annotation or words?"""
-    bm = BRACKET_HEADING.match(text)
-    if bm and bm.group(2) and not bm.group(2).isdigit():
-        return True
-    lm = LABEL_HEADING.match(text)
-    if lm and lm.group(2) and _is_chord_run(lm.group(3), dialect):
-        return True
-    return bool(ANNOTATION.match(text) or LYRIC_MARKER.match(text))
-
-
-# --- sung lines --------------------------------------------------------------------
-
-
-def _desired(t: dict):
-    if t["kind"] == "item":
-        return t["item"].get("column")
-    if t["kind"] == "anchor":
-        return t["measure"].get("anchorColumn")
-    if t["kind"] == "bar":
-        if t["close"] is not None and "column" in t["close"]:
-            return t["close"]["column"]
-        if t["measure"] is not None and "column" in t["measure"]:
-            return t["measure"]["column"]
-        if t["open"] is not None and "column" in t["open"]:
-            return max(t["open"]["column"] - len(t["bar"]), 0)
-    return None
-
-
-def _is_bracket(t: dict, open_: bool) -> bool:
-    if t["kind"] != "item":
-        return False
-    it = t["item"]
-    return it["type"] == "mark" and it["notation"] == "bracket" and it["open"] == open_
-
-
-def _may_touch(prev: dict, t: dict) -> bool:
-    """Two tokens may be written with no space between them only where one is
-    a bar line, which a reader splits off before anything else, and no colon
-    would then be taken for a repeat mark; or where one is an anchor and the
-    other a bar line, a `(` before it or a `)` after it, which a reader
-    splits off again, though not both brackets, since `(@9)` balances and is
-    one word (§8.4.5)."""
-    if t["kind"] == "anchor":
-        return prev["kind"] == "bar" or _is_bracket(prev, True)
-    if prev["kind"] == "anchor":
-        return t["kind"] == "bar" or (_is_bracket(t, False) and not prev.get("after_open"))
-    if prev["kind"] == "bar" and t["kind"] == "item":
-        return not t["text"].startswith(":")
-    if prev["kind"] == "item" and t["kind"] == "bar":
-        return not prev["text"].endswith(":")
-    return False
-
-
-def layout_sung(line: dict, dialect: str = DEFAULT_DIALECT) -> list[dict]:
-    """Place the chord line's tokens, each at its column where it fits; the
-    column chosen is left in "at"."""
-    toks = _place(line_tokens(line, sung=True))
-    if _misread(_render_sung(toks), dialect):
-        # As on a chart line, a `,` at column 0 keeps the line a chord line.
-        toks = _place([{"kind": "guard", "text": GUARD}] + line_tokens(line, sung=True))
-    return toks
-
-
-def _place(toks: list[dict]) -> list[dict]:
-    pos = 0
-    prev = None
-    for t in toks:
-        want = 0 if t["kind"] == "guard" else _desired(t)
-        if prev is None:
-            at = want if want is not None else 0
-        elif want is not None and (pos < want or (pos == want and _may_touch(prev, t))):
-            at = want
-        else:
-            at = pos + 1
-        t["at"] = at
-        if t["kind"] == "anchor":
-            t["after_open"] = prev is not None and at == pos and _is_bracket(prev, True)
-        pos = at + len(_token_text(t))
-        prev = t
-    return toks
-
-
-def _render_sung(toks: list[dict]) -> str:
-    out = ""
-    for t in toks:
-        out += " " * (t["at"] - len(out)) + _token_text(t)
-    return out
-
-
-def _lyric(line: dict) -> str:
-    """The line of words, rebuilt from the words its items hold."""
-    items = sorted((it for m in line["measures"] for it in m["items"]), key=lambda it: it["column"])
-    if items and items[0]["type"] == "lead":
-        text = items[0]["words"]
-        items = items[1:]
-    else:
-        text = " " * (items[0]["column"] if items else 0)
-    return text + "".join(it.get("words", "") for it in items)
-
-
-def _settle_sung(line: dict, dialect: str) -> None:
-    """Give a sung line its canonical columns and divide the words again."""
-    lyric = _lyric(line)
-    for m in line["measures"]:
-        m["items"] = [it for it in m["items"] if it["type"] != "lead"]
-    toks = layout_sung(line, dialect)
-    for t in toks:
-        if t["kind"] == "item":
-            t["item"]["column"] = t["at"]
-        elif t["kind"] == "bar":
-            x = t["at"]
-            if t["close"] is not None:
-                t["close"]["column"] = x
-                x += 1
-            if t["measure"] is not None:
-                t["measure"]["column"] = x
-            if t["open"] is not None:
-                t["open"]["column"] = x + len(t["bar"])
-        elif t["kind"] == "anchor":
-            t["measure"]["anchorColumn"] = t["at"]
-    items = sorted((it for m in line["measures"] for it in m["items"]), key=lambda it: it["column"])
-    divide_words(items, lyric)
-    lead = lyric[: items[0]["column"]]
-    if lead.strip(" "):
-        line["measures"][0]["items"].insert(0, {"type": "lead", "column": 0, "words": lead})
-
-
-def sung_lines(line: dict, dialect: str = DEFAULT_DIALECT) -> list[str]:
-    chords = _render_sung(layout_sung(line, dialect))
-    lyric = _lyric(line)
-    if line.get("forced"):
-        lyric = ">" + lyric[1:]
-    return [chords, lyric]
 
 
 # --- the canonical model ---------------------------------------------------------------
@@ -433,7 +147,8 @@ def canonical(doc: dict) -> dict:
                 continue
             for line in part["lines"]:
                 if line["kind"] == "sung":
-                    _settle_sung(line, dialect)
+                    # The layout again, for tokens whose width §8.3 changed (§4.5.3).
+                    converge(line, lyric_text(line), dialect)
     _rederive(doc, dialect)
     return doc
 
@@ -479,7 +194,7 @@ def music_lines(lines: list[dict], dialect: str = DEFAULT_DIALECT) -> list[str]:
         if k == "chart":
             out.append(chart_line_text(line, dialect))
         elif k == "sung":
-            out.extend(sung_lines(line, dialect))
+            out.extend(sung_text(line, dialect))
         elif k == "lyric":
             out.append(">" + line["text"][1:] if line["forced"] else line["text"])
         elif k == "break":

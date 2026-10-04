@@ -19,13 +19,12 @@
                     {
                       "type": "nochord",
                       "column": 0,
-                      "words": "When I"
+                      "words": "When I first s"
                     },
                     {
                       "type": "count",
                       "times": 2,
-                      "column": 6,
-                      "words": " first s"
+                      "column": 6
                     },
                     {
                       "type": "chord",
@@ -74,11 +73,15 @@
                   "bar": null,
                   "items": [
                     {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "l"
+                    },
+                    {
                       "type": "mark",
                       "open": true,
                       "notation": "bracket",
-                      "column": 0,
-                      "words": "la"
+                      "column": 0
                     },
                     {
                       "type": "chord",
@@ -95,7 +98,7 @@
                         "bass": null
                       },
                       "column": 2,
-                      "words": " la"
+                      "words": "a la"
                     },
                     {
                       "type": "chord",
@@ -111,15 +114,14 @@
                         "extensions": [],
                         "bass": null
                       },
-                      "column": 5,
-                      "words": " l"
+                      "column": 6,
+                      "words": " la la l"
                     },
                     {
                       "type": "mark",
                       "open": false,
                       "notation": "bracket",
-                      "column": 7,
-                      "words": "a la l"
+                      "column": 8
                     },
                     {
                       "type": "chord",
@@ -135,12 +137,12 @@
                         "extensions": [],
                         "bass": null
                       },
-                      "column": 13,
+                      "column": 14,
                       "words": "a la"
                     }
                   ],
                   "anchor": 9,
-                  "anchorColumn": 9
+                  "anchorColumn": 10
                 }
               ],
               "closeBar": null,
@@ -315,20 +317,18 @@
                         "bass": null
                       },
                       "column": 8,
-                      "words": "three"
+                      "words": "three four five"
                     },
                     {
                       "type": "mark",
                       "open": false,
                       "notation": "barline",
-                      "column": 13,
-                      "words": " four "
+                      "column": 13
                     },
                     {
                       "type": "count",
                       "times": 2,
-                      "column": 19,
-                      "words": "five"
+                      "column": 19
                     }
                   ],
                   "column": 7
@@ -346,13 +346,13 @@
             "part": 0,
             "line": 1,
             "measure": 0,
-            "item": 0
+            "item": 1
           },
           "close": {
             "part": 0,
             "line": 1,
             "measure": 0,
-            "item": 3
+            "item": 4
           },
           "count": 2,
           "endings": []

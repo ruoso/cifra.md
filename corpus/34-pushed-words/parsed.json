@@ -1,11 +1,11 @@
 {
-  "title": null,
+  "title": "Pushed words",
   "properties": [],
   "sections": [
     {
       "name": "Verse",
       "heading": "markdown",
-      "anchor": 1,
+      "anchor": null,
       "body": [
         {
           "type": "music",
@@ -19,7 +19,13 @@
                     {
                       "type": "lead",
                       "column": 0,
-                      "words": "When"
+                      "words": "W"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0
                     },
                     {
                       "type": "chord",
@@ -35,16 +41,9 @@
                         "extensions": [],
                         "bass": null
                       },
-                      "column": 4,
-                      "words": " I"
-                    }
-                  ],
-                  "anchor": 12,
-                  "anchorColumn": 0
-                },
-                {
-                  "bar": "|",
-                  "items": [
+                      "column": 2,
+                      "words": "hen "
+                    },
                     {
                       "type": "chord",
                       "symbol": "D",
@@ -60,10 +59,32 @@
                         "bass": null
                       },
                       "column": 6,
-                      "words": " first saw you"
+                      "words": "I firs"
+                    },
+                    {
+                      "type": "mark",
+                      "open": false,
+                      "notation": "bracket",
+                      "column": 8
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 12,
+                      "words": "t saw you"
                     }
-                  ],
-                  "column": 5
+                  ]
                 }
               ],
               "closeBar": null,
@@ -73,12 +94,12 @@
               "kind": "sung",
               "measures": [
                 {
-                  "bar": "|",
+                  "bar": null,
                   "items": [
                     {
-                      "type": "lead",
+                      "type": "nochord",
                       "column": 0,
-                      "words": "walki"
+                      "words": "Qua"
                     },
                     {
                       "type": "chord",
@@ -95,11 +116,340 @@
                         "bass": null
                       },
                       "column": 5,
-                      "words": "ng dow"
+                      "words": "ndo eu "
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Am",
+                      "index": 1,
+                      "key": "Am",
+                      "chord": {
+                        "root": {
+                          "letter": "A",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 12,
+                      "words": "te vi"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "Qu"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 2
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 4,
+                      "words": "anto"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 6
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 8
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 10,
+                      "words": "s eu"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "W"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 2,
+                      "words": "hen"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 5,
+                      "words": " I was"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "lead",
+                      "column": 0,
+                      "words": "Wh"
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 0
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 2
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 4,
+                      "words": "en I saw"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "la _x "
+                    },
+                    {
+                      "type": "mark",
+                      "open": true,
+                      "notation": "bracket",
+                      "column": 4
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 6,
+                      "words": "_ la"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "nochord",
+                      "column": 0,
+                      "words": "Whe"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "D",
+                      "index": 1,
+                      "key": "D",
+                      "chord": {
+                        "root": {
+                          "letter": "D",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 5,
+                      "words": "n I"
+                    },
+                    {
+                      "type": "chord",
+                      "symbol": "Em",
+                      "index": 1,
+                      "key": "Em",
+                      "chord": {
+                        "root": {
+                          "letter": "E",
+                          "accidental": 0
+                        },
+                        "quality": "minor",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 10,
+                      "words": ""
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": false
+            },
+            {
+              "kind": "break"
+            },
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 0,
+                      "words": "Wh"
                     }
                   ],
-                  "column": 0,
-                  "anchor": 5,
+                  "anchor": 9,
                   "anchorColumn": 2
                 },
                 {
@@ -119,422 +469,11 @@
                         "extensions": [],
                         "bass": null
                       },
-                      "column": 11,
-                      "words": "n the "
+                      "column": 7,
+                      "words": "en I first"
                     }
                   ],
-                  "column": 9
-                },
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "chord",
-                      "symbol": "Em",
-                      "index": 1,
-                      "key": "Em",
-                      "chord": {
-                        "root": {
-                          "letter": "E",
-                          "accidental": 0
-                        },
-                        "quality": "minor",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 17,
-                      "words": "road"
-                    }
-                  ],
-                  "column": 15
-                }
-              ],
-              "closeBar": "|",
-              "forced": false
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": null,
-                  "items": [
-                    {
-                      "type": "lead",
-                      "column": 0,
-                      "words": "and"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "G",
-                      "index": 1,
-                      "key": "G",
-                      "chord": {
-                        "root": {
-                          "letter": "G",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 3,
-                      "words": " the sun"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "D",
-                      "index": 1,
-                      "key": "D",
-                      "chord": {
-                        "root": {
-                          "letter": "D",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 11,
-                      "words": " was low"
-                    }
-                  ],
-                  "anchor": 5,
-                  "anchorColumn": 0
-                }
-              ],
-              "closeBar": null,
-              "forced": false
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "lead",
-                      "column": 0,
-                      "words": "la l"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "G",
-                      "index": 1,
-                      "key": "G",
-                      "chord": {
-                        "root": {
-                          "letter": "G",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 4,
-                      "words": "a la "
-                    }
-                  ],
-                  "column": 0,
-                  "anchor": 5,
-                  "anchorColumn": 1
-                },
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "chord",
-                      "symbol": "D",
-                      "index": 1,
-                      "key": "D",
-                      "chord": {
-                        "root": {
-                          "letter": "D",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 9,
-                      "words": "la la la"
-                    },
-                    {
-                      "type": "mark",
-                      "open": true,
-                      "notation": "bracket",
-                      "column": 13
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "Em",
-                      "index": 1,
-                      "key": "Em",
-                      "chord": {
-                        "root": {
-                          "letter": "E",
-                          "accidental": 0
-                        },
-                        "quality": "minor",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 17,
-                      "words": " la "
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "C",
-                      "index": 1,
-                      "key": "C",
-                      "chord": {
-                        "root": {
-                          "letter": "C",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 21,
-                      "words": "la"
-                    },
-                    {
-                      "type": "mark",
-                      "open": false,
-                      "notation": "bracket",
-                      "column": 23
-                    }
-                  ],
-                  "column": 5,
-                  "anchor": 7,
-                  "anchorColumn": 14
-                }
-              ],
-              "closeBar": null,
-              "forced": false
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": null,
-                  "items": [
-                    {
-                      "type": "lead",
-                      "column": 0,
-                      "words": "and"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "G",
-                      "index": 1,
-                      "key": "G",
-                      "chord": {
-                        "root": {
-                          "letter": "G",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 3,
-                      "words": " I sai"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "D",
-                      "index": 1,
-                      "key": "D",
-                      "chord": {
-                        "root": {
-                          "letter": "D",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 9,
-                      "words": "d hell"
-                    },
-                    {
-                      "type": "nochord",
-                      "column": 15,
-                      "words": "o"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "Em",
-                      "index": 1,
-                      "key": "Em",
-                      "chord": {
-                        "root": {
-                          "letter": "E",
-                          "accidental": 0
-                        },
-                        "quality": "minor",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 23,
-                      "words": ""
-                    }
-                  ],
-                  "anchor": 8,
-                  "anchorColumn": 20
-                }
-              ],
-              "closeBar": null,
-              "forced": false
-            },
-            {
-              "kind": "break"
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "lead",
-                      "column": 0,
-                      "words": "an"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "G",
-                      "index": 1,
-                      "key": "G",
-                      "chord": {
-                        "root": {
-                          "letter": "G",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 2,
-                      "words": "d you said"
-                    }
-                  ],
-                  "column": 0,
-                  "anchor": 9,
-                  "anchorColumn": 4
-                },
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "chord",
-                      "symbol": "D",
-                      "index": 1,
-                      "key": "D",
-                      "chord": {
-                        "root": {
-                          "letter": "D",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 12,
-                      "words": " goodbye"
-                    }
-                  ],
-                  "column": 10
-                }
-              ],
-              "closeBar": null,
-              "forced": false
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": null,
-                  "items": [
-                    {
-                      "type": "chord",
-                      "symbol": "G",
-                      "index": 1,
-                      "key": "G",
-                      "chord": {
-                        "root": {
-                          "letter": "G",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 0,
-                      "words": "one more time"
-                    }
-                  ]
-                }
-              ],
-              "closeBar": "|",
-              "forced": false
-            },
-            {
-              "kind": "sung",
-              "measures": [
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "lead",
-                      "column": 0,
-                      "words": "on"
-                    },
-                    {
-                      "type": "chord",
-                      "symbol": "C",
-                      "index": 1,
-                      "key": "C",
-                      "chord": {
-                        "root": {
-                          "letter": "C",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 2,
-                      "words": "e more ti"
-                    }
-                  ],
-                  "column": 0,
-                  "anchor": 10,
-                  "anchorColumn": 4
-                },
-                {
-                  "bar": "|",
-                  "items": [
-                    {
-                      "type": "chord",
-                      "symbol": "D",
-                      "index": 1,
-                      "key": "D",
-                      "chord": {
-                        "root": {
-                          "letter": "D",
-                          "accidental": 0
-                        },
-                        "quality": "major",
-                        "extensions": [],
-                        "bass": null
-                      },
-                      "column": 11,
-                      "words": "me"
-                    }
-                  ],
-                  "column": 9
+                  "column": 5
                 }
               ],
               "closeBar": null,
@@ -547,24 +486,107 @@
         {
           "open": {
             "part": 0,
-            "line": 3,
-            "measure": 1,
+            "line": 0,
+            "measure": 0,
             "item": 1
           },
           "close": {
             "part": 0,
-            "line": 3,
-            "measure": 1,
+            "line": 0,
+            "measure": 0,
             "item": 4
           },
           "count": 2,
           "endings": []
         }
       ]
+    },
+    {
+      "name": "Chorus",
+      "heading": "markdown",
+      "anchor": null,
+      "body": [
+        {
+          "type": "music",
+          "lines": [
+            {
+              "kind": "sung",
+              "measures": [
+                {
+                  "bar": null,
+                  "items": [
+                    {
+                      "type": "chord",
+                      "symbol": "G",
+                      "index": 1,
+                      "key": "G",
+                      "chord": {
+                        "root": {
+                          "letter": "G",
+                          "accidental": 0
+                        },
+                        "quality": "major",
+                        "extensions": [],
+                        "bass": null
+                      },
+                      "column": 1,
+                      "words": "Am Em la"
+                    }
+                  ]
+                }
+              ],
+              "closeBar": null,
+              "forced": true
+            }
+          ]
+        }
+      ],
+      "groups": []
     }
   ],
   "blocks": [],
   "sung": true,
-  "sungAt": 4,
-  "diagnostics": []
+  "sungAt": 6,
+  "diagnostics": [
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 9
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 9
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 9
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 11
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 13
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 13
+    },
+    {
+      "code": "stray-mark",
+      "message": "an opening mark inside an open repeat group",
+      "line": 15
+    },
+    {
+      "code": "unclosed-group",
+      "message": "a repeat group was opened and never closed",
+      "line": 20
+    }
+  ]
 }

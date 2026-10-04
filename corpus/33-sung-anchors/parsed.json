@@ -98,8 +98,8 @@
                       "words": "ng dow"
                     }
                   ],
-                  "anchor": 5,
                   "column": 0,
+                  "anchor": 5,
                   "anchorColumn": 2
                 },
                 {
@@ -234,8 +234,8 @@
                       "words": "a la "
                     }
                   ],
-                  "anchor": 5,
                   "column": 0,
+                  "anchor": 5,
                   "anchorColumn": 1
                 },
                 {
@@ -256,14 +256,13 @@
                         "bass": null
                       },
                       "column": 9,
-                      "words": "la l"
+                      "words": "la la la"
                     },
                     {
                       "type": "mark",
                       "open": true,
                       "notation": "bracket",
-                      "column": 13,
-                      "words": "a la"
+                      "column": 13
                     },
                     {
                       "type": "chord",
@@ -303,12 +302,11 @@
                       "type": "mark",
                       "open": false,
                       "notation": "bracket",
-                      "column": 23,
-                      "words": ""
+                      "column": 23
                     }
                   ],
-                  "anchor": 7,
                   "column": 5,
+                  "anchor": 7,
                   "anchorColumn": 14
                 }
               ],
@@ -422,8 +420,8 @@
                       "words": "d you said"
                     }
                   ],
-                  "anchor": 9,
                   "column": 0,
+                  "anchor": 9,
                   "anchorColumn": 4
                 },
                 {
@@ -511,8 +509,8 @@
                       "words": "e more ti"
                     }
                   ],
-                  "anchor": 10,
                   "column": 0,
+                  "anchor": 10,
                   "anchorColumn": 4
                 },
                 {
