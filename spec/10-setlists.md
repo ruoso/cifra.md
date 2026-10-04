@@ -284,7 +284,7 @@ produce it, and a canonical writer (§10.9) must be able to take it back.
 
 ```
 Setlist
-  title           from the level-1 heading, or none ("" is a title)
+  title           from the level-1 heading, or none (`#` alone is none, §10.3.1)
   properties[]    entries under the title, in order (§10.3.1)
   body[]          items and notes blocks, in document order
 
