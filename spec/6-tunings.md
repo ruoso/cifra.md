@@ -26,7 +26,7 @@ accidental `#`, `b`, `##`, `bb` (and the `♯`, `♭` forms). The accidental is
 applied to the pitch, so `Cb4` sounds the same as `B3` and `B#3` the same as
 `C4`.
 
-A reader MAY accept a lowercase letter; a writer MUST use uppercase.
+The letter is uppercase, as in a chord symbol (§5.1.1).
 
 ## 6.2 Writing a tuning
 

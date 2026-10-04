@@ -27,7 +27,7 @@ here.
 | 11 | Columns on sung lines | Counted in code points (§4.4) | UTF-16 code units; identical outside the supplementary planes |
 | 12 | Block order when writing | First appearance of the tuning, default variation first (§8.3) | Sorted by normalised tuning text, then name |
 | 13 | Voicing line spacing | Canonical `key = frets` with single spaces; any whitespace accepted | Same |
-| 14 | Lowercase root letters | Readers MAY accept; writers use uppercase (§5.1.1) | Accepted |
+| 14 | Lowercase root letters | Not chords (§5.1.1) | Accepted |
 | 15 | Legacy `# Tuning` and unlabelled `# Voicings` | Appendix A: MAY accept, convert on save | Accepted and migrated on load |
 | 16 | Bracket heading with digits only | Never a heading (§1.6.2) | Same |
 | 17 | `[1]` | Equals the bare key; never written (§2.4) | Same |
@@ -35,8 +35,8 @@ here.
 | 19 | Unknown tokens | Kept, reported (§2.8) | Same |
 | 20 | Section with no lines | Kept (§1.7) | Kept when named |
 
-Items 1 to 10, 2a to 2c, 8a, 8b and 12 are behavioural changes the reference parser would
-need to make to conform. Items 11 and 13 to 20 are confirmations.
+Items 1 to 10, 2a to 2c, 8a, 8b, 12 and 14 are behavioural changes the reference parser would
+need to make to conform. Items 11, 13 and 15 to 20 are confirmations.
 
 ## Decisions taken in this draft that the reference did not have to make
 

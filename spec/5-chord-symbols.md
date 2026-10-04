@@ -26,8 +26,9 @@ normalised: `CM7` is a major seventh, `Cm7` a minor seventh.
 A letter `A` to `G`, followed by an optional accidental: `#` or `♯` (sharp),
 `b` or `♭` (flat), `##` (double sharp), `bb` (double flat).
 
-`Bb` is B flat. `B` is B. `bb` is B flat, if a reader accepts lowercase
-letters, which it MAY; a writer MUST use uppercase.
+`Bb` is B flat. `B` is B. The letter is uppercase: `bb`, `am` and `e7` are
+not chords. Nobody writes a chord that way, and ruling it out is what keeps
+the lyric words *a*, *e* and *be* from reading as chords (§4.1).
 
 ### 5.1.2 Bass
 

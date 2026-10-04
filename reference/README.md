@@ -31,9 +31,6 @@ takes it back.
 
 ## Choices the specification leaves open
 
-- Lowercase root letters are not chords (§5.1.1 says a reader MAY accept
-  them). The strict choice keeps lyric words such as *a*, *e* and *be* from
-  reading as chords.
 - Diagnostics are sorted by line number.
 
 ## Tests
