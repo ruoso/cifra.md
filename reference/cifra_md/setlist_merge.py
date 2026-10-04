@@ -1,6 +1,7 @@
 """The merge of setlists (spec §11.13). `merge` in merge.py calls
 `merge_setlists` with the three canonical texts once whole files, unreadable
-inputs and unchanged sides are dealt with (§11.2 to §11.4)."""
+inputs, marked inputs and unchanged sides are dealt with (§11.2 to §11.4):
+a setlist that holds a marker line is never merged, as a song is not."""
 
 from __future__ import annotations
 

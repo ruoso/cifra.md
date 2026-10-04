@@ -84,9 +84,11 @@ def test_unchanged_sides_change_nothing(entry):
     for x in merge_inputs(entry):
         if x is not None:
             try:
-                inputs.append(x.decode("utf-8"))
+                x = x.decode("utf-8")
             except UnicodeDecodeError:
-                pass
+                continue
+            if not marker_lines(x):  # a marked input is never merged (§11.4)
+                inputs.append(x)
     for b in inputs:
         for x in inputs:
             want = canon(entry, x)

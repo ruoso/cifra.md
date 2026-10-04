@@ -81,6 +81,8 @@ EXAMPLES = [
     ("11.15.16", 0, "57-new-chord-on-both-sides", "result.cifra.md", "whole"),
     ("11.15.17", 0, "56-only-line-of-a-chord-deleted", "base.cifra.md", "whole"),
     ("11.15.17", 1, "56-only-line-of-a-chord-deleted", "result.cifra.md", "whole"),
+    ("11.15.18", 0, "26-marked-ours", "ours.cifra.md", "whole"),
+    ("11.15.18", 1, "26-marked-ours", "conflicts.json", "whole"),
 ]
 
 

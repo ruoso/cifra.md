@@ -41,7 +41,8 @@ Its **outcome** is one of:
 - a **result**: a text in canonical form (§8, §10.9);
 - **deleted**: the file does not exist after the merge;
 - **conflicts**: a list of conflicts (§11.12.1) and, unless the only
-  conflict is about the whole file (§11.4), a **marked text** (§11.12.2).
+  conflict is about the whole file or a marked input (§11.4), a **marked
+  text** (§11.12.2).
 
 What kind of file is merged is decided by its name. A file whose name
 ends in `.setlist.md` is merged as a setlist (§11.13); any other file
@@ -72,7 +73,13 @@ replace a file with the uploaded one performs no merge.
 A merge proceeds in this order:
 
 1. **Whole files.** If any input is absent, or any present input is not
-   UTF-8, the outcome is decided by §11.4, which may go on to step 2.
+   UTF-8 or holds a marker line (§11.12.3), the outcome is decided by
+   §11.4, which may go on to step 2. A present input that holds a marker
+   line is never merged: once §11.4 has dealt with an unreadable input
+   and with a file deleted on both sides, which need no look at what the
+   texts say, the merge stops there, before anything is canonicalised or
+   compared, with an `unresolved` conflict, and ours stays exactly as it
+   is.
 2. **Canonicalise.** Each present input is read and canonicalised: a song
    as §8 says, a setlist as §10.9 says. Everything below works on the
    three canonical models, and an absent base is the empty document.
@@ -118,12 +125,15 @@ chapter is written so that it does.
 - **Unchanged sides change nothing.** Writing *c(x)* for the canonical
   text of *x*: merging *b*, *x*, *x* gives *c(x)*; merging *b*, *b*, *x*
   and merging *b*, *x*, *b* both give *c(x)*. Here *b* and *x* are the
-  same when their canonical texts are (§11.2 step 3).
+  same when their canonical texts are (§11.2 step 3), and neither holds a
+  marker line: a marked text is not merged at all (§11.4).
 - **It is symmetric.** Merging base, theirs, ours gives the same result,
   or deletes alike, as merging base, ours, theirs. With conflicts, it
   gives the same conflicts in the same order, each with its ours and
   theirs exchanged, at the same lines of a marked text that is the
-  original with the two sides of every region exchanged. There is one
+  original with the two sides of every region exchanged. An `unresolved`
+  conflict names the same inputs, ours's line and theirs's exchanged; what
+  stays is in each case the side doing the merging. There is one
   exception, in the numbers given to footnote variants that occur only
   inside conflicts (§11.9.5).
 - **Independent changes do not conflict.** Changes to different
@@ -171,6 +181,26 @@ deleting it deletes it.
 document (§1.3) and there is nothing to merge: the outcome is a `file`
 conflict saying which sides are unreadable, with no marked text. A merger
 MUST NOT rewrite such a file.
+
+**Marked inputs.** A present input that holds a marker line (§11.12.3),
+after the text layer of §1.3, is a marked text: a merge someone left
+unresolved, not a document (§8.1). A marked input is never merged. What
+its markers meant, which lines were whose and whether a later edit
+resolved some of them, the merge cannot know, and canonicalising would
+keep the marker lines as notes or tokens and carry them into a result
+that is then not canonical. So the outcome is a single `unresolved`
+conflict naming each marked input, base, ours or theirs, with the 1-based
+line number, after the text layer, of its first marker line; and ours
+stays exactly as it is, byte for byte, or stays absent. There is no
+result and no marked text: what someone has to resolve is the marked
+input itself, and when it is ours it is already in place. Whether the
+other inputs are absent, changed or unchanged makes no difference.
+
+The cases are taken in this order: an input that is not UTF-8 (a
+`file` conflict, which says nothing of the other inputs' markers); a file
+deleted on both sides, which is deleted whatever base holds; a marked
+input; then the rest of the table above. The first two need no look at
+what the texts say; everything after the check for markers does.
 
 **Not canonical.** A text that is not canonical is canonicalised before
 it is merged (§11.2), which may drop what its reader reported (§8.2). A
@@ -815,6 +845,7 @@ The kinds, for songs:
 | Kind | About | Base, ours and theirs are |
 |---|---|---|
 | `file` | the whole file: deleted on one side and changed on the other, or not UTF-8 | which side deleted it, or which sides are unreadable |
+| `unresolved` | the whole file: an input that holds a marker line (§11.4) | for each marked input, the line of its first marker line; none for the others |
 | `title` | the title | the titles |
 | `property` | one property: two values, or deleted against changed | the values |
 | `reading` | `notation` or `words` changed by one side, under music the other side wrote (§11.7.2) | the values, which side changed it, and for `notation` the symbols that read differently |
@@ -827,14 +858,16 @@ The kinds, for songs:
 | `block-notes` | a stretch of a block's notes | the runs of lines |
 
 and for setlists, `title`, `property`, `item`, `text`, `entry` and
-`notes` (§11.13).
+`notes` (§11.13), with `file` and `unresolved` as for songs.
 
 These are the conflicts an application presents in musical terms: a
 stretch of chart with each side's bars, a shape for one chord in one
 tuning and variation with each side's diagram, a property with each
 side's value, a section or a block one side deleted. Runs are written in
 the result's keys (§11.9.5), except a base run of units or sections, which
-is written as base has it.
+is written as base has it. `file` and `unresolved` are about the file,
+not its music: an application says which side deleted it, which sides it
+cannot read, or which hold conflict markers someone left.
 
 ### 11.12.2 The marked text
 
@@ -908,7 +941,8 @@ line. A program that checks whether a text is canonical, such as a hook
 that guards a book, MUST find a marked text not canonical. A reader reads
 a marked text as any text, where the marker lines are notes, unknown
 tokens or forced lines depending on where they fall, and SHOULD report
-each marker line.
+each marker line. A merger does not merge one: a marked input gives an
+`unresolved` conflict (§11.4).
 
 So a document cannot hold a line of exactly seven `=` or `<` or `>`, even
 in its notes. That is the price of making an unresolved merge impossible
@@ -924,7 +958,11 @@ canonicalised (§8), and that is the merge's result. Resolving every
 conflict by ours, or every conflict by theirs, gives a document; so does
 any mix of the two. A `file` conflict has no region: it is resolved by
 keeping the changed side's canonical text, or by deleting the file (§11.4),
-or for an unreadable file by choosing one side's bytes.
+or for an unreadable file by choosing one side's bytes. An `unresolved`
+conflict has no region either: it is resolved by resolving the marked
+input itself, removing its marker lines by editing or by taking one side
+of each, and merging again; for a marked ours, the text left in place is
+that input.
 
 An application presents conflicts one at a time, from the conflict
 model, and offers *keep mine* and *take theirs* as resolution by one side
@@ -935,8 +973,9 @@ can resolve by a side is exactly a region of the marked text.
 
 A merger MUST be able to give the conflicts as a JSON object with one
 member, `conflicts`, an array with one object per conflict, in the order
-of their regions in the marked text, a `file` conflict first. Each object
-has these members, in this order, and no others:
+of their regions in the marked text, a `file` conflict first. A `file`
+conflict and an `unresolved` conflict are each the only conflict of their
+merge. Each object has these members, in this order, and no others:
 
 | Member | Present | Value |
 |---|---|---|
@@ -950,20 +989,26 @@ has these members, in this order, and no others:
 | `key` | `property`, `reading`, `voicing`, `entry` | the property's key, or the variant's key as the marked text writes it |
 | `changed` | `reading` | the side that changed the property |
 | `symbols` | `reading` of `notation` | the symbols that read differently |
-| `base`, `ours`, `theirs` | every kind but `file`: each when the thing is present on that side, and always for a run | a string for a value, a heading line, a voicing, a block or an item; an array of strings for a run, one per unit, section or line |
+| `base`, `ours`, `theirs` | every kind but `file` and `unresolved`: each when the thing is present on that side, and always for a run | a string for a value, a heading line, a voicing, a block or an item; an array of strings for a run, one per unit, section or line |
+| `base`, `ours`, `theirs` | `unresolved`: each when that input holds a marker line | the 1-based line number, after the text layer (§1.3), of its first marker line |
 
 A unit's string is its text (§11.8.1), a sung line's two lines joined by
 a LF; a section's or a block's is the text canonical form writes for it,
-its lines joined by LFs, with no final LF. The JSON is written as the
-corpus writes its JSON: a two-space indent, characters outside ASCII as
-themselves, and a final newline.
+its lines joined by LFs, with no final LF. An `unresolved` conflict is
+thus `kind` and one to three numbers, with no `line`: it has no region,
+and there is no marked text for it. Where a marked text would be written
+(the driver's `%A`, the text an application's *edit* opens), ours stands
+as it was given, which is the marked text someone has to resolve when
+ours is the input marked. The JSON is written as the corpus writes its
+JSON: a two-space indent, characters outside ASCII as themselves, and a
+final newline.
 
 ## 11.13 Setlists
 
 A setlist (§10) merges as a song does, with less in it. Its inputs are
-canonicalised as §10.9 says; whole files, unreadable inputs and unchanged
-sides are as §11.2 to §11.4 say; and its result is written and
-canonicalised as §10.9 says.
+canonicalised as §10.9 says; whole files, unreadable inputs, marked
+inputs and unchanged sides are as §11.2 to §11.4 say; and its result is
+written and canonicalised as §10.9 says.
 
 **Title.** A value; a conflict is a `title` conflict.
 
@@ -1067,6 +1112,11 @@ conforming driver:
   conflicts;
 - leaves `%A` as it is and exits with status 1 when an input is not UTF-8,
   saying so on its standard error;
+- leaves `%A` as it is and exits with status 1 when an input holds a
+  marker line (an `unresolved` conflict, §11.4), saying on its standard
+  error which inputs do and the line of each one's first marker line. A
+  marked ours stays marked, and git keeps the file unmerged until someone
+  resolves it;
 - writes markers of exactly seven characters with the labels `ours` and
   `theirs`, whatever marker size git asks for, so that its marked text is
   the one the corpus holds.
@@ -1855,6 +1905,54 @@ Cm | G
 - Cm: x35543
 ````
 
+### 11.15.18 A marked input
+
+From 11.15.2, someone committed the marked text as ours without resolving
+it:
+
+````
+# Blues in D minor
+
+## A
+```
+<<<<<<< ours
+Dm | G7 | C7 | F7M
+=======
+Dm | G7 | C7 | Fmaj7
+>>>>>>> theirs
+Bb | A7 | Dm | %
+```
+
+## B
+```
+Gm | C7 | F Dm | Gm A7
+```
+````
+
+Theirs, from 11.15.1's base, adds `E7 | A7 | Dm` at the end of *B*. Ours's
+fifth line is a marker line, so nothing is merged, and ours stays as it
+is. The conflicts:
+
+```json
+{
+  "conflicts": [
+    {
+      "kind": "unresolved",
+      "ours": 5
+    }
+  ]
+}
+```
+
+There is no marked text; ours is the text to resolve, by keeping `F7M` or
+`Fmaj7`, and the merge is then made again. Had the marked text been
+committed as base instead, with ours resolving it to `F7M` and theirs to
+`Fmaj7`, the conflict would name `"base": 5`, and ours would stay as it
+is with its `F7M`. Had theirs been a marked text git wrote, with its own
+labels, a `|||||||` section and CR LF line ends, and ours unchanged from
+base, the merge would not take theirs as it otherwise would (§11.2 step
+3): the conflict would name theirs, and ours would stay as it is.
+
 ## 11.16 Corpus entries
 
 The merge corpus is `corpus/merge/`, one directory per entry, numbered
@@ -1890,10 +1988,15 @@ An implementation validates itself by checking, for every entry:
 
 and, generated from every entry's files rather than stored: merging
 *b*, *x*, *x*, and *b*, *b*, *x*, and *b*, *x*, *b*, gives the canonical
-text of *x*, for each of the entry's readable inputs as *b* and *x*.
+text of *x*, for each of the entry's readable inputs that holds no marker
+line as *b* and *x*.
+
+An entry with an `unresolved` conflict holds `conflicts.json` and no
+marked text: what the merge leaves is the entry's ours, as it is.
 
 The entries cover the examples of §11.15, one each, and the alternatives
-their text describes; every row of §11.4 and a file that is not UTF-8;
+their text describes; every row of §11.4, a file that is not UTF-8, and
+a marked base, ours and theirs, and a setlist with a marked side;
 every kind of conflict of §11.12.1 and of §11.13; and a pure renumbering
 on each side, a key joined on one side and revoiced on the other, a key
 used only by unknown tokens, a heading changed in two fields by two
@@ -1937,11 +2040,6 @@ Deferred to a later version:
 - **Marker lines in notes.** §11.12.3 forbids a notes line of seven `=`
   that someone might have meant. A narrower rule, markers only in the
   shapes this chapter writes them, would allow it and still catch git's.
-- **Marked inputs.** An input that is itself a marked text, a merge
-  someone left unresolved, is canonicalised as any text is (§11.2), its
-  marker lines kept as notes or tokens, and they reach the result, which
-  is then not canonical (§11.12.3). Whether such an input should instead
-  be a `file` conflict, as an unreadable one is, is open.
 - **Joins without shapes.** Two keys that one side joined stay two keys
   in the result when no instrument has a shape for either (§11.9.4),
   since nothing then tells I3 they are one. A merge could join variants

@@ -89,7 +89,11 @@ give:
 | `asymmetric` | An empty file, in an entry whose conflicts number footnote variants under the one exception to symmetry (spec §11.9.5). | Hand |
 
 Exactly one of the result, `result.deleted` and `conflicts.json` is
-present. Inputs need not be canonical, and one of them need not be UTF-8.
+present. Inputs need not be canonical, one of them need not be UTF-8, and
+any of them may be a marked text, which the merge does not merge (spec
+§11.4): such an entry holds only `conflicts.json`, with its `unresolved`
+conflict, and no marked text, since what the merge leaves is the entry's
+ours, as it is.
 
 An implementation validates its merge by checking, for every entry:
 
@@ -107,7 +111,7 @@ An implementation validates its merge by checking, for every entry:
 
 and, generated from the files rather than stored: merging *b*, *x*, *x*,
 *b*, *b*, *x* and *b*, *x*, *b* gives the canonical text of *x*, for each
-readable input of the entry as *b* and as *x*.
+readable input of the entry that holds no marker line as *b* and as *x*.
 
 The reference implementation's checks are
 `reference/tests/test_merge_corpus.py`, and
@@ -119,6 +123,7 @@ and `--check` checks them.
 | Entry | Shows |
 |---|---|
 | 01 to 25 | The examples of spec §11.15, one each, and the alternatives their text describes: different sections, a rename and an edit (§11.15.1); one line changed twice, and two lines once each (§11.15.2); a section deleted and changed, and one renamed and edited (§11.15.3); a sung line changed twice, and two sung lines once each (§11.15.4); two instruments with two new markers, and with one (§11.15.5); a renumbered marker (§11.15.6); a line changed under a new marker (§11.15.7); two shapes for one chord, and for two instruments (§11.15.8); a bar split off with its chord revoiced elsewhere, and not (§11.15.9); a variation renamed and edited, deleted and edited, and variations added apart (§11.15.10); one tuning in two spellings (§11.15.11); properties added, a property given two values, and a `reading` conflict on `notation` (§11.15.12); a song added on both sides (§11.15.13); a setlist reordered and added to, and one whose item was removed and changed (§11.15.14) |
+| 26 to 28 | The example of spec §11.15.18 and its alternatives: a marked ours, a marked base, and a marked theirs as git writes one (its own labels, a `|||||||` section, a BOM and CR LF) against an unchanged ours, each an `unresolved` conflict |
 | 30 to 38 | Whole files (spec §11.4): added by one side, by both alike, deleted by both, deleted by one side with the other's unchanged or only respelled, deleted against changed on either side, and an input that is not UTF-8 |
 | 40-title-two-values | A `title` conflict |
 | 41-reading-words | A `reading` conflict on `words` |
@@ -138,3 +143,4 @@ and `--check` checks them.
 | 56 to 58 | The examples of spec §11.15.17, §11.15.16 and §11.15.15: the only line of a chord deleted, one new chord added on both sides, a bar moved to an existing marker |
 | 59-numbering-inside-a-conflict | Variants numbered inside a conflict, the exception to symmetry (marked `asymmetric`) |
 | 60 to 64 | Setlists: two reorders of one stretch, the same song added twice, a notes block changed on both sides, `title`, `text` and `entry` conflicts, and entries merged under the title and under an item |
+| 65-setlist-marked-side | A setlist whose theirs is a marked text: an `unresolved` conflict |

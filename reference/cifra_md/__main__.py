@@ -11,8 +11,9 @@ it, OURS) ends in `.setlist.md`, and a song otherwise. A file that does not
 exist is an absent input. It writes the result to OURS and exits 0; writes
 the marked text to OURS and exits 1 when something conflicts; deletes OURS
 and exits 0 when the merge deletes the file; and leaves OURS as it is and
-exits 1, saying why on standard error, when an input is not UTF-8 or the
-file was deleted on one side and changed on the other. With `--json`, the
+exits 1, saying why on standard error, when an input is not UTF-8, when an
+input holds a marker line (an `unresolved` conflict), or when the file was
+deleted on one side and changed on the other. With `--json`, the
 conflicts are printed on standard output as §11.12.5 gives them.
 """
 
@@ -62,6 +63,9 @@ def merge_driver(argv) -> int:
     for c in outcome.conflicts:
         if c["kind"] == "file" and "unreadable" in c:
             print(f"{path}: not UTF-8 ({', '.join(c['unreadable'])}); not merged", file=sys.stderr)
+        elif c["kind"] == "unresolved":
+            where = ", ".join(f"{side} (line {c[side]})" for side in ("base", "ours", "theirs") if side in c)
+            print(f"{path}: conflict markers left in {where}; not merged, resolve them first", file=sys.stderr)
         elif c["kind"] == "file":
             print(f"{path}: deleted by {c['deleted']} and changed by the other side; not merged", file=sys.stderr)
     if outcome.marked is not None:

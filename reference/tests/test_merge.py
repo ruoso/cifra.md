@@ -170,6 +170,67 @@ def test_whole_files(b, o, t, kind, want):
         assert r.conflicts == want and r.marked is None
 
 
+# --- §11.4 marked inputs ---
+
+MARKED = f"## A\n{F}\n<<<<<<< ours\nC | G7\n=======\nC | Em\n>>>>>>> theirs\n{F}\n"
+
+
+@pytest.mark.parametrize(
+    "b,o,t,want",
+    [
+        (SONG, MARKED, SONG2, {"ours": 3}),
+        (MARKED, SONG, SONG2, {"base": 3}),
+        (SONG, SONG2, MARKED, {"theirs": 3}),
+        (MARKED, MARKED, SONG2, {"base": 3, "ours": 3}),
+        # after the text layer: a BOM, CR LF, a tab and trailing spaces
+        (SONG, SONG, "\ufeff## A\r\n\r\n=======\t  \r\n", {"theirs": 3}),
+        (SONG, SONG, "## A\n|||||||  base\n", {"theirs": 2}),
+    ],
+)
+def test_a_marked_input_is_never_merged(b, o, t, want):
+    r = merge(b, o, t)
+    assert r.kind == "conflicts" and r.marked is None and r.result is None
+    assert r.conflicts == [{"kind": "unresolved", **want}]
+    assert r.kept is o
+
+
+def test_a_marked_input_stops_before_the_unchanged_sides():
+    # merging b, b, x would give x; a marked x is not merged at all
+    assert merge(SONG, SONG, MARKED).conflicts == [{"kind": "unresolved", "theirs": 3}]
+    assert merge(MARKED, SONG, SONG).conflicts == [{"kind": "unresolved", "base": 3}]
+    assert merge(None, None, MARKED).conflicts == [{"kind": "unresolved", "theirs": 3}]
+
+
+def test_a_marked_input_leaves_ours_exactly_as_it_is():
+    ours = MARKED.replace("\n", "\r\n").encode("utf-8")
+    r = merge(SONG, ours, SONG2)
+    assert r.kept is ours
+    assert merge(SONG, None, MARKED).kept is None
+
+
+def test_deleted_on_both_sides_and_unreadable_come_before_a_marked_input():
+    assert merge(MARKED, None, None).deleted
+    assert merge(MARKED, b"\xff", SONG).conflicts == [{"kind": "file", "unreadable": ["ours"]}]
+
+
+def test_a_marked_setlist_is_never_merged():
+    b = "1. [A](a.cifra.md)\n"
+    t = b + "<<<<<<< ours\n2. [B](b.cifra.md)\n=======\n>>>>>>> theirs\n"
+    r = merge(b, b + "2. [C](c.cifra.md)\n", t, setlist=True)
+    assert r.conflicts == [{"kind": "unresolved", "theirs": 2}] and r.marked is None
+
+
+def test_exchanging_the_sides_names_the_other_input():
+    assert merge(SONG, SONG2, MARKED).conflicts == [{"kind": "unresolved", "theirs": 3}]
+    assert merge(SONG, MARKED, SONG2).conflicts == [{"kind": "unresolved", "ours": 3}]
+
+
+def test_unresolved_json_members_are_in_order():
+    data = json.loads(conflicts_json(merge(MARKED, MARKED, MARKED)))
+    assert data == {"conflicts": [{"kind": "unresolved", "base": 3, "ours": 3, "theirs": 3}]}
+    assert list(data["conflicts"][0]) == ["kind", "base", "ours", "theirs"]
+
+
 def test_an_empty_base_is_the_empty_document():
     assert merge("", SONG, SONG2).conflicts == merge(None, SONG, SONG2).conflicts
 
@@ -232,6 +293,14 @@ def test_the_driver_writes_the_marked_text(tmp_path):
 def test_the_driver_leaves_ours_alone_when_an_input_is_not_utf8(tmp_path, capsys):
     assert driver(tmp_path, SONG, MESSY, b"\xff") == (1, MESSY)
     assert "not UTF-8" in capsys.readouterr().err
+
+
+def test_the_driver_leaves_ours_alone_when_an_input_is_marked(tmp_path, capsys):
+    ours = MARKED.replace("\n", "\r\n")
+    code, text = driver(tmp_path, SONG, ours.encode("utf-8"), SONG2)
+    assert (code, text) == (1, ours)
+    err = capsys.readouterr().err
+    assert "conflict markers" in err and "ours (line 3)" in err
 
 
 def test_the_driver_takes_an_empty_base_as_no_base(tmp_path):

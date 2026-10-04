@@ -3,7 +3,7 @@
 `merge(base, ours, theirs, setlist=False) -> Outcome`: each input is the
 text (str or bytes) or None when absent. The outcome holds a `result`, or
 `deleted`, or `conflicts` with, unless the only conflict is about the whole
-file, a `marked` text. `conflicts_json(outcome)` gives the JSON of §11.12.5.
+file or a marked input, a `marked` text. `conflicts_json(outcome)` gives the JSON of §11.12.5.
 """
 
 from __future__ import annotations
@@ -17,7 +17,7 @@ from .chord import DEFAULT_DIALECT, DIALECTS, parse_chord
 from .frets import format_fingers, format_frets
 from .layout import converge, lyric_text
 from .parse import CHORD_TOKEN, ascii_lower, key_for, parse
-from .text import NotUTF8Error, decode
+from .text import NotUTF8Error, decode, marker_lines
 from .write import (
     _chart_blocks,
     _collapse_blank_runs,
@@ -51,7 +51,10 @@ class Outcome:
     deleted: bool = False
     conflicts: list = field(default_factory=list)
     marked: str | None = None
-    kept: str | None = None  # for a `file` conflict, deleted against changed: the changed side's text
+    # For a `file` conflict, deleted against changed: the changed side's
+    # canonical text. For an `unresolved` conflict: ours exactly as it was
+    # given, str or bytes (None when ours is absent), which is what stays.
+    kept: str | bytes | None = None
 
     @property
     def kind(self) -> str:
@@ -420,6 +423,16 @@ def merge(base, ours, theirs, setlist: bool = False) -> Outcome:
         texts[name] = t
     if unreadable:
         return Outcome(conflicts=[{"kind": "file", "unreadable": unreadable}])
+    if texts["base"] is not None and texts["ours"] is None and texts["theirs"] is None:
+        return Outcome(deleted=True)
+    # A marked input is never merged (§11.4): ours stays exactly as it is.
+    first = {}
+    for name, x in texts.items():
+        found = marker_lines(x) if x is not None else []
+        if found:
+            first[name] = found[0]
+    if first:
+        return Outcome(conflicts=[{"kind": "unresolved", **first}], kept=ours)
     canon = canonicalise_setlist if setlist else canonical_song
     b, o, t = (None if texts[k] is None else canon(texts[k]) for k in ("base", "ours", "theirs"))
     if b is None:
