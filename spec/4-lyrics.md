@@ -138,8 +138,7 @@ they are simply not numbered.
 
 ## Open questions
 
-- Whether a chord line with bar lines should be able to be sung (a bar
-  line over a lyric line). This draft allows it; the words divide at item
-  columns and the bar lines divide measures.
-- Whether to let a document declare itself sung in a property, removing
-  the two-word rule.
+- Nothing at present. A chord line with bar lines may be sung: the words
+  divide at item columns and the bar lines divide measures (§4.4). A
+  document need not declare itself sung, because one `>` line already
+  makes it so (§4.2, §4.3).

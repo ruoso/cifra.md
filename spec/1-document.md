@@ -260,6 +260,8 @@ not music.
 
 ## Open questions
 
+Deferred to a later version:
+
 - Whether `###` should one day nest sections (a *Verse* with *a* and *b*
   halves). Reserved for that reason.
 - Whether the fence info string should select a dialect or a mode (a

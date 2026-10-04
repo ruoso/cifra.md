@@ -299,6 +299,8 @@ MUST NOT emit a spelling the grammar of §5.3 does not accept.
 
 ## Open questions
 
+Deferred to a later version:
+
 - Solfège roots (`Dó7M`) and German `H`/`B` are note-name conventions, not
   quality conventions. The grammar separates the two axes, but this draft
   defines only letter names.

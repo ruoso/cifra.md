@@ -211,6 +211,8 @@ printed sheet and an editor need.
 
 ## Open questions
 
+Deferred to a later version:
+
 - Whether a block for a tuning should be able to say which *kind* of
   instrument it is for (guitar, cavaquinho) for display, given that the
   tuning does not say.

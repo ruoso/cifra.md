@@ -224,4 +224,6 @@ have been read (§3.2).
 
 ## Open questions
 
-- Whether `###` should nest sections. Reserved; see §1.6.1.
+None that block this version. Each chapter ends with the questions it
+leaves for a later version, each with the syntax it would use reserved or
+reading harmlessly today.

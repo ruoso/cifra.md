@@ -165,6 +165,9 @@ whatever the author wrote under it. This is how a cifra writes a line
 
 ## Open questions
 
+Deferred to a later version; each reads as an unknown token or as name
+text today:
+
 - Whether to define `%%`, the two-bar repeat, which some charts use.
 - Whether a heading may carry a count (`## Chorus x2`), meaning the whole
   section is played twice. This draft treats it as part of the name.
