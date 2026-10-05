@@ -1,0 +1,6 @@
+1. [Spaces And Ampersand](<a b & c.cifra.md>)
+2. [Accented Title](can%C3%A7%C3%A3o.cifra.md)
+3. [Dot Segments](songs/./sub/../tune.cifra.md)
+4. [One Level Up](../shared/hymn.cifra.md)
+5. [Parentheses](<a (1).cifra.md>)
+6. [Accent After Percent](%3C%CC%81.cifra.md)

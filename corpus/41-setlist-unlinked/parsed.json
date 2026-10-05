@@ -1,0 +1,59 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "unlinked",
+      "number": 1,
+      "content": "a spoken intro, not a song",
+      "entries": []
+    },
+    {
+      "type": "unlinked",
+      "number": 2,
+      "content": "[With A Title](with-a-title.cifra.md \"the title\")",
+      "entries": []
+    },
+    {
+      "type": "unlinked",
+      "number": 3,
+      "content": "[Reference Style][ref]",
+      "entries": []
+    },
+    {
+      "type": "unlinked",
+      "number": 4,
+      "content": "![Cover Art](cover-art.cifra.md)",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 5,
+      "text": "The Only Real Song",
+      "path": "the-only-real-song.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "unlinked-item",
+      "message": "an item that is not a song link; kept, and skipped when playing",
+      "line": 1
+    },
+    {
+      "code": "unlinked-item",
+      "message": "an item that is not a song link; kept, and skipped when playing",
+      "line": 2
+    },
+    {
+      "code": "unlinked-item",
+      "message": "an item that is not a song link; kept, and skipped when playing",
+      "line": 3
+    },
+    {
+      "code": "unlinked-item",
+      "message": "an item that is not a song link; kept, and skipped when playing",
+      "line": 4
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Café Session",
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "Warm Up",
+      "path": "warm-up.cifra.md",
+      "entries": [
+        {
+          "type": "property",
+          "key": "note",
+          "value": "be gentle"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

@@ -3,12 +3,19 @@
     python -m tools.corpus --write    regenerate every entry's outputs from its inputs
     python -m tools.corpus --check    report entries whose files disagree with the implementation
 
-Per reading entry (corpus/README.md):
+Per reading entry (corpus/README.md), a song entry discovered by its
+`input.cifra.md` and a setlist entry (spec §10) by its `input.setlist.md`,
+each read and written by its own reader and canonical writer:
 
     input.cifra.md        the document as written                  (hand-written)
     input.parsed.json     parse(input.cifra.md)                     (generated)
     canonical.cifra.md    write(input.parsed.json)                  (generated)
     parsed.json           parse(canonical.cifra.md)                 (generated)
+
+    input.setlist.md      the setlist as written                    (hand-written)
+    input.parsed.json     parse_setlist(input.setlist.md)           (generated)
+    canonical.setlist.md  write_setlist(input.parsed.json)          (generated)
+    parsed.json           parse_setlist(canonical.setlist.md)       (generated)
 
 Per merge entry, in corpus/merge/ (corpus/README.md, spec §11.16), with
 EXT `.cifra.md` for a song and `.setlist.md` for a setlist:
@@ -42,6 +49,10 @@ def dump(model: dict) -> str:
 
 def entries():
     return sorted(p for p in CORPUS.iterdir() if p.is_dir() and (p / "input.cifra.md").exists())
+
+
+def setlist_entries():
+    return sorted(p for p in CORPUS.iterdir() if p.is_dir() and (p / "input.setlist.md").exists())
 
 
 def merge_entries():
@@ -102,10 +113,29 @@ def generate(entry: pathlib.Path) -> dict[str, str]:
     }
 
 
+def generate_setlist(entry: pathlib.Path) -> dict[str, str]:
+    """A setlist reading entry's outputs (spec §10.6, §10.9), the song reading
+    entry's four files with `.setlist.md` for the texts."""
+    from cifra_md.setlist import parse_setlist, write_setlist
+
+    source = (entry / "input.setlist.md").read_bytes()
+    model = parse_setlist(source)
+    canonical = write_setlist(model)
+    return {
+        "input.parsed.json": dump(model),
+        "canonical.setlist.md": canonical,
+        "parsed.json": dump(parse_setlist(canonical)),
+    }
+
+
 def main(argv) -> int:
     if argv == ["--write"]:
         for entry in entries():
             for name, text in generate(entry).items():
+                (entry / name).write_bytes(text.encode("utf-8"))
+            print("wrote", entry.name)
+        for entry in setlist_entries():
+            for name, text in generate_setlist(entry).items():
                 (entry / name).write_bytes(text.encode("utf-8"))
             print("wrote", entry.name)
         for entry in merge_entries():
@@ -120,6 +150,12 @@ def main(argv) -> int:
         bad = 0
         for entry in entries():
             for name, text in generate(entry).items():
+                path = entry / name
+                if not path.exists() or path.read_bytes() != text.encode("utf-8"):
+                    print(f"{name} differs: {entry.name}")
+                    bad += 1
+        for entry in setlist_entries():
+            for name, text in generate_setlist(entry).items():
                 path = entry / name
                 if not path.exists() or path.read_bytes() != text.encode("utf-8"):
                     print(f"{name} differs: {entry.name}")

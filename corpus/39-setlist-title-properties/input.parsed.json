@@ -1,0 +1,32 @@
+{
+  "title": "Wednesday Rehearsal",
+  "properties": [
+    {
+      "type": "property",
+      "key": "date",
+      "value": "2026-03-15"
+    },
+    {
+      "type": "property",
+      "key": "place",
+      "value": "Studio B"
+    },
+    {
+      "type": "unrecognised",
+      "text": "bring the capo"
+    }
+  ],
+  "body": [],
+  "diagnostics": [
+    {
+      "code": "duplicate-key",
+      "message": "`date` is set again; the earlier value is not kept",
+      "line": 6
+    },
+    {
+      "code": "unrecognised-entry",
+      "message": "an entry that is not `key: value`; kept as written",
+      "line": 7
+    }
+  ]
+}

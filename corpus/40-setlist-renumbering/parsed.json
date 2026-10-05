@@ -1,0 +1,28 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "First Up",
+      "path": "first-up.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "Second Up",
+      "path": "second-up.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "Third Up",
+      "path": "third-up.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}

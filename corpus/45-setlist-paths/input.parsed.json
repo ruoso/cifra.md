@@ -1,0 +1,49 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "Spaces And Ampersand",
+      "path": "a b & c.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "Accented Title",
+      "path": "canção.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "Dot Segments",
+      "path": "songs/tune.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 4,
+      "text": "One Level Up",
+      "path": "../shared/hymn.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 5,
+      "text": "Parentheses",
+      "path": "a (1).cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 6,
+      "text": "Accent After Percent",
+      "path": "<́.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}

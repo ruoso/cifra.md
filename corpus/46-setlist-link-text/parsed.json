@@ -1,0 +1,28 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "A \\[Bracketed\\] Name with *stars*",
+      "path": "song-one.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "An old name the song no longer uses",
+      "path": "song-two.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "Nested [brackets] inside the text",
+      "path": "song-three.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}

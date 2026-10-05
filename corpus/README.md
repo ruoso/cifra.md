@@ -13,6 +13,16 @@ Each reading entry is a directory with four files:
 | `canonical.cifra.md` | The canonical text (spec §8) of that model: what a conforming writer saves. | Generated |
 | `parsed.json` | The model a conforming reader produces from `canonical.cifra.md`, diagnostics included: the model of the canonical form, and what any reader gets from the file once it has been saved. | Generated |
 
+A **setlist** reading entry (spec §10) is the same four files with
+`input.setlist.md`, `canonical.setlist.md` and the two `*.parsed.json`
+beside them, read by the setlist reader (§10.6) and written by its canonical
+writer (§10.9) instead of the song reader and writer. An entry is discovered
+by the extension of its input: `input.cifra.md` is a song, `input.setlist.md`
+a setlist. The setlist entries are below, after the song entries. They pin
+checks 1 to 4 and the sixth, model-level check; the fifth, schema, check is
+not run over a setlist model, because §10.6 has no JSON Schema yet (spec §10
+*Open questions*).
+
 A reader lays out every sung line as canonical form writes it (spec
 §4.5), so the two JSON files agree on every sung line's columns and words
 however the input was spaced. Where canonicalising changes the model, the
@@ -72,6 +82,24 @@ and read what came out before committing it. `python -m tools.corpus
 | 32-unclosed-verbatim | An unclosed verbatim fence and the blank lines after it |
 | 33-sung-anchors | Bar anchors on sung lines kept at their columns: against bar lines and brackets, the last of several, past a token that grows, and numbers carried in from an anchor-only line and from the end of the line before |
 | 34-pushed-words | Sung lines whose words are pushed so that every chord stays over its character: brackets, a token that grows, `_` padding inside words (one, several, two in one word), padding written in excess or too little, underscores that are words, a chord line longer than its words, a carried anchor with no room, and words forced because they would read as chords without their padding |
+
+The setlist reading entries (spec §10):
+
+| Entry | Shows |
+|---|---|
+| 35-setlist-minimal | A title and a few song-link items (§10.3, §10.4) |
+| 36-setlist-empty | A setlist of only blank lines: the zero-byte canonical file (§10.9.1) |
+| 37-setlist-title-only | A setlist that is only its title, its extra spaces collapsed (§10.3.1) |
+| 38-setlist-no-title | A setlist with no title, named by its file alone, items only (§10.3.1) |
+| 39-setlist-title-properties | Properties under the title: key case, order kept, an unrecognised entry, a repeated key losing its earlier value (§10.3.1, §10.6, §10.9.2) |
+| 40-setlist-renumbering | `)` markers, out-of-order numbers and extra leading spaces, renumbered `1.`, `2.`, `3.` (§10.3.2, §10.9.2) |
+| 41-setlist-unlinked | Unlinked items kept, reported, renumbered and counted: plain text, a link with a title, a reference link, an image (§10.3.2, §10.4) |
+| 42-setlist-item-properties | An item's `key`, `note` and an application-defined key, in canonical `key`-`note`-rest order (§10.7, §10.9.2) |
+| 43-setlist-song-twice | The same song played twice, each item with its own entries (§10.8.2) |
+| 44-setlist-notes-blocks | A notes block with an inner blank line splitting the item run, numbering continuing across it (§10.3.4, §10.9.2) |
+| 45-setlist-paths | Percent-encoding of the canonical set, non-ASCII kept raw, dot-segments removed, a leading `..`, an accent after a percent-encoded byte (§10.5, §10.9.2) |
+| 46-setlist-link-text | Link text kept as written and not refreshed: escapes, inline Markdown, nested brackets (§10.4.1, §10.9.3) |
+| 47-setlist-text-layer | A BOM, CR and CR LF line ends, tabs, trailing spaces and non-NFC input, normalised in the canonical text (§10.2, §10.9.1) |
 
 ## Merge entries
 

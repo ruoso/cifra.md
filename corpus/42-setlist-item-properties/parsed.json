@@ -1,0 +1,30 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "A Tune In The Set",
+      "path": "a-tune-in-the-set.cifra.md",
+      "entries": [
+        {
+          "type": "property",
+          "key": "key",
+          "value": "Am"
+        },
+        {
+          "type": "property",
+          "key": "note",
+          "value": "watch the ending"
+        },
+        {
+          "type": "property",
+          "key": "singer",
+          "value": "Marina"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

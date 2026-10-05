@@ -1,0 +1,45 @@
+{
+  "title": "Two Sets, One Encore",
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "The Anthem",
+      "path": "the-anthem.cifra.md",
+      "entries": [
+        {
+          "type": "property",
+          "key": "note",
+          "value": "opener"
+        }
+      ]
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "Bridge Song",
+      "path": "bridge-song.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "The Anthem",
+      "path": "the-anthem.cifra.md",
+      "entries": [
+        {
+          "type": "property",
+          "key": "note",
+          "value": "encore"
+        },
+        {
+          "type": "property",
+          "key": "key",
+          "value": "G"
+        }
+      ]
+    }
+  ],
+  "diagnostics": []
+}

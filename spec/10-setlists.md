@@ -682,6 +682,5 @@ Deferred to a later version:
 - Whether a reader on a case-insensitive file system should find
   `Garota.cifra.md` for a path `garota.cifra.md`. Today names compare
   exactly, as git compares them.
-- A JSON Schema for the model of §10.6, and corpus entries for reading
-  setlists (the merge corpus has setlists, §11.16). Until the schema
-  exists, the prose model above is the normative one.
+- A JSON Schema for the model of §10.6. Until the schema exists, the
+  prose model above is the normative one.

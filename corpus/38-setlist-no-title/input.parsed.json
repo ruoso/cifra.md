@@ -1,0 +1,21 @@
+{
+  "title": null,
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "Soundcheck Blues",
+      "path": "soundcheck-blues.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "House Lights Down",
+      "path": "house-lights-down.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}

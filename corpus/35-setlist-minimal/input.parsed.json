@@ -1,0 +1,28 @@
+{
+  "title": "Friday at the Corner Café",
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "Opening Tune",
+      "path": "opening-tune.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "The Long Road",
+      "path": "the-long-road.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "Closing Number",
+      "path": "closing-number.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}

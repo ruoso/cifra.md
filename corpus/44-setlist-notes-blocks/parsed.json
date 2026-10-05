@@ -1,0 +1,43 @@
+{
+  "title": "The Whole Show",
+  "properties": [],
+  "body": [
+    {
+      "type": "song",
+      "number": 1,
+      "text": "Intro Theme",
+      "path": "intro-theme.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 2,
+      "text": "Main Theme",
+      "path": "main-theme.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "notes",
+      "lines": [
+        "Second set.",
+        "",
+        "(tune down a half step)"
+      ]
+    },
+    {
+      "type": "song",
+      "number": 3,
+      "text": "Reprise",
+      "path": "reprise.cifra.md",
+      "entries": []
+    },
+    {
+      "type": "song",
+      "number": 4,
+      "text": "Finale",
+      "path": "finale.cifra.md",
+      "entries": []
+    }
+  ],
+  "diagnostics": []
+}
