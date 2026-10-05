@@ -86,6 +86,17 @@ export { parse } from "./parse.js";
 // never canonical, never saved, never pushed.
 export { write, canonical, MarkedTextError, isCanonical } from "./write.js";
 
+// Semantic diff — "what changed, in musical terms" (DIRECTION §3.6, §4, §5).
+// The app's own layer over the spec-defined model, not part of the format:
+// `diff(before, after) -> { changes, summary }` compares two models `parse`
+// produces and returns an ordered list of change records plus a one-line
+// summary (the default save message). It has no corpus footprint and nothing
+// in the Python reference to port — its conformance is its unit tests
+// (cifra_js.diff refinement §Decisions). Framework-free, below the view; runs
+// in the Worker alongside save/merge/index, feeding the save sheet, song
+// history and version previews (workflows 4 and 6).
+export { diff } from "./diff.js";
+
 // Three-way merge (spec §11). Each of base/ours/theirs is bytes or absent
 // (null); a merge input need not be UTF-8 (corpus/README.md). Returns the
 // files the merge would write, keyed by their corpus names — the forward-merge
