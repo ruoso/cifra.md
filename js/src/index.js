@@ -17,6 +17,15 @@
 // implementation (cifra_js.text_layer refinement, §Decisions).
 export { decode, prepare, markerLines, isMarkerLine, NotUtf8Error } from "./text.js";
 
+// Chord symbols (spec §5): the permissive parser, the canonical dialect-free
+// model, the three dialects and their four ambiguities, and the §5.5 spelled
+// tones. Re-exported from one place so the reader (which classifies every
+// chart token) and future tasks import one correct implementation
+// (cifra_js.chords refinement, §Decisions). The note-name helpers of pitch.js
+// come with them, as the reference exposes parse_note alongside parse_chord.
+export { parseChord, isChord, chordTones, DIALECTS, DEFAULT_DIALECT } from "./chord.js";
+export { parseNote, formatNote, isNote } from "./pitch.js";
+
 class NotImplementedError extends Error {
   constructor(op) {
     super(

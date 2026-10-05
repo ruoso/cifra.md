@@ -120,6 +120,40 @@ function stripModel(model) {
   return out;
 }
 
+// Every `type: "chord"` item anywhere in a stored model, in document order.
+// A recursive walk rather than a model-shape traversal, so it finds chords
+// wherever the model carries them (chart measures today, embedded songs
+// tomorrow) and needs no change as the model grows. The chord sub-object has
+// no `type`, so it is never mistaken for an item.
+function collectChordItems(node, out = []) {
+  if (Array.isArray(node)) {
+    for (const v of node) collectChordItems(v, out);
+  } else if (node && typeof node === "object") {
+    if (node.type === "chord" && typeof node.symbol === "string") out.push(node);
+    for (const v of Object.values(node)) collectChordItems(v, out);
+  }
+  return out;
+}
+
+// The dialect a document's `notation` property resolves to (§1.4.3 lines
+// 128–152): the value compared case-insensitively, one of the three dialect
+// ids or `brazilian` by default and on any other value. This mirrors the
+// reader's mapping minimally to feed the chord parser; the reader owns the
+// `bad-notation` diagnostic (cifra_js.chords refinement §Decisions). `dialects`
+// is the implementation's DIALECTS table, so the harness stays
+// implementation-agnostic.
+function resolveDialect(model, dialects) {
+  let value = null;
+  for (const p of Array.isArray(model.properties) ? model.properties : []) {
+    if (p && typeof p.key === "string" && p.key.toLowerCase() === "notation") {
+      value = typeof p.value === "string" ? p.value : null;
+    }
+  }
+  if (value === null) return "brazilian";
+  const lower = value.toLowerCase();
+  return Object.prototype.hasOwnProperty.call(dialects, lower) ? lower : "brazilian";
+}
+
 // The checks of a reading entry (corpus/README.md lines 37–58). Songs use
 // parse/write/canonical, setlists parseSetlist/writeSetlist/canonicalSetlist
 // (§Constraints); both run checks 1–4 and 6. Check 5 (schema) is not run in
@@ -147,7 +181,7 @@ export function readingChecks(entry, impl) {
   const canonicalText = `canonical${ops.ext}`;
   const id = (n) => `${entry.name}/${n}`;
 
-  return [
+  const checks = [
     // tl. The text layer (§1.3): the canonical text is a fixed point of
     //     prepare — prepare(canonical bytes) rejoined (lines by LF, one
     //     trailing LF iff there is at least one line, the empty file → zero
@@ -219,6 +253,41 @@ export function readingChecks(entry, impl) {
       },
     },
   ];
+
+  // chords. The chord layer (§5): for every stored `type: "chord"` item,
+  //     re-derive its model from its written symbol under the document's
+  //     dialect and compare, byte for byte, to what the entry stored. This is
+  //     the strongest §5 assertion computable from the committed corpus bytes
+  //     without a reader — checks 1–4/6 need the whole-song model this task
+  //     does not build (cifra_js.chords refinement §Decisions). Registered only
+  //     for an entry whose stored model holds chords, and born passing (outside
+  //     the ledger) like `<entry>/tl`: the §5 parser must handle every chord in
+  //     the corpus, not only the dense 12/17 entries.
+  const stored = model("parsed.json");
+  const chordItems = collectChordItems(stored);
+  if (chordItems.length) {
+    checks.push({
+      id: id("chords"),
+      run: () => {
+        const dialect = resolveDialect(stored, impl.DIALECTS);
+        for (const item of chordItems) {
+          const result = impl.parseChord(item.symbol, dialect);
+          // The reader stores `chord` then `ambiguities`, omitting the latter
+          // when empty; mirror that field order and omission on both sides so
+          // the byte comparison pins §5 exactly as the corpus records it.
+          const produced = { chord: result.chord };
+          if (result.ambiguities && result.ambiguities.length) {
+            produced.ambiguities = result.ambiguities;
+          }
+          const expected = { chord: item.chord };
+          if ("ambiguities" in item) expected.ambiguities = item.ambiguities;
+          compareBytes(dump(produced), dump(expected), `${id("chords")} [${item.symbol}]`);
+        }
+      },
+    });
+  }
+
+  return checks;
 }
 
 // The three merge inputs, with the entry's extension; a missing input is

@@ -18,7 +18,7 @@ import {
   mergeChecks,
   staleLedgerIds,
 } from "./corpus/harness.js";
-import { prepare } from "../src/index.js";
+import { prepare, parseChord, DIALECTS } from "../src/index.js";
 
 const corpusDir = fileURLToPath(new URL("../../corpus/", import.meta.url));
 
@@ -146,6 +146,76 @@ describe("planted mismatch (reading)", () => {
       (c) => c.id.endsWith("/1"),
     );
     expect(() => check1.run()).toThrow();
+  });
+});
+
+describe("planted mismatch (chords)", () => {
+  // Pins the chord-symbol check (cifra_js.chords refinement §Acceptance): a
+  // synthetic song carrying one chord item, whose stored `chord` is what the
+  // real parser produces, so the real implementation passes and a wrong parse
+  // fails — proving the `<entry>/chords` check is not vacuous, as the package's
+  // planted-mismatch and text_layer's planted non-fixed-point cases do.
+  function plantSongWithChord(symbol, chord, ambiguities) {
+    const item = { type: "chord", symbol, index: 1, key: symbol, chord };
+    if (ambiguities) item.ambiguities = ambiguities;
+    const model = {
+      title: null,
+      properties: [],
+      sections: [
+        {
+          name: "",
+          heading: null,
+          anchor: null,
+          body: [
+            {
+              type: "music",
+              lines: [{ kind: "chart", measures: [{ bar: null, items: [item], number: 1, stated: false }], closeBar: null }],
+            },
+          ],
+          groups: [],
+        },
+      ],
+      blocks: [],
+      sung: false,
+      sungAt: null,
+      diagnostics: [],
+    };
+    const dir = mkdtempSync(join(tmpdir(), "cifra-chords-"));
+    writeFileSync(join(dir, "parsed.json"), dump(model));
+    return { name: "synthetic", dir, kind: "song" };
+  }
+
+  const realImpl = { parseChord, DIALECTS };
+  const chordsCheck = (entry, impl) =>
+    readingChecks(entry, impl).find((c) => c.id.endsWith("/chords"));
+
+  test("an entry whose stored chord matches the parser passes", () => {
+    const { chord } = parseChord("C7");
+    const entry = plantSongWithChord("C7", chord);
+    expect(() => chordsCheck(entry, realImpl).run()).not.toThrow();
+  });
+
+  test("a wrong parse of the symbol fails the check", () => {
+    const { chord } = parseChord("C7");
+    const entry = plantSongWithChord("C7", chord);
+    const wrong = {
+      DIALECTS,
+      // A parser that reads C7 as a bare minor triad — the right root, the
+      // wrong quality and no seventh.
+      parseChord: () => ({
+        chord: { root: { letter: "C", accidental: 0 }, quality: "minor", extensions: [], bass: null },
+        ambiguities: [],
+        errors: [],
+      }),
+    };
+    expect(() => chordsCheck(entry, wrong).run()).toThrow();
+  });
+
+  test("an entry with no chords registers no chords check", () => {
+    const dir = mkdtempSync(join(tmpdir(), "cifra-nochords-"));
+    const model = { title: "Synthetic", properties: [], sections: [] };
+    writeFileSync(join(dir, "parsed.json"), dump(model));
+    expect(chordsCheck({ name: "synthetic", dir, kind: "song" }, realImpl)).toBeUndefined();
   });
 });
 
