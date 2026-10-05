@@ -18,7 +18,7 @@ import {
   mergeChecks,
   staleLedgerIds,
 } from "./corpus/harness.js";
-import { prepare, parseChord, DIALECTS } from "../src/index.js";
+import { prepare, parseChord, DIALECTS, markerLines, decode } from "../src/index.js";
 
 const corpusDir = fileURLToPath(new URL("../../corpus/", import.meta.url));
 
@@ -233,28 +233,97 @@ describe("planted mismatch (merge, forward)", () => {
     return { name: "synthetic", dir };
   }
 
+  // merge now returns an Outcome; the forward check maps it with mergeOutputs
+  // (cifra_js.merge refinement §Decisions). The canned merge returns the file map
+  // directly, with mergeOutputs the identity, so the comparison is still against
+  // the bytes it produces.
+  const forward = (files) => ({ merge: () => files, mergeOutputs: (x) => x });
+  const forwardCheck = (entry, impl) => mergeChecks(entry, impl).find((c) => c.id.endsWith("/1"));
+
   test("a merge producing exactly the stored files passes", () => {
     const entry = plantMergeEntry({ "result.cifra.md": "# Merged\n" });
-    const impl = { merge: () => ({ "result.cifra.md": "# Merged\n" }) };
-    expect(() => mergeChecks(entry, impl)[0].run()).not.toThrow();
+    expect(() => forwardCheck(entry, forward({ "result.cifra.md": "# Merged\n" })).run()).not.toThrow();
   });
 
   test("a wrong byte in a produced file fails", () => {
     const entry = plantMergeEntry({ "result.cifra.md": "# Merged\n" });
-    const impl = { merge: () => ({ "result.cifra.md": "# merged\n" }) };
-    expect(() => mergeChecks(entry, impl)[0].run()).toThrow();
+    expect(() => forwardCheck(entry, forward({ "result.cifra.md": "# merged\n" })).run()).toThrow();
   });
 
   test("a stored output the merge did not produce fails", () => {
     const entry = plantMergeEntry({ "result.cifra.md": "# Merged\n" });
-    const impl = { merge: () => ({}) };
-    expect(() => mergeChecks(entry, impl)[0].run()).toThrow();
+    expect(() => forwardCheck(entry, forward({})).run()).toThrow();
   });
 
   test("producing a file the entry does not have fails", () => {
     const entry = plantMergeEntry({ "result.cifra.md": "# Merged\n" });
-    const impl = { merge: () => ({ "result.deleted": "" }) };
-    expect(() => mergeChecks(entry, impl)[0].run()).toThrow();
+    expect(() => forwardCheck(entry, forward({ "result.deleted": "" })).run()).toThrow();
+  });
+});
+
+describe("planted mismatch (merge, battery)", () => {
+  // The reverse (/2), result-canonical (/3), resolution (/4) and unchanged-side
+  // (/perm) checks this task adds, each proved non-vacuous: a correct canned impl
+  // passes, a broken one fails (cifra_js.merge refinement §Acceptance). An
+  // identity parse/write is a canonical fixed point, so `canon` is observable.
+  const identity = { parse: (x) => x, write: (m) => m, decode, markerLines };
+  const checkOf = (entry, impl, suffix) => mergeChecks(entry, impl).find((c) => c.id.endsWith(suffix));
+
+  function plantMerge(files) {
+    const dir = mkdtempSync(join(tmpdir(), "cifra-merge2-"));
+    writeFileSync(join(dir, "base.cifra.md"), "# Base\n");
+    writeFileSync(join(dir, "ours.cifra.md"), "# Ours\n");
+    writeFileSync(join(dir, "theirs.cifra.md"), "# Theirs\n");
+    for (const [name, content] of Object.entries(files)) writeFileSync(join(dir, name), content);
+    return { name: "synthetic", dir };
+  }
+
+  const MARKED = "<<<<<<< ours\nX\n=======\nY\n>>>>>>> theirs\n";
+
+  test("/2 passes when exchanging the sides mirrors the outcome", () => {
+    const entry = plantMerge({ "result.cifra.md": "# R\n" });
+    const impl = { ...identity, merge: () => ({ kind: "result", result: "# R\n", deleted: false, conflicts: [], marked: null }), mergeOutputs: () => ({}) };
+    expect(() => checkOf(entry, impl, "/2").run()).not.toThrow();
+  });
+
+  test("/2 fails a merge whose sides are not mirrored", () => {
+    const entry = plantMerge({ "conflicts.json": "{}\n", "marked.cifra.md": MARKED });
+    // The same conflict and marked text for both orders: a non-symmetric merge.
+    const impl = {
+      ...identity,
+      merge: () => ({ kind: "conflicts", result: null, deleted: false, conflicts: [{ kind: "title", base: null, ours: "X", theirs: "Y" }], marked: MARKED }),
+      mergeOutputs: () => ({}),
+    };
+    expect(() => checkOf(entry, impl, "/2").run()).toThrow();
+  });
+
+  test("/3 passes a canonical result and fails a non-canonical one", () => {
+    const entry = plantMerge({ "result.cifra.md": "# R\n" });
+    expect(() => checkOf(entry, identity, "/3").run()).not.toThrow();
+    const nonCanon = { ...identity, write: (m) => m + "!" };
+    expect(() => checkOf(entry, nonCanon, "/3").run()).toThrow();
+  });
+
+  test("/4 passes a clean resolution and fails one that leaves a marker", () => {
+    const entry = plantMerge({ "conflicts.json": "{}\n", "marked.cifra.md": MARKED });
+    const clean = { ...identity, resolveMarked: (_m, side) => (side === "ours" ? "X\n" : "Y\n") };
+    expect(() => checkOf(entry, clean, "/4").run()).not.toThrow();
+    const leaves = { ...identity, resolveMarked: (m) => m };
+    expect(() => checkOf(entry, leaves, "/4").run()).toThrow();
+  });
+
+  test("/perm passes an unchanged-side identity merge and fails one that changes it", () => {
+    // Only ours present, so b and x are both ours's text and the three merges are
+    // merge(x, x, x): a merge returning its ours arg is the identity canon wants.
+    const entry = (() => {
+      const dir = mkdtempSync(join(tmpdir(), "cifra-perm-"));
+      writeFileSync(join(dir, "ours.cifra.md"), "# Only\n");
+      return { name: "synthetic", dir };
+    })();
+    const good = { ...identity, merge: (_b, o) => ({ kind: "result", result: o, deleted: false, conflicts: [], marked: null }), mergeOutputs: () => ({}) };
+    expect(() => checkOf(entry, good, "/perm").run()).not.toThrow();
+    const bad = { ...identity, merge: (_b, o) => ({ kind: "result", result: o + "!", deleted: false, conflicts: [], marked: null }), mergeOutputs: () => ({}) };
+    expect(() => checkOf(entry, bad, "/perm").run()).toThrow();
   });
 });
 

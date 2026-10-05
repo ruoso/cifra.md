@@ -402,7 +402,7 @@ export function parseSetlist(bytes) {
 
 // --- the writer (§10.9) ----------------------------------------------------
 
-function entryLine(entry, indent = 0) {
+export function entryLine(entry, indent = 0) {
   const pad = " ".repeat(indent);
   if (entry.type === "property") {
     return `${pad}- ${entry.key}:` + (entry.value ? ` ${entry.value}` : "");
@@ -411,7 +411,7 @@ function entryLine(entry, indent = 0) {
 }
 
 // An item's entries in canonical order: `key`, `note`, then the rest (§10.9.2).
-function orderedEntries(entries) {
+export function orderedEntries(entries) {
   const first = [];
   for (const k of ["key", "note"]) {
     for (const e of entries) {
@@ -422,7 +422,7 @@ function orderedEntries(entries) {
 }
 
 // The item line after its number and the space (§10.9.2).
-function itemContent(item) {
+export function itemContent(item) {
   if (item.type === "song") return `[${item.text}](${writePath(item.path)})`;
   return item.content;
 }

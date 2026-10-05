@@ -59,16 +59,6 @@ export {
   refreshText,
 } from "./setlist.js";
 
-class NotImplementedError extends Error {
-  constructor(op) {
-    super(
-      `cifra.md/js: ${op} is not implemented yet — a later cifra_js task fills it in`,
-    );
-    this.name = "NotImplementedError";
-    this.op = op;
-  }
-}
-
 // Reader: bytes of a cifra.md document -> model (spec §1–§7). Takes bytes
 // because the text layer (spec §1.3) begins by validating UTF-8. The reader
 // never throws on malformed music — everything it cannot keep is a diagnostic —
@@ -113,11 +103,16 @@ export {
 // history and version previews (workflows 4 and 6).
 export { diff } from "./diff.js";
 
-// Three-way merge (spec §11). Each of base/ours/theirs is bytes or absent
-// (null); a merge input need not be UTF-8 (corpus/README.md). Returns the
-// files the merge would write, keyed by their corpus names — the forward-merge
-// seam the harness checks; the richer Outcome and the reverse/canonical/
-// resolution checks belong to cifra_js.merge.
-export function merge(_base, _ours, _theirs, _options) {
-  throw new NotImplementedError("merge");
-}
+// Three-way merge (spec §11). Each of base/ours/theirs is bytes, a string, or
+// absent (null); a merge input need not be UTF-8 (corpus/README.md).
+// `merge(base, ours, theirs, { setlist }) -> Outcome` returns the structured
+// outcome `{ result, deleted, conflicts, marked, kept, kind }` the app's
+// conflict UI reads to present each conflict one at a time (§11.12). Three pure
+// helpers accompany it: `conflictsJson` writes the §11.12.5 JSON, `mergeOutputs`
+// maps an outcome to the corpus file set, and `resolveMarked` resolves a marked
+// text by one side for the *keep mine* / *take theirs* choices (§11.12.4). The
+// merge finishes through the §8 writer and merges setlists through the §10
+// setlist layer; it knows nothing of git, the Worker, storage or the network —
+// the Worker that wires it as isomorphic-git's merge driver is elsewhere
+// (cifra_js.merge refinement §Deferred work).
+export { merge, conflictsJson, mergeOutputs, resolveMarked } from "./merge.js";

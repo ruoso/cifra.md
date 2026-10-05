@@ -210,7 +210,9 @@ export function canonical(doc) {
 
 // A fence around lines, long enough that none of them closes it (§8.4.3). The
 // character is a backtick unless the info string holds one, then a tilde.
-function fence(lines, info = "") {
+// Exported for the merge (merge.js), which writes a marked text through the same
+// §8.4 serialiser helpers (the reference's write.py exports these likewise).
+export function fence(lines, info = "") {
   const char = info.includes("`") ? "~" : "`";
   const re = new RegExp("^ {0,3}(" + char + "+)");
   let longest = 0;
@@ -223,7 +225,7 @@ function fence(lines, info = "") {
 }
 
 // The text of a music part's lines (§8.4.4/§8.4.5), line by line.
-function musicLines(lines, dialect = DEFAULT_DIALECT) {
+export function musicLines(lines, dialect = DEFAULT_DIALECT) {
   const out = [];
   for (const line of lines) {
     const k = line.kind;
@@ -238,14 +240,14 @@ function musicLines(lines, dialect = DEFAULT_DIALECT) {
 
 // A Markdown heading (§8.4.3). A text that ends in what a reader would take for
 // a closing sequence gets a closing ` #` of its own, so that it reads back.
-function headingLine(level, text) {
+export function headingLine(level, text) {
   if (CLOSING_SEQUENCE.test(text)) text += " #";
   return "#".repeat(level) + (text ? " " + text : "");
 }
 
 // A section's heading text with its ` @` anchor and ` x` count, in that order
 // (§8.4.3).
-function headingName(section) {
+export function headingName(section) {
   let name = section.name;
   if (section.anchor !== null && section.anchor !== undefined) name = stripSpaces(`${name} @${section.anchor}`);
   if (section.times !== null && section.times !== undefined) name = stripSpaces(`${name} x${section.times}`);
@@ -255,7 +257,7 @@ function headingName(section) {
 // The chart's blocks, section by section (§8.4.3): a markdown heading and its
 // first part, or a bracket/label heading written into a music fence that stays
 // open across the sections that continue it (the cifra conventions, §8.4.3).
-function chartBlocks(sections, dialect) {
+export function chartBlocks(sections, dialect) {
   const blocks = [];
   let openFence = null; // the music fence a cifra heading continues
 

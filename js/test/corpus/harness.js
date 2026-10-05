@@ -300,49 +300,215 @@ function mergeInputs(entryDir, ext) {
   });
 }
 
-// The forward merge check of a merge entry (corpus/README.md lines 126–149):
-// merge(base, ours, theirs) must produce the entry's stored output files, byte
-// for byte, with no unexpected and no missing file (mirroring merge_outputs /
-// stale_outputs, reference/tools/corpus.py lines 78–102). The reverse /
-// symmetry / canonicality / resolution / idempotence checks belong to
-// cifra_js.merge (§Decisions), which owns corpus/merge/. The merge operation
-// returns the files it would write, keyed by their corpus names.
+// The §11.12.5 member order and the pruning conflict_json does (drop None, keep
+// only known members), ported from reference/cifra_md/merge.py so the mirror and
+// normal helpers of the reverse check can compare conflicts the way the corpus
+// does. The merge module owns the real serialiser; this is the harness's own
+// copy for the symmetry comparison (a test-only transform, like the mirror
+// helpers below), not a second implementation the gate depends on.
+const MEMBERS = [
+  "kind", "line", "deleted", "unreadable", "item", "occurrence", "after",
+  "tuning", "variation", "key", "changed", "symbols", "base", "ours", "theirs",
+];
+
+function conflictJson(c) {
+  const out = {};
+  for (const k of MEMBERS) {
+    if (k in c && c[k] !== null && c[k] !== undefined) out[k] = c[k];
+  }
+  return out;
+}
+
+// Split a marked text into plain lines and [ours, theirs] regions
+// (reference/tests/merge_props.py `regions`).
+function markedRegions(marked) {
+  const out = [];
+  const lines = marked.split("\n");
+  let k = 0;
+  while (k < lines.length) {
+    if (lines[k] === "<<<<<<< ours") {
+      const m = lines.indexOf("=======", k);
+      const e = lines.indexOf(">>>>>>> theirs", m);
+      out.push([lines.slice(k + 1, m), lines.slice(m + 1, e)]);
+      k = e + 1;
+    } else {
+      out.push(lines[k]);
+      k += 1;
+    }
+  }
+  return out;
+}
+
+// The marked text with the two sides of every region exchanged (merge_props.py
+// `mirror_text`).
+function mirrorText(marked) {
+  const out = [];
+  for (const el of markedRegions(marked)) {
+    if (Array.isArray(el)) out.push("<<<<<<< ours", ...el[1], "=======", ...el[0], ">>>>>>> theirs");
+    else out.push(el);
+  }
+  return out.join("\n");
+}
+
+// A conflict with ours/theirs exchanged (merge_props.py `mirror_conflict`).
+function mirrorConflict(c) {
+  c = conflictJson(c);
+  const swap = { ours: "theirs", theirs: "ours" };
+  const out = {};
+  for (const [k, v0] of Object.entries(c)) {
+    const k2 = swap[k] || k;
+    let v = v0;
+    if (k === "changed" || k === "deleted") v = swap[v];
+    if (k === "unreadable") v = ["base", "ours", "theirs"].filter((x) => v0.includes(swap[x] || x));
+    out[k2] = v;
+  }
+  const res = {};
+  for (const k of Object.keys(c)) if (k in out) res[k] = out[k];
+  for (const [k, v] of Object.entries(out)) if (!(k in c)) res[k] = v;
+  return res;
+}
+
+// A conflict's JSON with its members in sorted order, as one comparable string
+// (merge_props.py `normal`, compared as bytes rather than deep-equal).
+function normalConflict(c) {
+  const cj = conflictJson(c);
+  const o = {};
+  for (const k of Object.keys(cj).sort()) o[k] = cj[k];
+  return JSON.stringify(o);
+}
+
+// The merge checks of a merge entry: the full §11.16 battery (corpus/README.md
+// lines 126–149, spec §11.16). This task builds them onto the forward check the
+// `package` task landed (cifra_js.merge refinement §Decisions). `impl.merge`
+// returns an `Outcome`; `impl.mergeOutputs` maps it to the corpus file set, and
+// the reverse/canonical/resolution checks use the `Outcome` and `marked`
+// directly. Each check is `{ id, run }`; `run` throws on mismatch.
 export function mergeChecks(entry, impl) {
   const ext = mergeExtension(entry.dir);
   const outputNames = mergeOutputNames(ext);
-  const id = `merge/${entry.name}/1`;
+  const setlist = ext === ".setlist.md";
+  const run3 = (base, ours, theirs) => impl.merge(base, ours, theirs, { setlist });
+  const outputs = (outcome) => impl.mergeOutputs(outcome, { setlist });
+  const canon = (text) => (setlist ? impl.writeSetlist(impl.parseSetlist(text)) : impl.write(impl.parse(text)));
 
-  const run = () => {
-    const [base, ours, theirs] = mergeInputs(entry.dir, ext);
-    const produced = impl.merge(base, ours, theirs, {
-      setlist: ext === ".setlist.md",
+  const checks = [];
+
+  // 1. merge(base, ours, theirs) gives the entry's stored output files, byte for
+  //    byte, with no unexpected and no missing file (mirroring merge_outputs /
+  //    stale_outputs, reference/tools/corpus.py).
+  checks.push({
+    id: `merge/${entry.name}/1`,
+    run: () => {
+      const [base, ours, theirs] = mergeInputs(entry.dir, ext);
+      const produced = outputs(run3(base, ours, theirs));
+      const names = produced instanceof Map ? [...produced.keys()] : Object.keys(produced);
+      const get = (name) => (produced instanceof Map ? produced.get(name) : produced[name]);
+      for (const name of names) {
+        const path = join(entry.dir, name);
+        if (!existsSync(path)) {
+          throw new Error(`merge/${entry.name}: produced ${name}, which the entry does not have`);
+        }
+        compareBytes(get(name), readFileSync(path), `merge/${entry.name}/${name}`);
+      }
+      const producedSet = new Set(names);
+      for (const name of outputNames) {
+        if (existsSync(join(entry.dir, name)) && !producedSet.has(name)) {
+          throw new Error(`merge/${entry.name}: the entry has ${name}, which the merge did not produce`);
+        }
+      }
+    },
+  });
+
+  // 2. Exchanging the sides mirrors the outcome (§11.16): the same result or
+  //    deletion, or the conflicts and marked text with ours/theirs exchanged. An
+  //    entry flagged `asymmetric` skips this (§11.9.5).
+  if (!existsSync(join(entry.dir, "asymmetric"))) {
+    checks.push({
+      id: `merge/${entry.name}/2`,
+      run: () => {
+        const [base, ours, theirs] = mergeInputs(entry.dir, ext);
+        const r = run3(base, ours, theirs);
+        const r2 = run3(base, theirs, ours);
+        if (r.kind !== r2.kind) throw new Error(`merge/${entry.name}/2: kind ${r2.kind}, expected ${r.kind}`);
+        if (r.kind === "result") {
+          compareBytes(r2.result, r.result, `merge/${entry.name}/2 result`);
+        } else if (r.kind === "conflicts") {
+          const got = r2.conflicts.map(normalConflict);
+          const want = r.conflicts.map((c) => normalConflict(mirrorConflict(c)));
+          if (JSON.stringify(got) !== JSON.stringify(want)) {
+            throw new Error(`merge/${entry.name}/2: conflicts are not the mirror\n  got:  ${JSON.stringify(got)}\n  want: ${JSON.stringify(want)}`);
+          }
+          const wantMarked = r.marked === null ? null : mirrorText(r.marked);
+          if ((r2.marked ?? null) !== wantMarked) {
+            throw new Error(`merge/${entry.name}/2: marked text is not the mirror`);
+          }
+        }
+      },
     });
-    const names = produced instanceof Map ? [...produced.keys()] : Object.keys(produced);
-    const get = (name) => (produced instanceof Map ? produced.get(name) : produced[name]);
+  }
 
-    // Every produced file is one of the entry's stored files, matching it.
-    for (const name of names) {
-      const path = join(entry.dir, name);
-      if (!existsSync(path)) {
-        throw new Error(
-          `merge/${entry.name}: produced ${name}, which the entry does not have`,
-        );
+  // 3. The result is canonical (§11.16): canonicalising it is itself.
+  if (existsSync(join(entry.dir, `result${ext}`))) {
+    checks.push({
+      id: `merge/${entry.name}/3`,
+      run: () => {
+        const text = readFileSync(join(entry.dir, `result${ext}`)).toString("utf-8");
+        compareBytes(canon(text), text, `merge/${entry.name}/3`);
+      },
+    });
+  }
+
+  // 4. Resolving every region of the marked text by ours, and every one by
+  //    theirs (§11.12.4), gives a text with no marker line whose canonical form
+  //    is a fixed point (§11.16).
+  if (existsSync(join(entry.dir, `marked${ext}`))) {
+    checks.push({
+      id: `merge/${entry.name}/4`,
+      run: () => {
+        const marked = readFileSync(join(entry.dir, `marked${ext}`)).toString("utf-8");
+        for (const side of ["ours", "theirs"]) {
+          const resolved = impl.resolveMarked(marked, side);
+          if (impl.markerLines(resolved).length) {
+            throw new Error(`merge/${entry.name}/4: resolving by ${side} left a marker line`);
+          }
+          const text = canon(resolved);
+          compareBytes(canon(text), text, `merge/${entry.name}/4 ${side}`);
+        }
+      },
+    });
+  }
+
+  // perm. The generated unchanged-side checks (§11.16, §11.3): for each readable,
+  //       marker-free input taken as b and x, merge(b, x, x), merge(b, b, x) and
+  //       merge(b, x, b) give the canonical text of x.
+  checks.push({
+    id: `merge/${entry.name}/perm`,
+    run: () => {
+      const inputs = [];
+      for (const bytes of mergeInputs(entry.dir, ext)) {
+        if (bytes === null) continue;
+        let text;
+        try {
+          text = impl.decode(bytes);
+        } catch {
+          continue;
+        }
+        if (impl.markerLines(text).length) continue; // a marked input is never merged (§11.4)
+        inputs.push(text);
       }
-      compareBytes(get(name), readFileSync(path), `merge/${entry.name}/${name}`);
-    }
-
-    // No stored output file is left unproduced.
-    const producedSet = new Set(names);
-    for (const name of outputNames) {
-      if (existsSync(join(entry.dir, name)) && !producedSet.has(name)) {
-        throw new Error(
-          `merge/${entry.name}: the entry has ${name}, which the merge did not produce`,
-        );
+      for (const b of inputs) {
+        for (const x of inputs) {
+          const want = canon(x);
+          for (const args of [[b, x, x], [b, b, x], [b, x, b]]) {
+            const r = run3(args[0], args[1], args[2]);
+            compareBytes(r.result ?? "", want, `merge/${entry.name}/perm`);
+          }
+        }
       }
-    }
-  };
+    },
+  });
 
-  return [{ id, run }];
+  return checks;
 }
 
 // The ledger guard (cifra_js.package refinement §Constraints): the ledger must
