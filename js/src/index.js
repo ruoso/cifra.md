@@ -77,15 +77,14 @@ class NotImplementedError extends Error {
 // refinement §Constraints).
 export { parse } from "./parse.js";
 
-// Canonical writer: model -> canonical text (spec §8).
-export function write(_model) {
-  throw new NotImplementedError("write");
-}
-
-// Model-level canonicalisation: model -> canonical model (spec §8.2, §8.3, §4.5).
-export function canonical(_model) {
-  throw new NotImplementedError("canonical");
-}
+// Canonical writer: model -> canonical text (spec §8). `write` is
+// `serialize ∘ canonical` with the §8.1 marked-text refusal; `canonical` is the
+// §8.2/§8.3/§4.5 model-level canonicaliser. `MarkedTextError` and `isCanonical`
+// are part of the writer's public contract for the app's save path — it
+// surfaces the refusal and uses `isCanonical` to know whether a save would
+// change the file (cifra_js.writer refinement §Decisions). A marked text is
+// never canonical, never saved, never pushed.
+export { write, canonical, MarkedTextError, isCanonical } from "./write.js";
 
 // Three-way merge (spec §11). Each of base/ours/theirs is bytes or absent
 // (null); a merge input need not be UTF-8 (corpus/README.md). Returns the

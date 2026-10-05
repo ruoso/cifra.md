@@ -7,11 +7,14 @@
 // attached to and lays the line out canonically, pushing the words, never a
 // chord. The reader records its result in the model.
 //
-// The writer's rendering functions (chartLineText, sungText, chordText,
-// lyricText) are model→text and join this module with cifra_js.writer; this
-// task lands only what the reader needs — `converge`, its token model
-// (`lineTokens`, placement, padding, division) and the shared `_misread` guard
-// (refinement §Decisions).
+// The writer's per-line rendering functions (chartLineText, sungText,
+// chordText, lyricText) are model→text and live here too (added by
+// cifra_js.writer), beside the reader's `converge`, so that one token model
+// (`lineTokens`, `itemText`, placement, padding, division) both lays a sung
+// line out and prints it — which is what makes reading a document and reading
+// its canonical form give the same sung lines (§8.4.5). The document-level
+// serialiser (§8.4.1–§8.4.3, §8.4.6), the §8.3 invariants and the
+// marked-text refusal are cifra_js.writer's `write.js`.
 //
 // Framework-free and zero runtime dependencies (DIRECTION §3.7): only regular
 // expressions and plain objects, standing on parse.js (the chart grammar and
@@ -400,4 +403,72 @@ function divide(line, laid, mask) {
   if (lead.replace(/^ +/, "").replace(/ +$/, "")) {
     line.measures[0].items.unshift({ type: "lead", column: 0, words: lead });
   }
+}
+
+// --- printing a chord line and a sung line (§8.4.4, §8.4.5) ------------------
+// A port of the reference's layout.py writer half (chart_line_text, lyric_text,
+// chord_text, sung_text) — matched to the corpus, never shared code.
+
+// A chord line that is not sung (§8.4.4): its tokens joined by single spaces. A
+// line whose first word would make a reader take it for a heading, an
+// annotation or words is written after a `,`, which a reader drops.
+export function chartLineText(line, dialect = DEFAULT_DIALECT) {
+  let text = lineTokens(line).map(tokenText).join(" ");
+  if (misread(text, dialect)) text = GUARD + " " + text;
+  return text;
+}
+
+// The line of words of a sung line (§8.4.5), printed from the model: each item's
+// words at its column, a gap inside the words filled with `_`, the gap before
+// words that begin the line with spaces. A forced line is printed here with a
+// space for its marker; sungText restores the `>`.
+export function lyricText(line) {
+  const items = line.measures.flatMap((m) => m.items);
+  const lead = (items.find((it) => it.type === "lead") || {}).words ?? "";
+  const attached = items
+    .filter((it) => it.type !== "lead" && substantive(it) && "column" in it)
+    .sort((a, b) => a.column - b.column);
+  let text = lead;
+  for (const it of attached) {
+    const w = it.words ?? "";
+    if (w && text.length < it.column) {
+      const ch = /[^ ]/.test(text) ? PAD : " ";
+      text += ch.repeat(it.column - text.length);
+    }
+    text += w;
+  }
+  return text;
+}
+
+// The chord line of a sung line (§8.4.5), printed from the model: every token at
+// its column; one with none (the closing bar line) one space after the token
+// before it. A line that would be misread gets the `,` guard at column 0, which
+// the layout has left free.
+export function chordText(line, dialect = DEFAULT_DIALECT) {
+  const toks = lineTokens(line, true);
+  let end = 0;
+  for (let k = 0; k < toks.length; k += 1) {
+    const t = toks[k];
+    const want = desired(t);
+    t.at =
+      want !== null && want !== undefined && (k === 0 || want >= end)
+        ? want
+        : k === 0
+          ? 0
+          : end + 1;
+    end = t.at + tokenText(t).length;
+  }
+  let text = render(toks);
+  if (misread(text, dialect)) {
+    text = text.slice(0, 2) === "  " ? GUARD + text.slice(1) : GUARD + " " + text;
+  }
+  return text;
+}
+
+// The two lines of a sung line (§8.4.5): the chord line, then the words line
+// with its `>` restored when the line is forced.
+export function sungText(line, dialect = DEFAULT_DIALECT) {
+  let lyric = lyricText(line);
+  if (line.forced) lyric = ">" + lyric.slice(1);
+  return [chordText(line, dialect), lyric];
 }

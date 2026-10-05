@@ -34,7 +34,7 @@ export const BRACKET_HEADING = /^( *\[ *([^\]]*?) *\] *)(.*)$/;
 export const LABEL_HEADING = /^( *([^ :|]+):(?: +|$))(.*)$/;
 const HEADING_ANCHOR = / *@(0*[1-9][0-9]*) *$/;
 const BAR_ANCHOR = /^@(0*[1-9][0-9]*)$/;
-const COUNT = /^\(?(?:[x×](0*[1-9][0-9]*)|(0*[1-9][0-9]*)[x×]|(bis))\)?$/;
+export const COUNT = /^\(?(?:[x×](0*[1-9][0-9]*)|(0*[1-9][0-9]*)[x×]|(bis))\)?$/;
 const BEAT = new Set(["/", ".", "-"]);
 export const ANNOTATION = /^ *\/\/ ?(.*)$/;
 const HEADING_COUNT = / *(\(?(?:[x×]0*[1-9][0-9]*|0*[1-9][0-9]*[x×]|bis)\)?) *$/;
@@ -48,7 +48,7 @@ const REPEAT = "%";
 const FINGERING = /^(.*?) *\(([^()]*)\) *$/;
 
 // Lowercase only ASCII A–Z, as the reference's `ascii_lower` does.
-function asciiLower(text) {
+export function asciiLower(text) {
   let out = "";
   for (const c of text) {
     out += c >= "A" && c <= "Z" ? String.fromCharCode(c.charCodeAt(0) + 32) : c;
@@ -102,7 +102,7 @@ function isBar(measure) {
   return measure.items.some((it) => substantive(it));
 }
 
-function keyFor(symbol, index) {
+export function keyFor(symbol, index) {
   return index > 1 ? `${symbol}[${index}]` : symbol;
 }
 
@@ -1104,4 +1104,31 @@ export function isChordRun(text, dialect) {
 // Read a cifra.md document into its model (schema/cifra.schema.json).
 export function parse(bytes, dialect = null) {
   return new Parser(bytes, dialect).run();
+}
+
+// Re-derive a model's derived fields (bar numbers and repeat groups) in place,
+// exactly as the reader computes them, for the canonical writer's `canonical`
+// (spec §8.2; cifra_js.writer refinement §Decisions). It reuses the reader's own
+// `numberBars`/`pairRepeats` on a throwaway parser, so there is one copy of the
+// §2.8/§3 rules held to the corpus, not a second that could drift (the
+// reference's `write._rederive` reuses the parser's methods likewise). The
+// throwaway parser absorbs any diagnostics these recomputations raise; a model
+// carries only the diagnostics its own reading produced.
+export function rederive(doc, dialect) {
+  const p = new Parser("", null);
+  p.dialect = dialect;
+  p.sections = doc.sections;
+  for (const section of p.sections) {
+    for (const part of section.body) {
+      if (part.type !== "music") continue;
+      for (const line of part.lines) {
+        for (const m of line.measures || []) {
+          delete m.number;
+          delete m.stated;
+        }
+      }
+    }
+  }
+  if (!doc.sung) p.numberBars();
+  for (const section of p.sections) p.pairRepeats(section);
 }
