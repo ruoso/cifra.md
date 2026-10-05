@@ -86,6 +86,22 @@ export { parse } from "./parse.js";
 // never canonical, never saved, never pushed.
 export { write, canonical, MarkedTextError, isCanonical } from "./write.js";
 
+// Editing operations (spec §8.5): the five changes a writer makes to a song's
+// voicings — choose a shape for one occurrence, for a key, clear a key, choose
+// shapes for many at once, and add a variation — the app's write path for
+// arranging (what the arrange mode and the chord wizard call). Each is a pure
+// model transform `doc → doc` returning a new, mutated model; the caller writes
+// it canonical with `write`/`canonical`, under which §8.3 renumbers, merges and
+// prunes. The reference carries no editor and the corpus no editing fixture, so
+// these are unit-tested against the spec prose (cifra_js.editing refinement).
+export {
+  chooseShapeForOccurrence,
+  chooseShapeForKey,
+  clearKey,
+  chooseShapes,
+  addVariation,
+} from "./edit.js";
+
 // Semantic diff — "what changed, in musical terms" (DIRECTION §3.6, §4, §5).
 // The app's own layer over the spec-defined model, not part of the format:
 // `diff(before, after) -> { changes, summary }` compares two models `parse`
