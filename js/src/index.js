@@ -70,10 +70,12 @@ class NotImplementedError extends Error {
 }
 
 // Reader: bytes of a cifra.md document -> model (spec §1–§7). Takes bytes
-// because the text layer (spec §1.3) begins by validating UTF-8.
-export function parse(_bytes) {
-  throw new NotImplementedError("parse");
-}
+// because the text layer (spec §1.3) begins by validating UTF-8. The reader
+// never throws on malformed music — everything it cannot keep is a diagnostic —
+// the single exception being invalid UTF-8, which the text layer rejects
+// (NotUtf8Error), because such bytes are not a document (cifra_js.reader
+// refinement §Constraints).
+export { parse } from "./parse.js";
 
 // Canonical writer: model -> canonical text (spec §8).
 export function write(_model) {
