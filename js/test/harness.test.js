@@ -17,6 +17,7 @@ import {
   readingChecks,
   mergeChecks,
   staleLedgerIds,
+  unexpectedFailures,
 } from "./corpus/harness.js";
 import { prepare, parseChord, DIALECTS, markerLines, decode } from "../src/index.js";
 
@@ -339,5 +340,22 @@ describe("ledger guard", () => {
 
   test("a ledger of only real ids is clean", () => {
     expect(staleLedgerIds(["01-minimal-chart/1"], checkIds)).toEqual([]);
+  });
+});
+
+describe("empty-ledger guard", () => {
+  // Pins the Merger-profile guard (cifra_js.conformance refinement §Decisions;
+  // §9.3, §11.16): once the profile is claimed the ledger must be empty, so a
+  // bogus ledgered id makes the guard non-empty and the corpus assertion fails.
+  // This is the unit half of "the ledger is []" that corpus.test.js asserts.
+  test("an empty ledger is clean", () => {
+    expect(unexpectedFailures([])).toEqual([]);
+  });
+
+  test("a ledgered id is reported as an unexpected failure", () => {
+    expect(unexpectedFailures(["merge/37-file-not-utf8/1"])).toEqual(["merge/37-file-not-utf8/1"]);
+    // ...so `expect(unexpectedFailures(ledger)).toEqual([])` fails while any
+    // check is ledgered: the claim cannot stand with a hidden failure.
+    expect(unexpectedFailures(["merge/37-file-not-utf8/1"])).not.toEqual([]);
   });
 });

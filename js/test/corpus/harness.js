@@ -519,3 +519,14 @@ export function mergeChecks(entry, impl) {
 export function staleLedgerIds(ledger, checkIds) {
   return ledger.filter((id) => !checkIds.has(id));
 }
+
+// The Merger-profile guard (cifra_js.conformance refinement §Decisions; §9.3,
+// §11.16): once the package claims the Merger profile (§9.1), no corpus check
+// may be an expected failure, so the ledger must be empty. Every id it names is
+// therefore an unexpected failure; this returns them (all of them), so the
+// corpus assertion and its unit test share one source of truth for the rule. A
+// later spec change that re-ledgers a broken check breaks this guard, which
+// correctly means the claim no longer holds until the check is made to pass.
+export function unexpectedFailures(ledger) {
+  return [...ledger];
+}

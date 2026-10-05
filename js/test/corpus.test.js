@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 import { describe, test, expect } from "vitest";
 
 import * as impl from "../src/index.js";
-import { discover, readingChecks, mergeChecks, staleLedgerIds } from "./corpus/harness.js";
+import { discover, readingChecks, mergeChecks, staleLedgerIds, unexpectedFailures } from "./corpus/harness.js";
 
 // The corpus is a sibling of js/, found by relative path so the harness needs
 // no configuration and works from whatever checkout the gate points at
@@ -37,6 +37,15 @@ const checkIds = new Set(checks.map((c) => c.id));
 // prove it empty.
 test("expected-failures.json names no check that does not exist", () => {
   expect(staleLedgerIds(ledger, checkIds)).toEqual([]);
+});
+
+// The machine-checked half of the Merger-profile claim (cifra_js.conformance
+// refinement §Acceptance "corpus"; §9.3, §11.16, the Merger profile of §9.1):
+// the JavaScript package claims the Merger profile (§9), so no corpus check is
+// an expected failure — the ledger is empty. js/README.md is the claim's stated
+// half. This cannot stand while any reading or merge check is ledgered.
+test("expected-failures.json is empty — the Merger profile is claimed (§9)", () => {
+  expect(unexpectedFailures(ledger)).toEqual([]);
 });
 
 describe("corpus conformance", () => {
