@@ -3,9 +3,11 @@
 // module knows nothing of React; the view is the only layer that does
 // (DIRECTION §3.7). The reader, writer, setlist reader/writer and merge are
 // filled in by the later `cifra_js` tasks (`text_layer`, `chords`, `reader`,
-// `writer`, `setlists`, `merge`); until then every corpus-facing operation is
-// a named stub that throws, so the corpus harness can call them and record
-// each check as an expected failure.
+// `writer`, `setlists`, `merge`); the setlist reader/writer land with
+// `cifra_js.setlists`, so the song reader (`parse`/`write`/`canonical`) and
+// `merge` are the corpus-facing operations still stubbed — named stubs that
+// throw, so the corpus harness can call them and record each check as an
+// expected failure until their task lands.
 //
 // The names and the fact that they are corpus-facing are fixed here; their
 // real signatures and any richer public surface belong to the tasks that
@@ -25,6 +27,37 @@ export { decode, prepare, markerLines, isMarkerLine, NotUtf8Error } from "./text
 // come with them, as the reference exposes parse_note alongside parse_chord.
 export { parseChord, isChord, chordTones, DIALECTS, DEFAULT_DIALECT } from "./chord.js";
 export { parseNote, formatNote, isNote } from "./pitch.js";
+
+// The two block-level Markdown primitives chapter 10 borrows — the §1.4.1 title
+// and the §1.9 fences — in one neutral module the setlist reader uses now and
+// `cifra_js.reader` imports when it lands (cifra_js.setlists refinement
+// §Decisions).
+export { mdHeading, fenceOpen, closesFence } from "./markdown.js";
+
+// Setlists (spec §10): the reader, the canonical writer, the §10.5/§10.9.2 path
+// machinery and the §10.10 editing operations. A setlist holds no music, so
+// this layer reads no chart and imports no chord layer (cifra_js.setlists
+// refinement). The two book-wide §10.10 operations (a song moved across the
+// book; the setlist moved) are the app's — they resolve items against the
+// working copy the Worker owns — and compose with `songPath`,
+// `pathFromSetlistToSong` and `retargetItem` here.
+export {
+  parseSetlist,
+  writeSetlist,
+  canonicalSetlist,
+  songPath,
+  writePath,
+  pathFromSetlistToSong,
+  textForSong,
+  addSong,
+  removeItem,
+  moveItem,
+  setProperty,
+  removeProperty,
+  pointItemAtSong,
+  retargetItem,
+  refreshText,
+} from "./setlist.js";
 
 class NotImplementedError extends Error {
   constructor(op) {
@@ -50,21 +83,6 @@ export function write(_model) {
 // Model-level canonicalisation: model -> canonical model (spec §8.2, §8.3, §4.5).
 export function canonical(_model) {
   throw new NotImplementedError("canonical");
-}
-
-// Setlist reader: bytes of a setlist -> model (spec §10.6).
-export function parseSetlist(_bytes) {
-  throw new NotImplementedError("parseSetlist");
-}
-
-// Setlist canonical writer: model -> canonical setlist text (spec §10.9).
-export function writeSetlist(_model) {
-  throw new NotImplementedError("writeSetlist");
-}
-
-// Setlist model-level canonicalisation: model -> canonical model.
-export function canonicalSetlist(_model) {
-  throw new NotImplementedError("canonicalSetlist");
 }
 
 // Three-way merge (spec §11). Each of base/ours/theirs is bytes or absent
