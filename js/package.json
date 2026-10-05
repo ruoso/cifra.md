@@ -1,0 +1,21 @@
+{
+  "name": "cifra-md",
+  "version": "0.0.0",
+  "private": true,
+  "description": "cifra.md for JavaScript — the app's implementation of the format, held to the reference corpus.",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}
