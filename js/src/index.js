@@ -11,6 +11,12 @@
 // real signatures and any richer public surface belong to the tasks that
 // implement them (cifra_js.package refinement, §Decisions).
 
+// The text layer (spec §1.3) and the marker-line primitive (§11.12.3), the
+// floor every reader stands on: re-exported from one place so the reader,
+// writer, merge and the canonicality check all import one correct
+// implementation (cifra_js.text_layer refinement, §Decisions).
+export { decode, prepare, markerLines, isMarkerLine, NotUtf8Error } from "./text.js";
+
 class NotImplementedError extends Error {
   constructor(op) {
     super(

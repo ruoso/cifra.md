@@ -148,6 +148,25 @@ export function readingChecks(entry, impl) {
   const id = (n) => `${entry.name}/${n}`;
 
   return [
+    // tl. The text layer (§1.3): the canonical text is a fixed point of
+    //     prepare — prepare(canonical bytes) rejoined (lines by LF, one
+    //     trailing LF iff there is at least one line, the empty file → zero
+    //     bytes) equals the canonical bytes. Holds for every reading entry,
+    //     because §8 makes canonical form text-layer-clean (UTF-8, NFC, LF, no
+    //     BOM, no tabs, no trailing spaces, one final newline); born passing,
+    //     outside the ledger (cifra_js.text_layer refinement §Decisions). This
+    //     is the strongest text-layer assertion computable from the committed
+    //     corpus bytes without a reader: checks 1–4/6 need the model the text
+    //     layer alone cannot build.
+    {
+      id: id("tl"),
+      run: () => {
+        const canonical = bytes(canonicalText);
+        const lines = impl.prepare(canonical);
+        const rejoined = lines.length ? lines.join("\n") + "\n" : "";
+        compareBytes(rejoined, canonical, id("tl"));
+      },
+    },
     // 1. Reading input.*.md gives input.parsed.json.
     {
       id: id(1),

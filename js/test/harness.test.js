@@ -18,6 +18,7 @@ import {
   mergeChecks,
   staleLedgerIds,
 } from "./corpus/harness.js";
+import { prepare } from "../src/index.js";
 
 const corpusDir = fileURLToPath(new URL("../../corpus/", import.meta.url));
 
@@ -93,6 +94,7 @@ describe("planted mismatch (reading)", () => {
     parse: () => model,
     write: () => canonicalText,
     canonical: () => model,
+    prepare, // the real text layer; the tl check holds canonicalText a fixed point
   };
   const files = () => ({
     "input.cifra.md": "#   Synthetic\n",
@@ -122,6 +124,17 @@ describe("planted mismatch (reading)", () => {
     const entry = plantReadingEntry(planted);
     const check2 = readingChecks(entry, matchingImpl).find((c) => c.id.endsWith("/2"));
     expect(() => check2.run()).toThrow();
+  });
+
+  test("the tl check fails when the canonical text is not a text-layer fixed point", () => {
+    // Pins the text-layer check (cifra_js.text_layer refinement §Decisions):
+    // a trailing space in the stored canonical text means prepare strips it, so
+    // the rejoin differs and the check is not vacuous.
+    const planted = files();
+    planted["canonical.cifra.md"] = "# Synthetic \n"; // trailing space
+    const entry = plantReadingEntry(planted);
+    const tl = readingChecks(entry, matchingImpl).find((c) => c.id.endsWith("/tl"));
+    expect(() => tl.run()).toThrow();
   });
 
   test("a model with a different key order fails, not deep-equals", () => {
