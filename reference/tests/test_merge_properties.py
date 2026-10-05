@@ -5,8 +5,9 @@ Each case is a base and two sides made from it by the edits people make
 canonical and a fixed point; exchanging the sides mirrors the outcome, but
 for the numbering of §11.9.5; resolving a marked text by either side gives
 a document; changes to different sections, and to the voicings of different
-tunings, never conflict; keys both sides joined stay joined (§11.9.4); and
-a song played twice keeps each copy's entries on that copy (§11.13).
+tunings, never conflict; keys both sides joined stay joined, and a side's change to how the bars are grouped survives a side that did not
+change it (§11.9.4); and a song played twice keeps each copy's entries on
+that copy (§11.13).
 """
 
 import random
@@ -17,7 +18,20 @@ from cifra_md import is_canonical, parse
 from cifra_md.merge import canonical_song, merge
 from cifra_md.setlist import canonicalise_setlist, parse_setlist, write_setlist
 from cifra_md.text import marker_lines
-from merge_gen import add_note, document, edit, edit_setlist, insert_copy, join, only_section_changed, section_texts, setlist
+from merge_gen import (
+    add_note,
+    cm_grouping,
+    document,
+    edit,
+    edit_setlist,
+    insert_copy,
+    join,
+    only_section_changed,
+    regroup,
+    section_texts,
+    setlist,
+    unrelated,
+)
 from merge_props import resolve, symmetric
 
 SEEDS = range(12)
@@ -150,7 +164,7 @@ def test_keys_both_sides_joined_stay_joined(seed):
     """Both sides drop every `Cm` marker, and then one retitles the song and
     the other edits the voicings of one tuning. Every bar of `Cm` is then one
     variant, whatever shapes base had, so the result's chart is the joined
-    chart: base alone told the bars apart (§11.9.4 rule 4)."""
+    chart: base alone told the bars apart (§11.9.4)."""
     rnd = random.Random(seed)
     tried = 0
     while tried < N:
@@ -167,6 +181,27 @@ def test_keys_both_sides_joined_stay_joined(seed):
         # a side that joined, against one that did not change the chart
         assert merge(b, b, j).result == canonical_song(j)
         assert merge(b, j, b).result == canonical_song(j)
+
+
+@pytest.mark.parametrize("seed", SEEDS)
+def test_a_change_to_the_grouping_survives_a_side_that_did_not_change_it(seed):
+    """One side joins the keys of `Cm`, splits a bar of `Cm` off or moves it
+    to another key; the other retitles the song, changes a chord in a line
+    with no `Cm` and revoices a chord other than `Cm`. The second side left
+    the grouping of every `Cm` as base had it, so it decided nothing about
+    it: the result groups the bars of `Cm` as the first side does (§11.9.4)."""
+    rnd = random.Random(seed)
+    tried = 0
+    while tried < N:
+        b = document(rnd)
+        x = regroup(rnd, b)
+        if x is None or canonical_song(x) == canonical_song(b):
+            continue
+        tried += 1
+        y = unrelated(rnd, b)
+        for r in (merge(b, x, y), merge(b, y, x)):
+            assert r.result is not None, (b, x, y, r.marked)
+            assert cm_grouping(r.result) == cm_grouping(x), (b, x, y, r.result)
 
 
 @pytest.mark.parametrize("seed", SEEDS)

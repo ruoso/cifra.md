@@ -474,6 +474,23 @@ def dialect_of(props: list[dict]) -> str:
     return DEFAULT_DIALECT
 
 
+def voicing_text(e) -> str | None:
+    """A voicing as §8.4.6 writes it after the key, or none."""
+    if e is None:
+        return None
+    t = format_frets(e["frets"])
+    if e.get("fingers") and any(f is not None for f in e["fingers"]):
+        t += f" ({format_fingers(e['fingers'])})"
+    return t
+
+
+def most_common(keys):
+    """The key most of a list has, between equal numbers the one with the
+    least index; none if none is a key."""
+    c = Counter(k for k in keys if k is not None)
+    return min(c, key=lambda k: (-c[k], k[1])) if c else None
+
+
 def chords_of(line: dict) -> list[dict]:
     return [it for m in line.get("measures", []) for it in m["items"] if it["type"] == "chord"]
 
@@ -646,6 +663,7 @@ class SongMerge:
         B, O, T = self.v["base"], self.v[OURS], self.v[THEIRS]
         # Key matching: corresponding occurrences in units paired within paired sections.
         self.km = {}
+        self.joined = {}
         for side in SIDES:
             V = self.v[side]
             corr = []
@@ -653,7 +671,17 @@ class SongMerge:
                 bu, vu = B.secs[i].units, V.secs[j].units
                 for p, q in pairs_of(align(bu, vu, unit_match)).items():
                     corr.extend((kt(x), kt(y)) for x, y in zip(bu[p].chords, vu[q].chords))
-            self.km[side] = KeyMatch(B.keys, V.keys, corr)
+            km = self.km[side] = KeyMatch(B.keys, V.keys, corr)
+            # The base keys this side joined into another (§11.9.4): no key of
+            # its own continues them, and every corresponding occurrence went
+            # to one key that continues another base key.
+            dests: dict = {}
+            for b, v in corr:
+                dests.setdefault(b, set()).add(km.mu.get(v))
+            self.joined[side] = {
+                b: d.pop() for b, d in dests.items()
+                if b not in km.match and len(d) == 1 and None not in d and b not in d
+            }
 
         self.merge_metadata()
         self.merge_chart()
@@ -811,25 +839,39 @@ class SongMerge:
                 w = v if v[1] == 1 and v in self.v[other(side)].keys and v not in W.mu else None
                 out.append((None, v, w) if side == OURS else (None, w, v))
             sigs[n] = out
-        self.join_base_only(sigs)
+        # Each occurrence's grouping, merged as a value (§11.9.4 rule 4).
+        groups = [[(it["symbol"], self.grouping(sg)) for it, sg in zip(pc[2].chords, sigs[n])] for n, pc in enumerate(units)]
         first = {}
+        members: dict = {}
         pos = 0
         for n, pc in enumerate(units):
-            for k, it in enumerate(pc[2].chords):
-                key = (it["symbol"], sigs[n][k])
-                first.setdefault(key, pos)
+            for k, var in enumerate(groups[n]):
+                first.setdefault(var, pos)
+                members.setdefault(var, []).append(sigs[n][k])
                 pos += 1
-        self.unit_sigs = {}
+        self.unit_vars = {}
         for n, pc in enumerate(units):
-            self.unit_sigs[self.piece_id(pc)] = sigs[n]
+            self.unit_vars[self.piece_id(pc)] = groups[n]
+        # Each variant's signature (§11.9.4): the base key it continues, and on
+        # each side the key that continues it, or else the key most of it has.
+        self.vsig = {}
+        for var, sgs in members.items():
+            grp = var[1]
+            beta = grp[1] if grp[0] == "base" else most_common([sg[0] for sg in sgs])
+            sig = [beta, None, None]
+            for p, side in ((1, OURS), (2, THEIRS)):
+                keys = [sg[p] for sg in sgs]
+                m = self.km[side].match.get(beta) if beta is not None else None
+                sig[p] = m if m is not None and m in keys else most_common(keys)
+            self.vsig[var] = tuple(sig)
         self.vindex = {}
         by_symbol: dict[str, list] = {}
-        for key in first:
-            by_symbol.setdefault(key[0], []).append(key)
-        for sym, keys in by_symbol.items():
-            keys.sort(key=lambda key: (sorted((k[1] for k in key[1] if k is not None), reverse=True), first[key]))
-            for i, key in enumerate(keys, 1):
-                self.vindex[key] = i
+        for var in first:
+            by_symbol.setdefault(var[0], []).append(var)
+        for sym, vars_ in by_symbol.items():
+            vars_.sort(key=lambda var: (sorted((k[1] for k in self.vsig[var] if k is not None), reverse=True), first[var]))
+            for i, var in enumerate(vars_, 1):
+                self.vindex[var] = i
         # Keys used only by unknown tokens are not markers: identified by their
         # text in every version alike (§11.9.1), each is a variant of its own.
         self.fixed = {}
@@ -846,27 +888,63 @@ class SongMerge:
                     sym = cm.group(1) or t
                     k = (sym, max(int(cm.group(2)), 1) if cm.group(2) else 1)
                     if key_for(*k) == t:
-                        self.fixed[(sym, (k, k, k))] = k
-        self.variants = sorted(self.vindex, key=lambda key: (key[0], self.vindex[key]))
-        self.variants += sorted(self.fixed, key=lambda key: self.fixed[key])
+                        self.fixed[(sym, ("fixed", k))] = k
+                        self.vsig[(sym, ("fixed", k))] = (k, k, k)
+        self.variants = sorted(self.vindex, key=lambda var: (var[0], self.vindex[var]))
+        self.variants += sorted(self.fixed, key=lambda var: self.fixed[var])
 
-    @staticmethod
-    def join_base_only(sigs):
-        """A distinction only base made does not survive (§11.9.4 rule 4):
-        the occurrences whose signatures have one key for ours and one for
-        theirs are one variant, under the base key most of them have, between
-        equal numbers the one with the least index, or none if none has one."""
-        counts: dict[tuple, Counter] = {}
-        for s in sigs:
-            for b, o, t in s:
-                if o is not None and t is not None:
-                    counts.setdefault((o, t), Counter())[b] += 1
-        rep = {}
-        for ot, c in counts.items():
-            keys = [b for b in c if b is not None]
-            rep[ot] = min(keys, key=lambda b: (-c[b], b[1])) if keys else None
-        for n, s in enumerate(sigs):
-            sigs[n] = [(rep[(o, t)], o, t) if o is not None and t is not None else (b, o, t) for b, o, t in s]
+    def destination(self, side, k, beta):
+        """Where a side put an occurrence (§11.9.4): ("base", b) when its key
+        continues base key b, ("new", side, k) when its key is new, and none
+        when it has no key for it, unless it joined the occurrence's base key
+        into another, which then is where it put it."""
+        if k is None:
+            d = self.joined[side].get(beta) if beta is not None else None
+            return ("base", d) if d is not None else None
+        b = self.km[side].mu.get(k)
+        return ("base", b) if b is not None else ("new", side, k)
+
+    def grouping(self, sig):
+        """An occurrence's grouping, merged as a value (§11.9.4 rule 4): base's,
+        unless a side moved it; the side's, if one did, or both did alike; and
+        if both moved it to different places, the pair, kept apart from both."""
+        beta, o, t = sig
+        base = ("base", beta) if beta is not None else None
+        do, dt = self.destination(OURS, o, beta), self.destination(THEIRS, t, beta)
+        mo = do is not None and do != base
+        mt = dt is not None and dt != base
+        if not mo and not mt:
+            return base
+        # A side that left the occurrence where base had it, but changed the
+        # shape of its key there, decided about it too.
+        if mo and not mt and dt is not None and self.reshaped(THEIRS, beta):
+            mt = True
+        if mt and not mo and do is not None and self.reshaped(OURS, beta):
+            mo = True
+        if not mt:
+            return do
+        if not mo or do == dt:
+            return dt
+        return ("pair", do, dt)
+
+    def reshaped(self, side, b) -> bool:
+        """Whether a side changed the shape of base key b (§11.9.4): in a
+        block that base and the side both have, the side's item for the key
+        that continues b is not base's item for b."""
+        m = self.km[side].match.get(b)
+        if m is None:
+            return False
+        ident = lambda blk: (blk["tuning"]["id"], blk["label"])
+        mine = {ident(blk): blk for blk in self.v[side].blocks}
+        for X in self.v["base"].blocks:
+            Y = mine.get(ident(X))
+            if Y is None:
+                continue
+            x = next((e for e in X["voicings"] if (e["symbol"], e["index"]) == b), None)
+            y = next((e for e in Y["voicings"] if (e["symbol"], e["index"]) == m), None)
+            if voicing_text(x) != voicing_text(y):
+                return True
+        return False
 
     @staticmethod
     def piece_id(pc):
@@ -874,10 +952,10 @@ class SongMerge:
             return ("one", id(pc[2]))
         return (pc[0], id(pc[2]))
 
-    def variant_key(self, symbol, sig) -> tuple:
-        if (symbol, sig) in self.fixed:
-            return self.fixed[(symbol, sig)]
-        return (symbol, self.vindex[(symbol, sig)])
+    def variant_key(self, symbol, grp) -> tuple:
+        if (symbol, grp) in self.fixed:
+            return self.fixed[(symbol, grp)]
+        return (symbol, self.vindex[(symbol, grp)])
 
     # --- reading (§11.7.2) ---
     def applied_units(self, side):
@@ -946,14 +1024,7 @@ class SongMerge:
         def items(block):
             return {(e["symbol"], e["index"]): e for e in block["voicings"]} if block is not None else {}
 
-        def vtext(e):
-            if e is None:
-                return None
-            t = format_frets(e["frets"])
-            if e.get("fingers") and any(f is not None for f in e["fingers"]):
-                t += f" ({format_fingers(e['fingers'])})"
-            return t
-
+        vtext = voicing_text
         self.vtext = vtext
         pos = {"base": 0, OURS: 1, THEIRS: 2}
 
@@ -961,7 +1032,7 @@ class SongMerge:
             """A version's voicing for a variant in its counterpart of a block.
             A side that kept no occurrence of the variant's base key made no
             decision about its shape, so its voicing is base's: `base_block`."""
-            sym, sig = variant
+            sig = self.vsig[variant]
             k = sig[pos[version]]
             if block is None:
                 return None
@@ -1006,7 +1077,7 @@ class SongMerge:
         ids = set(blocks["base"]) | set(blocks[OURS]) | set(blocks[THEIRS])
         # weak absence (§11.10.3)
         def weak(side, i, var):
-            sym, sig = var
+            sig = self.vsig[var]
             beta = sig[0]
             if beta is None:
                 return False
@@ -1171,9 +1242,9 @@ class SongMerge:
         if u.kind[0] != "music":
             return ("line", u.kind, u.text)
         line = copy.deepcopy(u.line)
-        sigs = self.unit_sigs[self.piece_id(pc)]
-        for it, sg in zip(chords_of(line), sigs):
-            sym, idx = self.variant_key(it["symbol"], sg)
+        groups = self.unit_vars[self.piece_id(pc)]
+        for it, (_, grp) in zip(chords_of(line), groups):
+            sym, idx = self.variant_key(it["symbol"], grp)
             it["index"] = idx
             it["key"] = key_for(sym, idx)
         if line["kind"] == "sung":

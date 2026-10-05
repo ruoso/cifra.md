@@ -135,7 +135,7 @@ and `--check` checks them.
 | 47-block-notes-two-changes | A `block-notes` conflict |
 | 48-property-deleted-and-changed | A `property` conflict of presence |
 | 50-renumbered-on-each-side | A pure renumbering on each side |
-| 51-joined-and-revoiced | A key joined on one side and revoiced on the other |
+| 51-joined-and-revoiced | A key joined on one side and given a new guitar shape on the other: the other side decided about the joined bar too, which stays apart, with the new guitar shape and the joining side's ukulele shape (spec §11.9.4) |
 | 52-key-of-unknown-tokens | A key used only by unknown tokens, merged by its text |
 | 53-repeat-marks-and-inner-line | A repeat group's closing mark moved by one side and an inner line changed by the other |
 | 54-words-pushed-by-merged-marker | A sung line whose words are pushed because the merged marker grew |
@@ -145,4 +145,8 @@ and `--check` checks them.
 | 60 to 64 | Setlists: two reorders of one stretch, the same song added twice, a notes block changed on both sides, `title`, `text` and `entry` conflicts, and entries merged under the title and under an item |
 | 65-setlist-marked-side | A setlist whose theirs is a marked text: an `unresolved` conflict |
 | 66 to 68 | The example of spec §11.15.20 and its alternative, a song played twice: a copy inserted before another while the other side changes a copy, the later or the earlier, each change staying on its copy; and a copy removed by one side and changed by the other, whose `item` conflict names its `occurrence` |
-| 69 to 71 | The example of spec §11.15.19 and its alternatives: keys joined on both sides, so that the joined variant takes the other side's new shape, and joined on both sides with no shapes at all, where the marker goes; and joined on one side while the other kept them apart and revoiced one, where they stay two keys |
+| 69 to 71, 78 | The example of spec §11.15.19 and its alternatives: keys joined on both sides, so that the joined variant takes the other side's new shape, and joined on both sides with no shapes at all, where the marker goes; joined on one side while the other left the grouping as base had it and revoiced the key the bar was joined into, where the join stands and the joined bar takes the new shape; and joined on one side while the other gave the joined key a new shape, where the bar stays apart and its two shapes conflict |
+| 72, 77 | The example of spec §11.15.21 and its alternative: a join on one side against an unrelated change on the other, which keeps the join; and a different bar moved on each side, both moves kept |
+| 73, 74 | The example of spec §11.15.22 and its alternative: one bar moved two ways, kept apart from both with each side's shape on the instrument it decided; and with two shapes on one instrument, a `voicing` conflict |
+| 75-line-added-with-a-joined-key | A line one side added with a key the other side joined: it joins too |
+| 76, 79 | The alternatives of spec §11.15.15: a bar moved to an existing marker which the other side gave a new shape, where the bar plays it; and moved off a key the other side gave a new shape, where the bar stays apart and its two shapes conflict |

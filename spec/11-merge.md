@@ -136,6 +136,13 @@ chapter is written so that it does.
   stays is in each case the side doing the merging. There is one
   exception, in the numbers given to footnote variants that occur only
   inside conflicts (§11.9.5).
+- **A change to the grouping survives.** Where one side moved chord
+  occurrences from one footnote decision to another, joining two keys,
+  splitting a bar off or moving it to an existing key, and the other side
+  left those occurrences in the keys base had them in and gave those keys
+  no new shape, the result groups those occurrences as the moving side
+  does (§11.9.4). A side whose grouping is base's made no decision about
+  it, whatever else it changed.
 - **Independent changes do not conflict.** Changes to different
   sections, to different lines of a section (adjacent ones included), to
   the title and to properties of different keys, to the chart and to the
@@ -624,10 +631,15 @@ fixed another chord on its line.
 
 ### 11.9.4 Variants
 
-The decisions of the merged document are its **variants**. Every chord
-occurrence in the merged chart, and in each side of each conflict region,
-has a **signature** (*β*, *ω*, *τ*): its key in base, ours and theirs,
-or none:
+The decisions of the merged document are its **variants**. Which
+occurrences share one is merged as a value is (§11.6): for each
+occurrence, the decision base had it in, and where each side put it. A
+side that left it where base had it decided nothing, and the side that
+moved it wins.
+
+Every chord occurrence in the merged chart, and in each side of each
+conflict region, has first a **signature** (*β*, *ω*, *τ*): its key in
+base, ours and theirs, or none:
 
 1. In a unit in both: its three keys.
 2. In a unit taken once from a change made by both sides, or from the
@@ -643,63 +655,110 @@ or none:
    in the merged chart. Otherwise none for base and *v* for *V*, and for
    *W*: *v* if *v* is a symbol alone (its index is 1) and *W* has *v* as a
    key that is new in *W* (§11.9.2 step 3), and none otherwise.
-4. Last, a distinction only base made does not survive. For each key *o*
-   of ours and key *t* of theirs, the occurrences whose signatures have
-   *o* for ours and *t* for theirs all take for base the same key: the
-   base key that most of them have, between equal numbers the one
-   with the least index, and none if none of them has a base key. An
-   occurrence whose signature has none for ours or for theirs is left as
-   it is. Rule 3 looks at the signatures of rules 1 and 2 as they are
-   before this rule.
 
-Occurrences of one symbol with the same signature are one variant.
-Occurrences that either side tells apart are therefore different
-variants, and occurrences no version has seen together are different too,
-unless rule 3 joins them: a line one side added with a key that side also
-gave to a bar that both sides kept, or that both sides added alike, joins
-that bar's variant; and a chord that base does not have, written bare by
-both sides in lines each added on its own, is one chord (§11.15.16). A
-marker that both sides added is not joined that way: `Cm[2]` new on each
-side may be two decisions under one name (§11.9.1). Occurrences that only
-base told apart are one variant, **joined** by rule 4 from the base keys
-they had; the base key it gives them is the one the variant
-**continues**.
+Rule 3 gives occurrences no version has seen together the signature of
+the decision they belong to: a line one side added with a key that side
+also gave to a bar that both sides kept, or that both sides added alike,
+has that bar's signature; and a chord that base does not have, written
+bare by both sides in lines each added on its own, is one chord
+(§11.15.16). A marker that both sides added is not taken as one that way:
+`Cm[2]` new on each side may be two decisions under one name (§11.9.1).
 
-Keeping apart whatever either side tells apart is safe, because the
-canonical form joins variants again when some block has a shape for both
-and no block tells them apart (§8.3 I3). So a side that joined two keys
-the other side kept apart loses nothing: each is merged on its own with
-the shapes the joining side gave it, and they are one key again in the
-result unless the other side gave them different shapes on some
-instrument, in which case keeping them apart is what that instrument's
-arrangement needs. A side keeps two keys apart even when it only left
-them as base had them: where no instrument has a shape for either, nothing
-joins them again, and they stay two keys, as that side has them.
+A side *V* **joined** a base key *b* into a base key *d* when *V* has no
+key matched with *b*, *b* has at least one corresponding occurrence on
+*V* (§11.9.2), and every one of them has on *V* a key matched with *d*,
+which is not *b*. A side that writes every bar of `Cm[2]` as `Cm` joins
+`Cm[2]` into `Cm`.
 
-Where both sides joined two keys, nothing but base tells them apart, and
-the bars are one variant whatever the blocks hold: two people who both
-dropped a marker have both said that its bars and the others are one
-decision. Kept apart, each would be merged against its own shape in
-base: the bars whose shape was not the one the joined key kept would be
-changed by both sides, a `voicing` conflict even where one side only kept
-the shape most of the bars had; and with no shapes, they would stay two
-keys that neither side has (§11.15.19). The joined variant continues the
-base key that most of its bars had, as a side's key continues the base
-key whose occurrences it mostly kept (§11.9.2); that key decides its
-place in the numbering (§11.9.5) and its voicing in base (§11.10.3). The
-other base keys it joined have no variant of their own, so their items
-are not merged, as an item for a key nothing plays is not (§11.10.3), and
-the result does not keep them (§8.3 I1). A key used only by unknown
-tokens is not a variant (§11.9.5), has no signature, and is never joined.
+Side *V*'s **destination** for an occurrence with signature
+(*β*, *ω*, *τ*), *v* being *ω* for ours and *τ* for theirs, is:
+
+- if *v* is matched with a base key *b* (μ_V_(*v*) is *b*): the base key
+  *b*, the decision *v* continues;
+- if *v* is new in *V*: *v* on *V*, a decision only *V* has;
+- if *v* is none: the base key *d*, if *V* joined *β* into *d*; otherwise
+  none, as *V* has not seen the occurrence.
+
+*V* **moved** the occurrence when its destination is not none and is not
+the base key *β*; where *β* is none, any destination is a move. A
+renumbered key is matched with the base key it was (§11.9.2), so
+renumbering moves nothing. *V* also moved it, **in place**, when the
+other side moved it and *V* did not, *V*'s destination is the base key
+*β*, and *V* **reshaped** *β*: in some block that base and *V* both have,
+with the same tuning and the same variation's name, *V*'s item for
+match_V_(*β*) is not base's item for *β*, a different shape, or a shape
+on one side and none on the other.
+
+4. The occurrence's **grouping** is:
+   - the base key *β*, if neither side moved it;
+   - the destination of the side that moved it, if one did, or of both,
+     if both moved it to the same destination;
+   - the pair of the two destinations, ours's then theirs's, if both moved
+     it and their destinations differ.
+
+Occurrences of one symbol with the same grouping are one variant. A
+variant **continues** a base key: *b*, if its grouping is the base key
+*b*; otherwise the base key most of its occurrences have, between equal
+numbers the one with the least index, or none if none has one. Its
+**signature** is (*β*, *ω*, *τ*), with *β* the key it continues, and for
+each side the key matched with *β* on that side, if some occurrence of
+the variant has it there, or otherwise the key most of its occurrences
+have there, between equal numbers the one with the least index, or none.
+A key used only by unknown tokens is not a variant (§11.9.5): it has no
+signature and no grouping, and no side moves it.
+
+So a grouping that one side changed and the other left alone is the
+changing side's. A side that joins bars into another key, splits a bar
+off to a new key or moves it to an existing one keeps that change when the
+other side left those bars where base had them, whatever else the other
+side changed in the song (§11.15.21). Two sides that moved different bars
+both keep their moves. What base told apart and no side moved stays apart,
+and what base had together and no side moved stays together. A distinction
+only base made does not survive: two sides that both wrote bar 3's `Cm[2]`
+as `Cm` moved it to one destination, and it is one variant with the other
+bars of `Cm` whatever the blocks hold (§11.15.19). A side that joined a
+whole key moved every occurrence of it, those on lines only the other side
+has included: a line the other side added with `Cm[2]` joins `Cm` too.
+
+Two sides that moved one occurrence to different places have each decided
+about it, and differently. Neither decision is undone for the other: the
+occurrence is kept apart from everything either side kept it apart from,
+in a variant of the occurrences both sides moved alike, and its shapes are
+merged from what each side chose (§11.10.3). Where the two chose different
+shapes on one instrument, that is a `voicing` conflict about the bar;
+where they did not, each instrument plays what the side that decided there
+chose (§11.15.22). Keeping it apart loses nothing, since the canonical
+form joins it again with any variant whose shape it has on every
+instrument (§8.3 I3). Putting it with both destinations instead would join
+bars that neither side joined, and a conflict about the grouping itself
+would be one no region of the marked text can show.
+
+A side that gave a key a new shape decided about every bar of that key,
+including one the other side moved away; so it moved that bar in place,
+and the bar is kept apart, as a bar both sides moved is, its shapes merged
+from what each side chose. Were the bar joined to the other side's
+destination, the new shape would be lost for it, or given to bars it was
+not chosen for; and since clearing a shape can make the canonical form
+join two keys (§8.3 I3), a join would then set an arrangement for one
+instrument against an arrangement for another (§11.3). A new shape for
+the destination is no decision about the move: the bar moved there plays
+it.
+
+The variant's signature decides its place in the numbering (§11.9.5) and
+its voicing in each version (§11.10.3). A variant that holds occurrences
+of several base keys has a voicing in base only for the key it continues;
+the other base keys it took in have no variant of their own, so their
+items are not merged, as an item for a key nothing plays is not
+(§11.10.3), and the result does not keep them (§8.3 I1).
 
 ### 11.9.5 Numbering
 
 Each variant is given an index, which the merged model writes as its
 marker. For each symbol, its variants are ordered:
 
-1. by the indices of the keys in their signatures, those that are not
-   none, taken in descending order and compared as lists, element by
-   element, a list that is a prefix of another coming first;
+1. by the indices of the keys in their signatures (§11.9.4), those that
+   are not none, taken in descending order and compared as lists, element
+   by element, a list that is a prefix of another coming first;
 2. then by their first occurrence in the merged chart, in which the
    occurrences inside a conflict region are those of ours's side, then
    those of theirs's.
@@ -714,15 +773,15 @@ A key used only by unknown tokens is not a variant: it keeps its text
 The first rule keeps the numbering both sides already agree on: a key
 neither side renamed keeps its relative place, a key a side renumbered
 takes its new place, and a variant either side split off comes after the
-ones it was split from. A joined variant is ordered by its signature as
-rule 4 of §11.9.4 leaves it, so by the base key it continues. The second only decides between variants that the
-first cannot tell apart, such as two that the two sides split off at
-the same time. Ordering by position in the merged chart is symmetric
-except between two variants whose first occurrences are on opposite sides
-of one conflict region: there ours's comes first. That is the one place
-where merging base, theirs, ours is not the exact mirror of merging base,
-ours, theirs (§11.3), and it only changes which of two markers in a
-conflict the user is about to resolve is called which.
+ones it was split from. A variant that took in occurrences of several
+base keys is ordered by the base key it continues. The second only decides
+between variants that the first cannot tell apart, such as two that the
+two sides split off at the same time. Ordering by position in the merged
+chart is symmetric except between two variants whose first occurrences
+are on opposite sides of one conflict region: there ours's comes first.
+That is the one place where merging base, theirs, ours is not the exact
+mirror of merging base, ours, theirs (§11.3), and it only changes which of
+two markers in a conflict the user is about to resolve is called which.
 
 ## 11.10 The voicings part
 
@@ -784,15 +843,22 @@ voicing is base's. A side that deleted the only line playing a chord has
 not cleared that chord's shape for a line the other side added
 (§11.15.17).
 
-A variant joined from several base keys (§11.9.4 rule 4) has for *β* the
-base key it continues, and base's voicing for it is base's item for that
-key; base's items for the other keys it joined are not its voicing. Each
-side has one key for it, and so one voicing. So the shape most of its bars
-played in base is the joined variant's shape in base: a side that kept it
-for the joined key left the variant as it was, and the other side's
-choice is taken; and the two conflict only where each side gave the
-joined key a shape other than that one, and they are not the same
-(§11.15.19).
+A variant that took in occurrences of several base keys, joined or moved
+there by a side (§11.9.4), has for *β* the base key it continues, and
+base's voicing for it is base's item for that key; base's items for the
+other keys it took in are not its voicing. Each side's voicing is its item
+for the key the signature gives it on that side. A side that left those
+occurrences in their own base keys still has a key for each of them, and
+its items for those keys are not the variant's voicing either: they are
+base's items, since a side that gave one of those keys a new shape moved
+its occurrences in place, and they are not in the variant. So a variant
+plays the shape of the key it continues. A side that joined `Cm[2]` into
+`Cm` gave its bars the shape of `Cm`; if the other side gave `Cm` a new
+shape, the joined bars play the new shape (§11.15.19); if it gave `Cm[2]`
+one, it decided about those bars, which stay apart, each instrument
+playing the shape the side that decided there chose. The two sides
+conflict only where each gave the variant a shape other than the one it
+had in base, and they are not the same.
 
 **Weak absence.** A side that splits an occurrence off a key, for one
 instrument, leaves it with no voicing on every other instrument, though it
@@ -1392,9 +1458,10 @@ ukulele, plays bar 7 differently: it becomes `Cm[2]`, with
 `- Cm[2]: 5333` in the ukulele's block. Both write `Cm[2]`, for two
 different decisions.
 
-Masked, neither line changed, so both are in both. Bar 3 has the
-signature (`Cm`, `Cm[2]`, `Cm`), bar 7 (`Cm`, `Cm`, `Cm[2]`), and the
-other `Cm`s (`Cm`, `Cm`, `Cm`): three variants. Bar 3's guitar voicing is
+Masked, neither line changed, so both are in both. Ours moved bar 3 to
+its new `Cm[2]` and theirs bar 7 to its own; the other `Cm`s no one moved.
+That is three variants, with the signatures (`Cm`, `Cm[2]`, `Cm`),
+(`Cm`, `Cm`, `Cm[2]`) and (`Cm`, `Cm`, `Cm`). Bar 3's guitar voicing is
 ours's new shape, and its ukulele voicing, none on ours's side, is weak,
 and theirs left the ukulele's `Cm` as it was, so it is none. Bar 7 is the
 same the other way round. The other `Cm`s sort by the list `[1, 1, 1]`,
@@ -1421,9 +1488,10 @@ Cm | F7 | Cm[3] | G7
 - Cm[3]: 5333
 ````
 
-Had both split off bar 3, one for each instrument, bar 3 would have the
-signature (`Cm`, `Cm[2]`, `Cm[2]`), one variant, and the result one
-`Cm[2]` with the guitar's shape from ours and the ukulele's from theirs.
+Had both split off bar 3, one for each instrument, both would have moved
+it, each to a key of its own: one variant, with the signature (`Cm`,
+`Cm[2]`, `Cm[2]`), and the result one `Cm[2]` with the guitar's shape from
+ours and the ukulele's from theirs.
 
 ### 11.15.6 A marker renumbered on one side
 
@@ -1912,9 +1980,12 @@ Cm | G7
 - Cm[2]: x3554x
 ````
 
-*A*'s bar and *B*'s are two variants, (`Cm`, `Cm[2]`, `Cm`) and
-(`Cm[2]`, `Cm[2]`, `Cm[2]`), with the same shape, which the canonical form
-joins.
+Ours moved *A*'s bar to the decision *B*'s bar is in, and theirs left it
+where base had it, so the two bars are one variant (§11.9.4), which plays
+`Cm[2]`'s shape. Had theirs given `Cm[2]` a new shape, *A*'s bar would
+play it too. Had theirs given `Cm` a new shape instead, it would have
+decided about *A*'s bar as well: the bar would be kept apart, with ours's
+shape for it, `x3554x`, against theirs's new one, a `voicing` conflict.
 
 ### 11.15.16 One new chord, added on both sides
 
@@ -2048,12 +2119,11 @@ Both sides decide that bar 3 is played as every other `Cm`: each writes
 it `Cm`, and canonical form drops `- Cm[2]` from the block. Ours also adds
 `- key: Cm`; theirs voices `Cm` as `x3554x`.
 
-The three bars of `Cm` that base also wrote `Cm` have the signature
-(`Cm`, `Cm`, `Cm`), and bar 3 (`Cm[2]`, `Cm`, `Cm`): only base tells them
-apart, so they are one variant (§11.9.4 rule 4), which continues `Cm`,
-the base key three of its four bars had. Its guitar voicing is
-`x35543` in base and on ours's side, and `x3554x` on theirs's: theirs's.
-The result:
+Bar 3 has the signature (`Cm[2]`, `Cm`, `Cm`): each side's `Cm`
+continues base's `Cm`, so both moved bar 3 there, to the same destination,
+and it is one variant with the three bars no one moved (§11.9.4). The
+variant continues `Cm`. Its guitar voicing is `x35543` in base and on
+ours's side, and `x3554x` on theirs's: theirs's. The result:
 
 ````
 - key: Cm
@@ -2076,10 +2146,13 @@ Kept apart, bar 3 would have been a variant of its own, with
 `8-10-10-8-8-8` in base, `x35543` on ours's side and `x3554x` on
 theirs's: a `voicing` conflict over a shape ours never touched. Had base
 no voicings, the result would be the same chart without them, where kept
-apart bar 3 would have stayed `Cm[2]`, a marker neither side has. Had
-theirs kept bar 3's `Cm[2]` instead, theirs would tell the two apart, and
-the result would have `Cm` as `x3554x` and `Cm[2]` as `x35543`, ours's
-shape for the bar.
+apart bar 3 would have stayed `Cm[2]`, a marker neither side has.
+
+Had theirs kept bar 3's `Cm[2]` and its shape, it would have left the bar
+where base had it and decided nothing about it: ours's move stands, and
+the result is the same. Had theirs instead given `Cm[2]` a new shape, it
+would have decided about bar 3 too, and the bar would stay apart, with
+ours's `x35543` for it against theirs's new shape: a `voicing` conflict.
 
 ### 11.15.20 A song played twice
 
@@ -2128,6 +2201,143 @@ gone on the second item. Had theirs given a note to the first
 4. [Corcovado](corcovado.cifra.md)
 ```
 
+### 11.15.21 A join against an unrelated change
+
+Base:
+
+````
+## A
+```
+Cm | F7 | Cm[2] | G7
+Cm | F7 | Cm | G7
+```
+
+## B
+```
+Ab | G7 | Cm | %
+```
+````
+
+Ours decides that bar 3 is the same `Cm` as the others, and writes it
+`Cm`. Theirs makes the last bar of *B* `C7`. Theirs still has `Cm[2]` in
+bar 3, but only because base had it there: its `Cm` continues base's `Cm`
+and its `Cm[2]` base's `Cm[2]`, so it moved nothing. Ours's `Cm` continues
+base's `Cm`, with four of its five bars, and bar 3 is moved there. The
+grouping is ours's:
+
+````
+## A
+```
+Cm | F7 | Cm | G7
+Cm | F7 | Cm | G7
+```
+
+## B
+```
+Ab | G7 | Cm | C7
+```
+````
+
+Had theirs instead written bar 7 `Cm[2]`, putting it with bar 3, each side
+would have moved a different bar, and the result would keep both moves:
+bar 3 `Cm`, bar 7 `Cm[2]`.
+
+### 11.15.22 One bar moved two ways
+
+Base:
+
+````
+## A
+```
+Cm | F7 | Cm[2] | G7
+Cm | F7 | Cm[2] | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
+- F7: 131211
+- G7: 320001
+
+## Voicings: G4 C4 E4 A4
+- Cm: 0333
+- Cm[2]: 0333
+````
+
+Ours plays bar 3 low on the guitar, as every `Cm`: it writes it `Cm`.
+Theirs gives bar 3 its own ukulele shape, splitting it off `Cm[2]`:
+
+````
+## A
+```
+Cm | F7 | Cm[3] | G7
+Cm | F7 | Cm[2] | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
+- F7: 131211
+- G7: 320001
+
+## Voicings: G4 C4 E4 A4
+- Cm: 0333
+- Cm[2]: 0333
+- Cm[3]: 5333
+````
+
+Both moved bar 3, ours to the decision that continues `Cm` and theirs to
+a new one, so it is kept apart from both: a variant of its own, with the
+signature (`Cm[2]`, `Cm`, `Cm[3]`). On the guitar it is `8-10-10-8-8-8`
+in base, `x35543` on ours's side, and none on theirs's, which is weak
+(§11.10.3): ours's. On the ukulele it is `0333` in base and on ours's side,
+and `5333` on theirs's: theirs's. Its list of indices, `[3, 2, 1]`, comes
+after `Cm[2]`'s, `[2, 2, 2]`. The result:
+
+````
+## A
+```
+Cm | F7 | Cm[3] | G7
+Cm | F7 | Cm[2] | G7
+```
+
+---
+
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
+- Cm[3]: x35543
+- F7: 131211
+- G7: 320001
+
+## Voicings: G4 C4 E4 A4
+- Cm: 0333
+- Cm[2]: 0333
+- Cm[3]: 5333
+````
+
+Bar 3 plays `Cm`'s shape on the guitar, as ours chose, and its own on the
+ukulele, as theirs chose; the ukulele tells it from `Cm`, so it keeps its
+marker. Had theirs also given `Cm[3]` a guitar shape, `x3554x`, the two
+sides would have chosen two shapes for bar 3 on the guitar:
+
+````
+## Voicings: E2 A2 D3 G3 B3 E4
+- Cm: x35543
+- Cm[2]: 8-10-10-8-8-8
+<<<<<<< ours
+- Cm[3]: x35543
+=======
+- Cm[3]: x3554x
+>>>>>>> theirs
+- F7: 131211
+- G7: 320001
+````
+
 ## 11.16 Corpus entries
 
 The merge corpus is `corpus/merge/`, one directory per entry, numbered
@@ -2174,7 +2384,9 @@ their text describes; every row of §11.4, a file that is not UTF-8, and
 a marked base, ours and theirs, and a setlist with a marked side;
 every kind of conflict of §11.12.1 and of §11.13; and a pure renumbering
 on each side, a key joined on one side and revoiced on the other, a key
-used only by unknown tokens, a heading changed in two fields by two
+joined on one side into a key the other side revoiced, a line added with
+a key the other side joined, a bar moved to a key the other side revoiced,
+a key used only by unknown tokens, a heading changed in two fields by two
 sides, a repeat group whose marks and inner lines were changed by
 different sides, conflicts that force a section to be written whole
 (§11.12.2), a sung line whose words are pushed because the merged marker
@@ -2199,6 +2411,19 @@ Deferred to a later version:
 - **Variants numbered inside a conflict.** The one asymmetry of §11.9.5.
   It could be removed by ordering such variants by their content, at some
   cost in rules.
+- **A new shape as a decision about every bar.** A side that gives a key
+  a new shape on one instrument decides about every bar of that key, and
+  keeps apart a bar the other side moved away (§11.9.4), even where the
+  move changed nothing on that instrument. Comparing shapes instrument by
+  instrument would let such a move stand where the two do not meet, at
+  the cost of a grouping that differs from one instrument to the next,
+  which footnote markers cannot say.
+- **Names after a regroup.** The merge numbers its variants afresh
+  (§11.9.5). A side that split a bar off to a new key while its other keys
+  were renumbered can find the result grouping its bars as it did, under
+  other names, when the other side changed something unrelated. Ordering
+  by the moving side's own indices where only one side moved would keep
+  its names, at the cost of a rule that looks at which side moved what.
 - **Choices that go with a deleted line.** A shape chosen for a chord
   whose only occurrence the other side deleted is dropped without a
   conflict (§11.10.3). Whether a merge should report it, as a notice

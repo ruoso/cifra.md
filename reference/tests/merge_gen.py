@@ -162,6 +162,55 @@ def join(text: str) -> str:
     return write(parse(re.sub(r"Cm\[\d+\]", "Cm", chart) + rule + rest))
 
 
+def regroup(rnd, text: str) -> str | None:
+    """A side that changes only how the bars of `Cm` are grouped: it joins
+    every key of `Cm` into one (§8.3 I3), or splits one bare `Cm` off to a
+    new key, or moves it to an existing one (§8.5.1). None if the chart has
+    no `Cm` to regroup."""
+    chart, rule, rest = text.partition("\n---\n")
+    if "Cm[" in chart and rnd.random() < 0.4:
+        return join(text)
+    lines = chart.split("\n")
+    bare = [k for k, ln in enumerate(lines) if re.search(r"(?<![\w\[])Cm(?![\w\[])", ln) and not ln.startswith("## ")]
+    if not bare:
+        return None
+    k = rnd.choice(bare)
+    to = rnd.choice(["Cm[9]", "Cm[2]"] if "Cm[2]" in chart else ["Cm[9]"])
+    lines[k] = re.sub(r"(?<![\w\[])Cm(?![\w\[])", lambda m: to, lines[k], count=1)
+    return write(parse("\n".join(lines) + rule + rest))
+
+
+def unrelated(rnd, text: str) -> str:
+    """A side whose changes leave every `Cm` alone: a new title, a chord
+    changed in a line with no `Cm` in it or next to it, and a new shape for a
+    chord other than `Cm`."""
+    chart, rule, rest = text.partition("\n---\n")
+    lines = chart.split("\n")
+    title = "# Retitled"
+    if lines and lines[0].startswith("# "):
+        lines[0] = title
+    else:
+        lines = [title, ""] + lines
+    # a line of words is one unit with the chord line above it (§11.8.1)
+    plain = [k for k, ln in enumerate(lines) if "Cm" not in "".join(lines[max(k - 1, 0) : k + 2])
+             and re.search(r"(?<![\w(])G7(?![\w(])", ln)]
+    if plain:
+        k = rnd.choice(plain)
+        lines[k] = re.sub(r"(?<![\w(])G7(?![\w(])", "G7(b9)", lines[k], count=1)
+    rest = re.sub(r"^- (?!Cm)(\S+): .*$", lambda m: f"- {m.group(1)}: x00000", rest, count=1, flags=re.M)
+    return write(parse("\n".join(lines) + rule + rest))
+
+
+def cm_grouping(text: str) -> list[int]:
+    """How a document's chart groups its bars of `Cm`: for each, in order,
+    the number of the first bar with its key. Names are left out, since the
+    merge numbers its variants afresh (§11.9.5)."""
+    keys = [it["key"] for s in parse(text)["sections"] for part in s["body"] if part["type"] == "music"
+            for ln in part["lines"] for m in ln.get("measures", []) for it in m["items"]
+            if it["type"] == "chord" and it["symbol"] == "Cm"]
+    return [keys.index(k) for k in keys]
+
+
 def section_texts(text: str) -> list[str]:
     """Each section of a document as canonical form writes it."""
     from cifra_md.write import _chart_blocks, _dialect

@@ -88,6 +88,12 @@ EXAMPLES = [
     ("11.15.20", 0, "66-setlist-song-played-twice", "base.setlist.md", "whole"),
     ("11.15.20", 1, "66-setlist-song-played-twice", "result.setlist.md", "whole"),
     ("11.15.20", 2, "67-setlist-note-on-the-first-copy", "result.setlist.md", "whole"),
+    ("11.15.21", 0, "72-joined-against-an-unrelated-change", "base.cifra.md", "whole"),
+    ("11.15.21", 1, "72-joined-against-an-unrelated-change", "result.cifra.md", "whole"),
+    ("11.15.22", 0, "73-one-bar-moved-two-ways", "base.cifra.md", "whole"),
+    ("11.15.22", 1, "73-one-bar-moved-two-ways", "theirs.cifra.md", "whole"),
+    ("11.15.22", 2, "73-one-bar-moved-two-ways", "result.cifra.md", "whole"),
+    ("11.15.22", 3, "74-one-bar-moved-two-ways-with-two-shapes", "marked.cifra.md", "part"),
 ]
 
 

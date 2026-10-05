@@ -264,40 +264,118 @@ def test_a_key_used_only_by_unknown_tokens_merges_by_its_text():
     assert r.result.endswith("- X[2]: 000000\n")
 
 
-# --- §11.9.4 rule 4: a distinction only base made ---
+# --- §11.9.4 rule 4: the grouping, merged as a value ---
 
 GUITAR = "## Voicings: E2 A2 D3 G3 B3 E4"
+UKE = "## Voicings: G4 C4 E4 A4"
 
 
-def song(chart, *voicings):
+def song(chart, *voicings, uke=()):
     text = f"## A\n{F}\n{chart}\n{F}\n"
+    if voicings or uke:
+        text += "\n---\n"
     if voicings:
-        text += f"\n---\n\n{GUITAR}\n" + "".join(f"- {v}\n" for v in voicings)
+        text += f"\n{GUITAR}\n" + "".join(f"- {v}\n" for v in voicings)
+    if uke:
+        text += f"\n{UKE}\n" + "".join(f"- {v}\n" for v in uke)
     return text
+
+
+def both_ways(base, ours, theirs):
+    r, r2 = merge(base, ours, theirs), merge(base, theirs, ours)
+    assert r.result == r2.result
+    return r.result
 
 
 def test_keys_both_sides_joined_are_one_key_with_no_shapes():
     base = song("Cm | F7 | Cm[2] | G7\nF | G7")
     ours = "- key: Cm\n\n" + song("Cm | F7 | Cm | G7\nF | G7")
     theirs = song("Cm | F7 | Cm | G7\nF | G7(b9)")
-    want = "- key: Cm\n\n" + song("Cm | F7 | Cm | G7\nF | G7(b9)")
-    assert merge(base, ours, theirs).result == want
-    assert merge(base, theirs, ours).result == want
+    assert both_ways(base, ours, theirs) == "- key: Cm\n\n" + song("Cm | F7 | Cm | G7\nF | G7(b9)")
 
 
-def test_keys_one_side_still_tells_apart_stay_apart():
-    # theirs kept bar 3's marker, so theirs tells the two apart, and with
-    # no shapes nothing joins them again (§8.3 I3)
+def test_a_join_survives_a_side_that_left_the_grouping_alone():
+    # theirs still tells bar 3 apart, but only as base did: it decided nothing
     base = song("Cm | F7 | Cm[2] | G7\nF | G7")
     ours = song("Cm | F7 | Cm | G7\nF | G7")
     theirs = song("Cm | F7 | Cm[2] | G7\nF | G7(b9)")
-    assert merge(base, ours, theirs).result == song("Cm | F7 | Cm[2] | G7\nF | G7(b9)")
+    assert both_ways(base, ours, theirs) == song("Cm | F7 | Cm | G7\nF | G7(b9)")
+
+
+def test_a_split_survives_a_side_that_left_the_grouping_alone():
+    base = song("Cm | F7 | Cm | G7\nF | G7", "Cm: x35543")
+    ours = song("Cm | F7 | Cm[2] | G7\nF | G7", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    theirs = song("Cm | F7 | Cm | G7\nF | G7(b9)", "Cm: x35543")
+    want = song("Cm | F7 | Cm[2] | G7\nF | G7(b9)", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    assert both_ways(base, ours, theirs) == want
 
 
 def test_a_join_by_one_side_against_an_unchanged_side_is_that_side():
     base = song("Cm | Cm[2]")
     assert merge(base, base, song("Cm | Cm")).result == song("Cm | Cm")
     assert merge(base, song("Cm | Cm"), base).result == song("Cm | Cm")
+
+
+def test_moves_of_different_bars_both_survive():
+    # ours joins bar 3 into Cm, theirs moves bar 5 to Cm[2]
+    base = song("Cm | F7 | Cm[2] | G7\nCm | F7 | Cm | G7\nCm[2]")
+    ours = song("Cm | F7 | Cm | G7\nCm | F7 | Cm | G7\nCm[2]")
+    theirs = song("Cm | F7 | Cm[2] | G7\nCm[2] | F7 | Cm | G7\nCm[2]")
+    assert both_ways(base, ours, theirs) == song("Cm | F7 | Cm | G7\nCm[2] | F7 | Cm | G7\nCm[2]")
+
+
+def test_a_joined_bar_plays_the_new_shape_of_the_key_it_joined():
+    base = song("Cm | F7 | Cm[2] | G7\nCm | F7 | Cm | G7", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    ours = song("Cm | F7 | Cm | G7\nCm | F7 | Cm | G7", "Cm: x35543")
+    theirs = song("Cm | F7 | Cm[2] | G7\nCm | F7 | Cm | G7", "Cm: x3554x", "Cm[2]: 8-10-10-8-8-8")
+    assert both_ways(base, ours, theirs) == song("Cm | F7 | Cm | G7\nCm | F7 | Cm | G7", "Cm: x3554x")
+
+
+def test_a_bar_moved_to_an_existing_key_plays_its_new_shape():
+    base = song("C | Cm\nF | Cm[2]\nCm | G", "Cm: x35543", "Cm[2]: x3554x")
+    ours = song("C | Cm[2]\nF | Cm[2]\nCm | G", "Cm: x35543", "Cm[2]: x3554x")
+    theirs = song("C | Cm\nF | Cm[2]\nCm | G", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    want = song("C | Cm[2]\nF | Cm[2]\nCm | G", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8")
+    assert both_ways(base, ours, theirs) == want
+    # had theirs given Cm the new shape instead, the bar ours moved would have
+    # been decided by both: kept apart, with ours's shape for it against theirs's
+    theirs = song("C | Cm\nF | Cm[2]\nCm | G", "Cm: 8-10-10-8-8-8", "Cm[2]: x3554x")
+    r = merge(base, ours, theirs)
+    assert [(c["kind"], c["base"], c["ours"], c["theirs"]) for c in r.conflicts] == [
+        ("voicing", "x35543", "x3554x", "8-10-10-8-8-8")
+    ]
+
+
+def test_a_join_against_a_new_shape_for_the_key_it_joined_keeps_the_bars_apart():
+    # theirs gave Cm[2] a new shape on the guitar: a decision about bar 3 too,
+    # which keeps it apart; ours's join still gives it Cm's ukulele shape
+    base = song("Cm | Cm[2] | G7", "Cm: x35543", "Cm[2]: x35543", uke=("Cm: 0333", "Cm[2]: 5333"))
+    ours = song("Cm | Cm | G7", "Cm: x35543", uke=("Cm: 0333",))
+    theirs = song("Cm | Cm[2] | G7", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", uke=("Cm: 0333", "Cm[2]: 5333"))
+    want = song("Cm | Cm[2] | G7", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", uke=("Cm: 0333", "Cm[2]: 0333"))
+    assert both_ways(base, ours, theirs) == want
+
+
+def test_a_bar_both_sides_moved_apart_is_kept_apart_from_both():
+    base = song("Cm | Cm[2]\nCm | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", uke=("Cm: 0333", "Cm[2]: 0333"))
+    ours = song("Cm | Cm\nCm | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", uke=("Cm: 0333", "Cm[2]: 0333"))
+    theirs = song("Cm | Cm[3]\nCm | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", uke=("Cm: 0333", "Cm[2]: 0333", "Cm[3]: 5333"))
+    want = song("Cm | Cm[3]\nCm | Cm[2]", "Cm: x35543", "Cm[2]: 8-10-10-8-8-8", "Cm[3]: x35543",
+                uke=("Cm: 0333", "Cm[2]: 0333", "Cm[3]: 5333"))
+    assert both_ways(base, ours, theirs) == want
+    # had theirs also given bar 2 a guitar shape, the two shapes would conflict
+    theirs = theirs.replace("- Cm[2]: 8-10-10-8-8-8\n", "- Cm[2]: 8-10-10-8-8-8\n- Cm[3]: x3554x\n", 1)
+    r = merge(base, ours, theirs)
+    assert [(c["kind"], c["key"], c["base"], c["ours"], c["theirs"]) for c in r.conflicts] == [
+        ("voicing", "Cm[3]", "8-10-10-8-8-8", "x35543", "x3554x")
+    ]
+
+
+def test_a_line_added_with_a_key_the_other_side_joined_joins_too():
+    base = song("Cm | F7 | Cm[2] | G7\nCm | F7 | Cm | G7")
+    ours = song("Cm | F7 | Cm | G7\nCm | F7 | Cm | G7")
+    theirs = song("Cm | F7 | Cm[2] | G7\nCm | F7 | Cm | G7\nAb | Cm[2]")
+    assert both_ways(base, ours, theirs) == song("Cm | F7 | Cm | G7\nCm | F7 | Cm | G7\nAb | Cm")
 
 
 def test_a_joined_variant_has_the_shape_of_the_base_key_most_of_it_continues():
@@ -307,8 +385,7 @@ def test_a_joined_variant_has_the_shape_of_the_base_key_most_of_it_continues():
     ours = song("Cm | Cm | Cm | Cm", "Cm: x3554x")
     theirs = "# Tarde\n\n" + song("Cm | Cm | Cm | Cm", "Cm: x35543")
     want = "# Tarde\n\n" + song("Cm | Cm | Cm | Cm", "Cm: x3554x")
-    assert merge(base, ours, theirs).result == want
-    assert merge(base, theirs, ours).result == want
+    assert both_ways(base, ours, theirs) == want
 
 
 def test_a_joined_variant_conflicts_when_both_sides_moved_off_its_base_shape():
@@ -340,16 +417,18 @@ def test_a_joined_variant_is_numbered_by_the_base_key_it_continues():
     assert merge(base, ours, theirs).result == song("Cm | Cm[2] | Cm[2] | Cm[2]\nF | G7")
 
 
-def test_joining_takes_the_base_key_most_occurrences_have_none_aside():
+def test_an_occurrence_s_grouping_merges_as_a_value():
     from cifra_md.merge import SongMerge
 
-    a, b, o, t = K("Cm"), K("Cm[2]"), K("Cm[3]"), K("Cm[4]")
-    sigs = [[(None, o, t), (b, o, t)], [(a, o, t), (b, o, t)], [(a, o, None), (b, o, None)]]
-    SongMerge.join_base_only(sigs)
-    assert sigs == [[(b, o, t), (b, o, t)], [(b, o, t), (b, o, t)], [(a, o, None), (b, o, None)]]
-    sigs = [[(None, o, t)]]
-    SongMerge.join_base_only(sigs)
-    assert sigs == [[(None, o, t)]]
+    a, b, n = K("Cm"), K("Cm[2]"), K("Cm[3]")
+    m = SongMerge(song("Cm | Cm[2] | Cm"), song("Cm | Cm | Cm[2]"), song("Cm | Cm[2] | Cm[2]"))
+    m.run()
+    # bar 1: no side moved it; bar 2: ours joined it into Cm; bar 3: both
+    # split it off, ours to a new key and theirs to the existing Cm[2]
+    assert m.grouping((a, a, a)) == ("base", a)
+    assert m.grouping((b, a, b)) == ("base", a)
+    assert m.grouping((a, b, b)) == ("pair", ("new", "ours", b), ("base", b))
+    assert m.grouping((None, n, None)) == ("new", "ours", n)
 
 
 def test_a_key_of_unknown_tokens_is_not_joined():
